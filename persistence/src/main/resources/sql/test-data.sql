@@ -10,7 +10,6 @@ INSERT INTO gift_certificates (name, description, price, duration, create_date, 
 INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date) VALUES
 ('The fourth', 'The fourth certificate', 14.0, 12, '2020-06-18T09:25:19Z', '2021-03-10T04:51:49Z');
 
-
 INSERT INTO tags(name) VALUES ('tag1');
 INSERT INTO tags(name) VALUES ('tag2');
 INSERT INTO tags(name) VALUES ('tag3');

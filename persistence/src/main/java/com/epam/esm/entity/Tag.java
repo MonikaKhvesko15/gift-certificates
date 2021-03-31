@@ -3,6 +3,7 @@ package com.epam.esm.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Tag implements Serializable {
     private Long id;
@@ -33,18 +34,19 @@ public class Tag implements Serializable {
         this.certificates = certificates;
     }
 
-    public boolean addCertificate(Certificate certificate) {
-        if (certificates == null) {
-            certificates = new ArrayList<>();
-            certificates.add(certificate);
-            return true;
-        } else {
-            if (certificates.contains(certificate)) {
-                return false;
-            }
-        }
-        certificates.add(certificate);
-        return true;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag = (Tag) o;
+        return Objects.equals(id, tag.id) &&
+                Objects.equals(name, tag.name) &&
+                Objects.equals(certificates, tag.certificates);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, certificates);
     }
 
     @Override

@@ -1,6 +1,3 @@
-CREATE USER MAPPING IF NOT EXISTS FOR db_user
-SERVER PostgreSQL
-
 -- Database: certificates
 
 -- DROP DATABASE certificates;
@@ -14,7 +11,6 @@ CREATE DATABASE certificates
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
 
-GRANT ALL PRIVILEGES ON certificates TO PostgreSQL;
+SET TIME ZONE 'UTC';
 
-//?
-SET TIME ZONE '+3:00';
+SET datestyle TO "ISO";

@@ -1,4 +1,4 @@
--- DROP TABLE gift_certificates CASCADE;
+DROP TABLE gift_certificates CASCADE;
 
 CREATE TABLE gift_certificates
 (
@@ -7,11 +7,11 @@ CREATE TABLE gift_certificates
     description      varchar(255),
     price            double precision,
     duration         int,
-    create_date      timestamp           NOT NULL,
-    last_update_date timestamp          NOT NULL
+    create_date      timestamptz           NOT NULL,
+    last_update_date timestamptz          NOT NULL
 );
 
--- DROP TABLE tags CASCADE;
+DROP TABLE tags CASCADE;
 
 CREATE TABLE tags
 (
@@ -20,7 +20,7 @@ CREATE TABLE tags
     UNIQUE (name)
 );
 
--- DROP TABLE gift_certificates_tags;
+DROP TABLE gift_certificates_tags;
 
 create table gift_certificates_tags
 (

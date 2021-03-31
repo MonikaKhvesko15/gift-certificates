@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class Certificate implements Serializable {
@@ -81,18 +82,24 @@ public class Certificate implements Serializable {
         this.tags = tags;
     }
 
-    public boolean AddTag(Tag tag) {
-        if (tags == null) {
-            tags = new ArrayList<>();
-            tags.add(tag);
-            return true;
-        } else {
-            if (tags.contains(tag)) {
-                return false;
-            }
-        }
-        tags.add(tag);
-        return true;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Certificate that = (Certificate) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(duration, that.duration) &&
+                Objects.equals(create_date, that.create_date) &&
+                Objects.equals(last_update_date, that.last_update_date) &&
+                Objects.equals(tags, that.tags);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, price, duration, create_date, last_update_date, tags);
     }
 
     @Override
