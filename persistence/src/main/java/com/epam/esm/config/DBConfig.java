@@ -6,18 +6,18 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import javax.sql.DataSource;
-import java.sql.Driver;
 
+@EnableWebMvc
+@ComponentScan(basePackages = "com.epam.esm")
 @Configuration
 @PropertySource("classpath:db/jdbc.properties")
-public class DBConfig {
+public class DBConfig implements WebMvcConfigurer {
 
     private static Logger logger = LoggerFactory.getLogger(DBConfig.class);
 
@@ -32,12 +32,6 @@ public class DBConfig {
 
     @Value("${password}")
     private String password;
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-
 
     @Bean
     @Profile("dev")
