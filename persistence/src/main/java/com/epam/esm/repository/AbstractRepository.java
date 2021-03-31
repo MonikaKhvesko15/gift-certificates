@@ -2,13 +2,16 @@ package com.epam.esm.repository;
 
 import com.epam.esm.specification.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractRepository<T> implements Repository {
+public abstract class AbstractRepository<T> implements Repository<T> {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     private static final String DELETE_BY_ID_QUERY = "DELETE FROM %s WHERE id = ?;";
 
@@ -24,13 +27,33 @@ public abstract class AbstractRepository<T> implements Repository {
 
     protected abstract String getTableName();
 
+    protected Integer insertData(String query, Object... params) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection
+                    .prepareStatement(query);
+            for (int i = 1; i <= params.length; i++) {
+                statement.setObject(i, params[i - 1]);
+            }
+            return statement;
+        }, keyHolder);
+
+        return (Integer) keyHolder.getKey();
+    }
+
     @Override
-    public List queryListResult(Specification specification) {
+    public List queryForListResult(Specification specification) {
         return null;
     }
 
     @Override
-    public Optional querySingleResult(Specification specification) {
+    public Optional queryForSingleResult(Specification specification) {
         return Optional.empty();
+    }
+
+    @Override
+    public T update(T t) {
+        return null;
     }
 }

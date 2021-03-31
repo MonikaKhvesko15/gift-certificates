@@ -33,6 +33,9 @@ public class DBConfig implements WebMvcConfigurer {
     @Value("${password}")
     private String password;
 
+    @Value("maxPoolSize")
+    private int maxPoolSize;
+
     @Bean
     @Profile("dev")
     public DataSource H2DataSource() {
@@ -54,7 +57,7 @@ public class DBConfig implements WebMvcConfigurer {
         config.setDataSourceClassName(driverClassName);
         config.setUsername(username);
         config.setPassword(password);
-        //config.setMaximumPoolSize();
+        config.setMaximumPoolSize(maxPoolSize);
 
         return new HikariDataSource(config);
     }
@@ -63,5 +66,4 @@ public class DBConfig implements WebMvcConfigurer {
     public JdbcTemplate getJdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
-
 }

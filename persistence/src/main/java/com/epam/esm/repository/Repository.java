@@ -7,18 +7,18 @@ import java.util.Optional;
 
 public interface Repository<T> {
     //create
-    void add(T t);
+    T add(T t);
 
     //update
-    void update(T t);
+    T update(T t);
 
     //delete
     boolean deleteById(Integer id);
 
     //read for List result
-    List<T> queryListResult(Specification<T> specification);
+    List<T> queryForListResult(Specification<T> specification);
 
     //read for single result
-    Optional<T> querySingleResult(Specification<T> specification);
+    Optional<T> queryForSingleResult(Specification<T> specification);
 
 }
