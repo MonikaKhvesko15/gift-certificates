@@ -1,7 +1,6 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.specification.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;

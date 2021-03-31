@@ -1,6 +1,5 @@
 package com.epam.esm.repository;
 
-import com.epam.esm.specification.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
