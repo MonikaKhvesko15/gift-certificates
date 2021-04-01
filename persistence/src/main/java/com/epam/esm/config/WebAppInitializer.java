@@ -16,8 +16,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
 
 
         //TODO: rebase config profiles to other place
-//        servletContext.setInitParameter(
-//                "spring.profiles.active", "dev");
+//        servletContext.setInitParameter("spring.profiles.active", "dev");
 
         // Create and register the DispatcherServlet
         DispatcherServlet servlet = new DispatcherServlet(context);

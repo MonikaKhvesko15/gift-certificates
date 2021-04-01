@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     }
 
     protected abstract String getTableName();
+
     protected abstract RowMapper<T> getRowMapper();
 
     @Override
@@ -51,13 +53,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     @Override
     public Optional<T> queryForSingleResult(SqlSpecification<T> specification) {
         List<T> items = queryForListResult(specification);
-        if (items.size() == 1) {
-            return Optional.of(items.get(0));
-        } else if (items.size() > 1) {
-            throw new IllegalArgumentException("More than one record found");
-        } else {
-            return Optional.empty();
-        }
+        return items.size() == 1 ? Optional.of(items.get(0)) : Optional.empty();
     }
 
 }

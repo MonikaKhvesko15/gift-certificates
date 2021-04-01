@@ -10,7 +10,6 @@ import java.util.List;
 
 public class CertificateRepository extends AbstractRepository<Certificate> {
 
-    private static final String GIFT_CERTIFICATES_TABLE_NAME = "gift_certificates";
     private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date) VALUES\n" +
             "(?, ?, ?, ?, ?, ?);";
 
@@ -20,7 +19,7 @@ public class CertificateRepository extends AbstractRepository<Certificate> {
 
     @Override
     protected String getTableName() {
-        return GIFT_CERTIFICATES_TABLE_NAME;
+        return Certificate.GIFT_CERTIFICATES_TABLE_NAME;
     }
 
     @Override

@@ -40,7 +40,7 @@ public class DBConfig implements WebMvcConfigurer {
 
     @Bean
     @Profile("dev")
-    public DataSource H2DataSource() {
+    public DataSource h2DataSource() {
         EmbeddedDatabaseBuilder databaseBuilder = new EmbeddedDatabaseBuilder();
         return databaseBuilder.setType(EmbeddedDatabaseType.H2)
                 .addScripts("classpath:sql/ddl.sql", "classpath:sql/script.sql", "classpath:sql/test-data.sql")
@@ -49,7 +49,7 @@ public class DBConfig implements WebMvcConfigurer {
 
     @Bean
     @Profile("prod")
-    public DataSource PostgresDataSource() {
+    public DataSource postgresDataSource() {
         HikariConfig config = new HikariConfig();
         config.setDataSourceClassName(driverClassName);
         config.setUsername(username);
@@ -66,6 +66,6 @@ public class DBConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("tags/list");
+        registry.addViewController("/");
     }
 }

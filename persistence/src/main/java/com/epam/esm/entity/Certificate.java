@@ -6,6 +6,8 @@ import java.util.*;
 
 public class Certificate extends Entity{
 
+    public static final String GIFT_CERTIFICATES_TABLE_NAME = "gift_certificates";
+
     private String name;
     private String description;
     private Double price;

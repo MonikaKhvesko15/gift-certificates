@@ -6,8 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 public class TagRepository extends AbstractRepository<Tag> {
-
-    private static final String TAGS_TABLE_NAME = "tags";
     private static final String INSERT_TAG_QUERY = "INSERT INTO tags(name) VALUES (?);";
 
     protected TagRepository(JdbcTemplate jdbcTemplate) {
@@ -16,7 +14,7 @@ public class TagRepository extends AbstractRepository<Tag> {
 
     @Override
     protected String getTableName() {
-        return TAGS_TABLE_NAME;
+        return Tag.TAGS_TABLE_NAME;
     }
 
     @Override

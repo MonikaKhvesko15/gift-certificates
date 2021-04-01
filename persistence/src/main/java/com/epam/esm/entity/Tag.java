@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class Tag extends Entity{
+    public static final String TAGS_TABLE_NAME = "tags";
+
     private String name;
 
     public Tag(Long id, String name) {
