@@ -46,12 +46,12 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     }
 
     @Override
-    public List<T> queryForListResult(SqlSpecification<T> specification) {
+    public List<T> queryForListResult(SqlSpecification specification) {
         return jdbcTemplate.query(specification.getSqlQuery(), getRowMapper());
     }
 
     @Override
-    public Optional<T> queryForSingleResult(SqlSpecification<T> specification) {
+    public Optional<T> queryForSingleResult(SqlSpecification specification) {
         List<T> items = queryForListResult(specification);
         return items.size() == 1 ? Optional.of(items.get(0)) : Optional.empty();
     }

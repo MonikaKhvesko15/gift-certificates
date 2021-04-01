@@ -13,9 +13,9 @@ public interface Repository<T extends Entity> {
     boolean deleteById(Integer id);
 
     //read for List result
-    List<T> queryForListResult(SqlSpecification<T> specification);
+    List<T> queryForListResult(SqlSpecification specification);
 
     //read for single result
-    Optional<T> queryForSingleResult(SqlSpecification<T> specification);
+    Optional<T> queryForSingleResult(SqlSpecification specification);
 
 }

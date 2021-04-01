@@ -2,7 +2,7 @@ package com.epam.esm.entity;
 
 import java.io.Serializable;
 
-public class Entity implements Serializable {
+public abstract class Entity implements Serializable {
     private Long id;
 
     public Entity(){

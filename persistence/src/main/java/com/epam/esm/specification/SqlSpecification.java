@@ -1,5 +1,5 @@
 package com.epam.esm.specification;
 
-public interface SqlSpecification<T> {
+public interface SqlSpecification {
     String getSqlQuery();
 }
