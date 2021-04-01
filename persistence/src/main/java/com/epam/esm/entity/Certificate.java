@@ -1,11 +1,9 @@
 package com.epam.esm.entity;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 
 public class Certificate extends Entity{
@@ -14,20 +12,68 @@ public class Certificate extends Entity{
     private String description;
     private Double price;
     private Integer duration;
-    private LocalDateTime createDate;
-    private LocalDateTime lastUpdateDate;
+    private LocalDate createDate;
+    private LocalDate lastUpdateDate;
     private List<Tag> tags;
 
-    //todo: apply Builder template
-    public Certificate(Long id, String name, String description, Double price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, List<Tag> tags) {
-        super(id);
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.tags = tags;
+    public static class Builder{
+        //Necessary parameters
+        private String name;
+        private LocalDate createDate;
+        private LocalDate lastUpdateDate;
+
+        //optional parameters
+        private Long id;
+        private String description;
+        private Double price;
+        private Integer duration;
+        private List<Tag> tags=new ArrayList<>();
+
+        public Builder(String name, LocalDate createDate, LocalDate lastUpdateDate){
+            this.name = name;
+            this.createDate = createDate;
+            this.lastUpdateDate = lastUpdateDate;
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder description(String description){
+            this.description = description;
+            return this;
+        }
+
+        public Builder price(Double price){
+            this.price=price;
+            return this;
+        }
+
+        public Builder duration(Integer duration){
+            this.duration=duration;
+            return this;
+        }
+
+        public Builder tags(List<Tag> tags){
+            this.tags=tags;
+            return this;
+        }
+
+        public Certificate build(){
+            return new Certificate(this);
+        }
+    }
+
+    private Certificate(Builder builder){
+        super(builder.id);
+        name = builder.name;
+        description = builder.description;
+        price = builder.price;
+        duration = builder.duration;
+        createDate = builder.createDate;
+        lastUpdateDate = builder.lastUpdateDate;
+        tags = builder.tags;
     }
 
     public String getName() {
@@ -62,19 +108,19 @@ public class Certificate extends Entity{
         this.duration = duration;
     }
 
-    public LocalDateTime getCreateDate() {
+    public LocalDate getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
+    public void setCreateDate(LocalDate createDate) {
         this.createDate = createDate;
     }
 
-    public LocalDateTime getLastUpdateDate() {
+    public LocalDate getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
+    public void setLastUpdateDate(LocalDate lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 
