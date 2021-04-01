@@ -1,9 +1,7 @@
 package com.epam.esm.entity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public class Certificate extends Entity{
@@ -14,7 +12,7 @@ public class Certificate extends Entity{
     private Integer duration;
     private LocalDate createDate;
     private LocalDate lastUpdateDate;
-    private List<Tag> tags;
+    private Set<Tag> tags;
 
     public static class Builder{
         //Necessary parameters
@@ -27,7 +25,7 @@ public class Certificate extends Entity{
         private String description;
         private Double price;
         private Integer duration;
-        private List<Tag> tags=new ArrayList<>();
+        private Set<Tag> tags = new HashSet<>();
 
         public Builder(String name, LocalDate createDate, LocalDate lastUpdateDate){
             this.name = name;
@@ -55,7 +53,7 @@ public class Certificate extends Entity{
             return this;
         }
 
-        public Builder tags(List<Tag> tags){
+        public Builder tags(Set<Tag> tags){
             this.tags=tags;
             return this;
         }
@@ -124,11 +122,11 @@ public class Certificate extends Entity{
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public List<Tag> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 

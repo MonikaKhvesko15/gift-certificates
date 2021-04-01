@@ -1,7 +1,5 @@
 package com.epam.esm.config;
 
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
@@ -23,8 +22,6 @@ import javax.sql.DataSource;
 @Configuration
 @PropertySource("classpath:db/jdbc.properties")
 public class DBConfig implements WebMvcConfigurer {
-
-    private static Logger logger = LoggerFactory.getLogger(DBConfig.class);
 
     @Value("${driverClassName}")
     private String driverClassName;
@@ -65,5 +62,10 @@ public class DBConfig implements WebMvcConfigurer {
     @Bean
     public JdbcTemplate getJdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("tags/list");
     }
 }

@@ -1,6 +1,7 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Tag;
+import com.epam.esm.mapper.TagMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -20,7 +21,7 @@ public class TagRepository extends AbstractRepository<Tag> {
 
     @Override
     protected RowMapper<Tag> getRowMapper() {
-        return null;
+        return new TagMapper();
     }
 
     @Override

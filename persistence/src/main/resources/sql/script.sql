@@ -24,7 +24,6 @@ DROP TABLE gift_certificates_tags;
 
 create table gift_certificates_tags
 (
-    id                   BIGSERIAL,
     gift_certificate_id BIGINT NOT NULL REFERENCES gift_certificates (id),
     tag_id              BIGINT NOT NULL REFERENCES tags (id),
     UNIQUE (gift_certificate_id, tag_id)

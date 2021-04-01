@@ -1,6 +1,7 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Certificate;
+import com.epam.esm.mapper.CertificateMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -24,7 +25,7 @@ public class CertificateRepository extends AbstractRepository<Certificate> {
 
     @Override
     protected RowMapper<Certificate> getRowMapper() {
-        return null;
+        return new CertificateMapper();
     }
 
     @Override
