@@ -2,32 +2,19 @@ package com.epam.esm.repository;
 
 import com.epam.esm.entity.Certificate;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class CertificateRepository extends AbstractRepository<Certificate> {
 
-
     private static final String GIFT_CERTIFICATES_TABLE_NAME = "gift_certificates";
+    private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date) VALUES\n" +
+            "(?, ?, ?, ?, ?, ?);";
 
     protected CertificateRepository(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
-    }
-
-    @Override
-    public Certificate add(Certificate certificate) {
-        return null;
-    }
-
-    @Override
-    public Certificate update(Certificate certificate) {
-        return null;
-    }
-
-    @Override
-    public boolean deleteById(Integer id) {
-
     }
 
     @Override
@@ -36,12 +23,26 @@ public class CertificateRepository extends AbstractRepository<Certificate> {
     }
 
     @Override
-    public List queryForListResult(Specification specification) {
+    protected RowMapper<Certificate> getRowMapper() {
         return null;
     }
 
     @Override
-    public Optional queryForSingleResult(Specification specification) {
-        return Optional.empty();
+    public Long save(Certificate certificate) {
+        return insertData(INSERT_GIFT_CERTIFICATE_QUERY, extractFields(certificate));
+    }
+
+    private List<Object> extractFields(Certificate certificate) {
+        return Arrays.asList(
+                certificate.getName(),
+                certificate.getDescription(),
+                certificate.getPrice(),
+                certificate.getDuration(),
+                certificate.getCreateDate(),
+                certificate.getLastUpdateDate());
+    }
+
+    public void update(Certificate t) {
+
     }
 }

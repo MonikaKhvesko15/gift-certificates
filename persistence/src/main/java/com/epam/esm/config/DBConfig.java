@@ -5,12 +5,17 @@ import com.sun.org.slf4j.internal.LoggerFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 import javax.sql.DataSource;
 
 @EnableWebMvc
@@ -33,21 +38,16 @@ public class DBConfig implements WebMvcConfigurer {
     @Value("${password}")
     private String password;
 
-    @Value("maxPoolSize")
+    @Value("${maxPoolSize}")
     private int maxPoolSize;
 
     @Bean
     @Profile("dev")
     public DataSource H2DataSource() {
-        try {
-            EmbeddedDatabaseBuilder databaseBuilder = new EmbeddedDatabaseBuilder();
-            return databaseBuilder.setType(EmbeddedDatabaseType.H2)
-                    .addScripts("classpath:sql/ddl.sql", "classpath:sql/script.sql", "classpath:sql/test-data.sql")
-                    .build();
-        } catch (Exception e) {
-            logger.error("Embedded DataSource bean cannot be created!", e);
-            return null;
-        }
+        EmbeddedDatabaseBuilder databaseBuilder = new EmbeddedDatabaseBuilder();
+        return databaseBuilder.setType(EmbeddedDatabaseType.H2)
+                .addScripts("classpath:sql/ddl.sql", "classpath:sql/script.sql", "classpath:sql/test-data.sql")
+                .build();
     }
 
     @Bean

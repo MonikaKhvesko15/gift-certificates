@@ -1,29 +1,33 @@
 package com.epam.esm.entity;
 
 import java.io.Serializable;
-import java.time.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 
-public class Certificate implements Serializable {
-    private Long id;
+public class Certificate extends Entity{
+
     private String name;
     private String description;
     private Double price;
     private Integer duration;
-    private LocalDateTime create_date;
-    private LocalDateTime last_update_date;
+    private LocalDateTime createDate;
+    private LocalDateTime lastUpdateDate;
     private List<Tag> tags;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    //todo: apply Builder template
+    public Certificate(Long id, String name, String description, Double price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, List<Tag> tags) {
+        super(id);
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createDate = createDate;
+        this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
     }
 
     public String getName() {
@@ -58,20 +62,20 @@ public class Certificate implements Serializable {
         this.duration = duration;
     }
 
-    public LocalDateTime getCreate_date() {
-        return create_date;
+    public LocalDateTime getCreateDate() {
+        return createDate;
     }
 
-    public void setCreate_date(LocalDateTime create_date) {
-        this.create_date = create_date;
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
     }
 
-    public LocalDateTime getLast_update_date() {
-        return last_update_date;
+    public LocalDateTime getLastUpdateDate() {
+        return lastUpdateDate;
     }
 
-    public void setLast_update_date(LocalDateTime last_update_date) {
-        this.last_update_date = last_update_date;
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public List<Tag> getTags() {
@@ -87,31 +91,29 @@ public class Certificate implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Certificate that = (Certificate) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
+        return Objects.equals(name, that.name) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(price, that.price) &&
                 Objects.equals(duration, that.duration) &&
-                Objects.equals(create_date, that.create_date) &&
-                Objects.equals(last_update_date, that.last_update_date) &&
+                Objects.equals(createDate, that.createDate) &&
+                Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
                 Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, create_date, last_update_date, tags);
+        return Objects.hash(name, description, price, duration, createDate, lastUpdateDate, tags);
     }
 
     @Override
     public String toString() {
         return "Certificate{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", duration=" + duration +
-                ", create_date=" + create_date +
-                ", last_update_date=" + last_update_date +
+                ", createDate=" + createDate +
+                ", lastUpdateDate=" + lastUpdateDate +
                 ", tags=" + tags +
                 '}';
     }
