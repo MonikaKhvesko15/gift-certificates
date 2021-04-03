@@ -18,6 +18,9 @@ public class Certificate extends Entity{
     private LocalDate lastUpdateDate;
     private Set<Tag> tags;
 
+    public Certificate() {
+    }
+
     public static class Builder{
         //Necessary parameters
         private String name;
@@ -30,6 +33,7 @@ public class Certificate extends Entity{
         private Double price;
         private Integer duration;
         private Set<Tag> tags = new HashSet<>();
+
 
         public Builder(String name, LocalDate createDate, LocalDate lastUpdateDate){
             this.name = name;

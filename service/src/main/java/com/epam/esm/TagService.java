@@ -12,8 +12,4 @@ public interface TagService {
     List<Tag> getAll();
 
     boolean remove(Long id);
-
-
-
-
 }

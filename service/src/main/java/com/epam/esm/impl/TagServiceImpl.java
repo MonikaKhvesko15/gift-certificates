@@ -6,12 +6,9 @@ import com.epam.esm.repository.Repository;
 import com.epam.esm.specification.TagAllSpecification;
 import com.epam.esm.specification.TagIdSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-@Component
 @Service
 public class TagServiceImpl implements TagService {
     private final Repository<Tag> tagRepository;

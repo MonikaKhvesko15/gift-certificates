@@ -2,6 +2,7 @@ package com.epam.esm.repository;
 
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.mapper.CertificateMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,7 @@ public class CertificateRepository extends AbstractRepository<Certificate> {
     private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date) VALUES\n" +
             "(?, ?, ?, ?, ?, ?);";
 
+    @Autowired
     protected CertificateRepository(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
     }
@@ -31,7 +33,7 @@ public class CertificateRepository extends AbstractRepository<Certificate> {
 
     @Override
     public Long save(Certificate certificate) {
-        return insertData(INSERT_GIFT_CERTIFICATE_QUERY, extractFields(certificate));
+        return insertData(INSERT_GIFT_CERTIFICATE_QUERY, extractFields(certificate).toArray());
     }
 
     private List<Object> extractFields(Certificate certificate) {

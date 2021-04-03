@@ -24,9 +24,9 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     protected abstract RowMapper<T> getRowMapper();
 
     @Override
-    public boolean deleteById(Long  id) {
+    public boolean deleteById(Long id) {
         String query = String.format(DELETE_BY_ID_QUERY, getTableName());
-        return jdbcTemplate.update(query,id)==1;
+        return jdbcTemplate.update(query, id) == 1;
     }
 
     protected Long insertData(String query, Object... params) {
