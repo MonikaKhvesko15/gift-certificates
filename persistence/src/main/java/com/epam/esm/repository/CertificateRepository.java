@@ -4,10 +4,12 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.mapper.CertificateMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Repository
 public class CertificateRepository extends AbstractRepository<Certificate> {
 
     private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date) VALUES\n" +

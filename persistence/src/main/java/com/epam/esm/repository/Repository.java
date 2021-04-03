@@ -10,7 +10,7 @@ public interface Repository<T extends Entity> {
     Long save(T t);
 
     //delete
-    boolean deleteById(Integer id);
+    boolean deleteById(Long id);
 
     //read for List result
     List<T> queryForListResult(SqlSpecification specification);

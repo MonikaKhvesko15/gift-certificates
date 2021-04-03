@@ -3,7 +3,6 @@ package com.epam.esm.repository;
 import com.epam.esm.entity.Entity;
 import com.epam.esm.specification.SqlSpecification;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -14,7 +13,7 @@ import java.util.Optional;
 
 public abstract class AbstractRepository<T extends Entity> implements Repository<T> {
     private final JdbcTemplate jdbcTemplate;
-    private static final String DELETE_BY_ID_QUERY = "DELETE FROM %s WHERE id = ?;";
+    private static final String DELETE_BY_ID_QUERY = "DELETE FROM %s WHERE id = ?";
 
     protected AbstractRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -25,9 +24,9 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     protected abstract RowMapper<T> getRowMapper();
 
     @Override
-    public boolean deleteById(Integer id) {
+    public boolean deleteById(Long  id) {
         String query = String.format(DELETE_BY_ID_QUERY, getTableName());
-        return jdbcTemplate.update(query, id) == 1;
+        return jdbcTemplate.update(query,id)==1;
     }
 
     protected Long insertData(String query, Object... params) {

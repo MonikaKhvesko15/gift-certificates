@@ -4,29 +4,41 @@ import com.epam.esm.TagService;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.Repository;
 import com.epam.esm.specification.TagAllSpecification;
-import com.epam.esm.specification.TagSpecification;
+import com.epam.esm.specification.TagIdSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Component
+@Service
 public class TagServiceImpl implements TagService {
-    private final Repository tagRepository;
+    private final Repository<Tag> tagRepository;
 
     @Autowired
-    public TagServiceImpl(Repository tagRepository) {
+    public TagServiceImpl(Repository<Tag> tagRepository) {
         this.tagRepository = tagRepository;
     }
 
     @Override
-    public List<Tag> getAll() {
+    public Long create(Tag tag) {
+        return tagRepository.save(tag);
+    }
+
+    @Override
+    public Tag getById(String id) {
+        return tagRepository.queryForSingleResult(new TagIdSpecification(id)).get();
+    }
+
+    @Override
+    public List getAll() {
         return tagRepository.queryForListResult(new TagAllSpecification());
     }
 
     @Override
-    public Tag getTag(){
-        return (Tag) tagRepository.queryForSingleResult(new TagSpecification()).get();
+    public boolean remove(Long id) {
+        return tagRepository.deleteById(id);
     }
 
 

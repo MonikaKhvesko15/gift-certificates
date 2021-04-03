@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
 public class Tag extends Entity{
     public static final transient String TAGS_TABLE_NAME = "tags";
 
     private String name;
+
+    public Tag() {
+    }
 
     public Tag(Long id, String name) {
         super(id);
