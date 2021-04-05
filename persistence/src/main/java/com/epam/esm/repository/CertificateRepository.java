@@ -1,14 +1,20 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Certificate;
+import com.epam.esm.entity.Certificate.Columns;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.mapper.CertificateMapper;
+import com.epam.esm.specification.CertificateIdSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CertificateRepository extends AbstractRepository<Certificate> {
@@ -32,19 +38,32 @@ public class CertificateRepository extends AbstractRepository<Certificate> {
     }
 
     @Override
-    public Long save(Certificate certificate) {
-        return insertData(INSERT_GIFT_CERTIFICATE_QUERY, extractFields(certificate).toArray());
+    public Certificate save(Certificate certificate) {
+        Long id = insertData(INSERT_GIFT_CERTIFICATE_QUERY, extractFields(certificate));
+        return queryForSingleResult(new CertificateIdSpecification(id.toString())).orElseThrow(EntityNotFoundException::new);
     }
 
-    private List<Object> extractFields(Certificate certificate) {
-        return Arrays.asList(
-                certificate.getName(),
-                certificate.getDescription(),
-                certificate.getPrice(),
-                certificate.getDuration(),
-                certificate.getCreateDate(),
-                certificate.getLastUpdateDate());
+//    private List<Object> extractFields(Certificate certificate) {
+//        return Arrays.asList(
+//                certificate.getName(),
+//                certificate.getDescription(),
+//                certificate.getPrice(),
+//                certificate.getDuration(),
+//                certificate.getCreateDate(),
+//                certificate.getLastUpdateDate());
+//    }
+
+    private Map<String, Object> extractFields(Certificate certificate) {
+        Map<String, Object> fields = new LinkedHashMap<>();
+        fields.put(Columns.NAME.getColumn(), certificate.getName());
+        fields.put(Columns.DESCRIPTION.getColumn(), certificate.getDescription());
+        fields.put(Columns.PRICE.getColumn(), certificate.getPrice());
+        fields.put(Columns.DURATION.getColumn(), certificate.getDuration());
+        fields.put(Columns.CREATE_DATE.getColumn(), certificate.getCreateDate());
+        fields.put(Columns.LAST_UPDATE_DATE.getColumn(), certificate.getLastUpdateDate());
+        return fields;
     }
+
 
     public void update(Certificate t) {
 

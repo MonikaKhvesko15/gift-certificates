@@ -1,16 +1,15 @@
 package com.epam.esm;
 
-import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.Tag;
+import com.epam.esm.dto.CertificateDto;
 
 import java.util.List;
 
 public interface CertificateService {
-    List<Certificate> getAll();
+    List<CertificateDto> getAll();
 
-    Certificate getById(String id);
+    CertificateDto getById(String id);
 
-    Long create(Certificate certificate);
+    CertificateDto create(CertificateDto certificate);
 
     boolean remove(Long id);
 }

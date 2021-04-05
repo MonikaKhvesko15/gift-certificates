@@ -11,6 +11,21 @@ public class Tag extends Entity{
 
     private String name;
 
+    public enum Columns {
+        ID("id"),
+        NAME("name");
+
+        private String column;
+
+        Columns(String columnName) {
+            this.column = columnName;
+        }
+
+        public String getColumn() {
+            return column;
+        }
+    }
+
     public Tag() {
     }
 

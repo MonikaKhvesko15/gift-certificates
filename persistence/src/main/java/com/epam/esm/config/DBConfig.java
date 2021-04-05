@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
@@ -65,4 +66,7 @@ public class DBConfig {
     public JdbcTemplate getJdbcTemplate() {
         return new JdbcTemplate(postgresDataSource());
     }
+
+    @Bean
+    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate(){return new NamedParameterJdbcTemplate(postgresDataSource());}
 }

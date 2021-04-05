@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface Repository<T extends Entity> {
     //create
-    Long save(T t);
+    T save(T t);
 
     //delete
     boolean deleteById(Long id);

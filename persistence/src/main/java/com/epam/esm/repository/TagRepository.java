@@ -1,7 +1,9 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.mapper.TagMapper;
+import com.epam.esm.specification.TagIdSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -27,8 +29,9 @@ public class TagRepository extends AbstractRepository<Tag> {
     }
 
     @Override
-    public Long save(Tag tag) {
+    public Tag save(Tag tag) {
         String name = tag.getName();
-        return insertData(INSERT_TAG_QUERY, name);
+        Long id = insertData(INSERT_TAG_QUERY, name);
+        return queryForSingleResult(new TagIdSpecification(id.toString())).orElseThrow(EntityNotFoundException::new);
     }
 }

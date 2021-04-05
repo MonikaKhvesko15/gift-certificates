@@ -1,13 +1,17 @@
 package com.epam.esm.impl;
 
 import com.epam.esm.TagService;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;
 import com.epam.esm.specification.TagAllSpecification;
 import com.epam.esm.specification.TagIdSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -19,13 +23,17 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Long create(Tag tag) {
-        return tagRepository.save(tag);
+    public TagDto create(TagDto tagDto) {
+        Tag tag = new Tag(tagDto.getId(), tagDto.getName());
+        tag = tagRepository.save(tag);
+        return new TagDto(tag);
     }
 
     @Override
-    public Tag getById(String id) {
-        return tagRepository.queryForSingleResult(new TagIdSpecification(id)).get();
+    public TagDto getById(String id) {
+        Optional<Tag> optionalTag = tagRepository.queryForSingleResult(new TagIdSpecification(id));
+        Tag tag = optionalTag.orElseThrow(EntityNotFoundException::new);
+        return new TagDto(tag);
     }
 
     @Override

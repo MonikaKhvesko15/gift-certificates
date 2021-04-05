@@ -1,15 +1,15 @@
 package com.epam.esm;
 
-import com.epam.esm.entity.Tag;
+import com.epam.esm.dto.TagDto;
 
 import java.util.List;
 
 public interface TagService {
-    Long create(Tag tag);
+    TagDto create(TagDto tag);
 
-    Tag getById(String id);
+    TagDto getById(String id);
 
-    List<Tag> getAll();
+    List<TagDto> getAll();
 
     boolean remove(Long id);
 }

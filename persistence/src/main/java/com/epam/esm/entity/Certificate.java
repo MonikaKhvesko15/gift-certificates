@@ -6,9 +6,9 @@ import java.util.Objects;
 import java.util.Set;
 
 
-public class Certificate extends Entity{
+public class Certificate extends Entity {
 
-    public static final String GIFT_CERTIFICATES_TABLE_NAME = "gift_certificates";
+    public static final transient String GIFT_CERTIFICATES_TABLE_NAME = "gift_certificates";
 
     private String name;
     private String description;
@@ -18,10 +18,30 @@ public class Certificate extends Entity{
     private LocalDate lastUpdateDate;
     private Set<Tag> tags;
 
+    public enum Columns {
+        ID("id"),
+        NAME("name"),
+        DESCRIPTION("description"),
+        PRICE("price"),
+        DURATION("duration"),
+        CREATE_DATE("create_date"),
+        LAST_UPDATE_DATE("last_update_date");
+
+        private String column;
+
+        Columns(String columnName) {
+            this.column = columnName;
+        }
+
+        public String getColumn() {
+            return column;
+        }
+        }
+
     public Certificate() {
     }
 
-    public static class Builder{
+    public static class Builder {
         //Necessary parameters
         private String name;
         private LocalDate createDate;
@@ -35,7 +55,7 @@ public class Certificate extends Entity{
         private Set<Tag> tags = new HashSet<>();
 
 
-        public Builder(String name, LocalDate createDate, LocalDate lastUpdateDate){
+        public Builder(String name, LocalDate createDate, LocalDate lastUpdateDate) {
             this.name = name;
             this.createDate = createDate;
             this.lastUpdateDate = lastUpdateDate;
@@ -46,32 +66,32 @@ public class Certificate extends Entity{
             return this;
         }
 
-        public Builder description(String description){
+        public Builder description(String description) {
             this.description = description;
             return this;
         }
 
-        public Builder price(Double price){
-            this.price=price;
+        public Builder price(Double price) {
+            this.price = price;
             return this;
         }
 
-        public Builder duration(Integer duration){
-            this.duration=duration;
+        public Builder duration(Integer duration) {
+            this.duration = duration;
             return this;
         }
 
-        public Builder tags(Set<Tag> tags){
-            this.tags=tags;
+        public Builder tags(Set<Tag> tags) {
+            this.tags = tags;
             return this;
         }
 
-        public Certificate build(){
+        public Certificate build() {
             return new Certificate(this);
         }
     }
 
-    private Certificate(Builder builder){
+    private Certificate(Builder builder) {
         super(builder.id);
         name = builder.name;
         description = builder.description;

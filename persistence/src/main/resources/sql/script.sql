@@ -22,10 +22,10 @@ CREATE TABLE tags
 
 DROP TABLE gift_certificates_tags;
 
-create table gift_certificates_tags
+CREATE TABLE gift_certificates_tags
 (
     gift_certificate_id BIGINT NOT NULL REFERENCES gift_certificates (id) ON DELETE CASCADE ,
     tag_id              BIGINT NOT NULL REFERENCES tags (id) ON DELETE CASCADE,
-    UNIQUE (gift_certificate_id, tag_id)
+    PRIMARY KEY (tag_id,gift_certificate_id, )
 );
 
