@@ -2,6 +2,7 @@ package com.epam.esm.repository;
 
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Certificate.Columns;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.mapper.CertificateMapper;
 import com.epam.esm.specification.CertificateIdSpecification;
@@ -10,17 +11,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Repository
 public class CertificateRepository extends AbstractRepository<Certificate> {
 
     private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date) VALUES\n" +
             "(?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_TAG_CERTIFICATE_QUERY = "INSERT INTO gift_certificates_tags (gift_certificate_id,tag_id) VALUES\n" +
+            "(?, ?);";
 
     @Autowired
     protected CertificateRepository(JdbcTemplate jdbcTemplate) {
@@ -40,8 +41,15 @@ public class CertificateRepository extends AbstractRepository<Certificate> {
     @Override
     public Certificate save(Certificate certificate) {
         Long id = insertData(INSERT_GIFT_CERTIFICATE_QUERY, extractFields(certificate));
+        Set<Tag> tags = certificate.getTags();
+        Long certificateId = certificate.getId();
+        tags.forEach(tag -> jdbcTemplate.update(INSERT_TAG_CERTIFICATE_QUERY, certificateId, tag.getId()));
         return queryForSingleResult(new CertificateIdSpecification(id.toString())).orElseThrow(EntityNotFoundException::new);
     }
+
+//    public Certificate update(){
+//
+//    }
 
 //    private List<Object> extractFields(Certificate certificate) {
 //        return Arrays.asList(
@@ -62,10 +70,5 @@ public class CertificateRepository extends AbstractRepository<Certificate> {
         fields.put(Columns.CREATE_DATE.getColumn(), certificate.getCreateDate());
         fields.put(Columns.LAST_UPDATE_DATE.getColumn(), certificate.getLastUpdateDate());
         return fields;
-    }
-
-
-    public void update(Certificate t) {
-
     }
 }

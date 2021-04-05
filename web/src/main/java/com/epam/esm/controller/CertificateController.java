@@ -28,12 +28,12 @@ public class CertificateController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Certificate>> findAll() {
+    public ResponseEntity<List<CertificateDto>> findAll() {
         return ResponseEntity.ok(certificateService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Certificate> findById(@PathVariable String id) {
+    public ResponseEntity<CertificateDto> findById(@PathVariable String id) {
         return ResponseEntity.ok(certificateService.getById(id));
     }
 

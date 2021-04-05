@@ -5,8 +5,6 @@ import com.epam.esm.dto.CertificateDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
-
-import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 

@@ -2,6 +2,7 @@ package com.epam.esm.impl;
 
 import com.epam.esm.TagService;
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.dto.converter.TagConverterDto;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -26,19 +28,20 @@ public class TagServiceImpl implements TagService {
     public TagDto create(TagDto tagDto) {
         Tag tag = new Tag(tagDto.getId(), tagDto.getName());
         tag = tagRepository.save(tag);
-        return new TagDto(tag);
+        return TagConverterDto.convertToDto(tag);
     }
 
     @Override
     public TagDto getById(String id) {
         Optional<Tag> optionalTag = tagRepository.queryForSingleResult(new TagIdSpecification(id));
         Tag tag = optionalTag.orElseThrow(EntityNotFoundException::new);
-        return new TagDto(tag);
+        return TagConverterDto.convertToDto(tag);
     }
 
     @Override
-    public List getAll() {
-        return tagRepository.queryForListResult(new TagAllSpecification());
+    public List<TagDto> getAll() {
+        List<Tag> tags = tagRepository.queryForListResult(new TagAllSpecification());
+        return tags.stream().map(TagConverterDto::convertToDto).collect(Collectors.toList());
     }
 
     @Override

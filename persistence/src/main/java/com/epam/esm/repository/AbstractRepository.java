@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractRepository<T extends Entity> implements Repository<T> {
-    private final JdbcTemplate jdbcTemplate;
+    protected final JdbcTemplate jdbcTemplate;
     private static final String DELETE_BY_ID_QUERY = "DELETE FROM %s WHERE id = ?";
 
     protected AbstractRepository(JdbcTemplate jdbcTemplate) {
@@ -54,5 +54,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
         List<T> items = queryForListResult(specification);
         return items.size() == 1 ? Optional.of(items.get(0)) : Optional.empty();
     }
+
+
 
 }

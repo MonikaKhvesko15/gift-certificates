@@ -29,12 +29,12 @@ public class TagController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Tag>> findAll() {
+    public ResponseEntity<List<TagDto>> findAll() {
         return ResponseEntity.ok(tagService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tag> findById(@PathVariable String id) {
+    public ResponseEntity<TagDto> findById(@PathVariable String id) {
         return ResponseEntity.ok(tagService.getById(id));
     }
 
@@ -48,4 +48,6 @@ public class TagController {
     public ResponseEntity<Boolean> delete(@PathVariable Long id) {
         return ResponseEntity.ok(tagService.remove(id));
     }
+
+
 }

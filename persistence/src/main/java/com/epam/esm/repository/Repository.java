@@ -17,5 +17,4 @@ public interface Repository<T extends Entity> {
 
     //read for single result
     Optional<T> queryForSingleResult(SqlSpecification specification);
-
 }

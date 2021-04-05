@@ -68,5 +68,7 @@ public class DBConfig {
     }
 
     @Bean
-    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate(){return new NamedParameterJdbcTemplate(postgresDataSource());}
+    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate(){
+        return new NamedParameterJdbcTemplate(postgresDataSource());
+    }
 }
