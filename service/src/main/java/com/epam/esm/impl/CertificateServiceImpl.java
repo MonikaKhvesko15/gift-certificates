@@ -1,5 +1,6 @@
 package com.epam.esm.impl;
 
+import com.epam.esm.CertificateQuery;
 import com.epam.esm.CertificateService;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.converter.CertificateConverterDTO;
@@ -8,10 +9,9 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.Repository;
 import com.epam.esm.specification.CertificateAllSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -82,6 +82,32 @@ public class CertificateServiceImpl implements CertificateService {
         certificate.setTags(tags);
         certificate = certificateRepository.update(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
+    }
+
+    @Override
+    public List<CertificateDTO> findByQuery(CertificateQuery certificateQuery) {
+        List<CertificateDTO> certificateDTOList = new ArrayList<>();
+        if (!certificateQuery.getTagName().isEmpty()) {
+
+        }
+
+        if (!certificateQuery.getName().isEmpty()) {
+
+        }
+
+        if (!certificateQuery.getDescription().isEmpty()) {
+
+        }
+
+        if (!certificateQuery.getSortDate().isEmpty()) {
+
+        }
+
+        if (certificateQuery.getSortName().isEmpty()) {
+
+        }
+
+        return certificateDTOList;
     }
 
 }

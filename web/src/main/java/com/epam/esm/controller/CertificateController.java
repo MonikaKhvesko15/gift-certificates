@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.CertificateQuery;
 import com.epam.esm.CertificateService;
 import com.epam.esm.dto.CertificateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,12 @@ public class CertificateController {
     @ResponseStatus(HttpStatus.OK)
     public CertificateDTO findById(@PathVariable Long id) {
         return certificateService.getById(id);
+    }
+
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public List<CertificateDTO> findByQuery(@RequestBody CertificateQuery query){
+        return certificateService.findByQuery(query);
     }
 
     @PostMapping()

@@ -15,4 +15,8 @@ public interface CertificateService {
 
     CertificateDTO update(CertificateDTO certificateDTO);
 
+    List<CertificateDTO> findByQuery(CertificateQuery certificateQuery);
+
+
+
 }
