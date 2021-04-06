@@ -13,6 +13,9 @@ public class TagDTO {
         this.name = name;
     }
 
+    public TagDTO() {
+    }
+
     public TagDTO(Tag tag) {
         this.id = tag.getId();
         this.name = tag.getName();

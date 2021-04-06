@@ -23,7 +23,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDTO create(TagDTO tagDto) {
-        Tag tag = new Tag(tagDto.getId(), tagDto.getName());
+        Tag tag = TagConverterDTO.convertToEntity(tagDto);
         tag = tagRepository.save(tag);
         return TagConverterDTO.convertToDto(tag);
     }

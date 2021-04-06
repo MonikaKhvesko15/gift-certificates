@@ -40,7 +40,7 @@ public class TagRepository extends AbstractRepository<Tag> {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(INSERT_TAG_QUERY);
-            ps.setString(1, name);
+            ps.setString(1,name);
             return ps;
         }, keyHolder);
 

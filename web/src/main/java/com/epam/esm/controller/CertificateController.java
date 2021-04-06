@@ -45,9 +45,9 @@ public class CertificateController {
     @ResponseStatus(HttpStatus.CREATED)
     public CertificateDTO create(@RequestBody CertificateDTO certificateDto, HttpServletRequest request, HttpServletResponse response) {
         CertificateDTO certificateDTO1 = certificateService.create(certificateDto);
-        Long id = certificateDTO1.getId();
-        String url = request.getRequestURL().toString();
-        response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
+//        Long id = certificateDTO1.getId();
+//        String url = request.getRequestURL().toString();
+//        response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
         return certificateDTO1;
     }
 

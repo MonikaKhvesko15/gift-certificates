@@ -22,7 +22,7 @@ public class CertificateRepository extends AbstractRepository<Certificate> {
             "(:name, :description, :price, :duration, now(),now());";
     private static final String ADD_TAGS_QUERY = "INSERT INTO gift_certificates_tags(gift_certificate_id, tag_id) VALUES (:gift_certificate_id, :tag_id);";
     private static final String UPDATE_GIFT_CERTIFICATE_QUERY = "UPDATE  gift_certificates SET (name, description, price, duration, last_update_date)= (:name, :description, :price, :duration ,now()) WHERE id=:id";
-    private static final String DELETE_QUERY = "UPDATE  gift_certificates SET (isDeleted) = 1 WHERE id=:id";
+    private static final String DELETE_QUERY = "UPDATE  gift_certificates SET isDeleted = 1 WHERE id=:id";
 
     @Autowired
     protected CertificateRepository(DataSource dataSource) {

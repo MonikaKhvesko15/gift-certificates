@@ -13,8 +13,8 @@ import java.util.List;
 public abstract class AbstractRepository<T extends Entity> implements Repository<T> {
     protected final DataSource dataSource;
     private final NamedParameterJdbcTemplate template;
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM %s WHERE :id";
-    private static final String DELETE_BY_ID_QUERY = "DELETE FROM %s WHERE :id";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM %s WHERE id = :id";
+    private static final String DELETE_BY_ID_QUERY = "DELETE FROM %s WHERE id = :id";
 
 
     protected AbstractRepository(DataSource dataSource) {
@@ -31,7 +31,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     public boolean deleteById(Long id) {
         String query = String.format(DELETE_BY_ID_QUERY, getTableName());
         SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-        return template.update(query, param) == 1;
+        return template.update(query, param)==1;
     }
 
     @Override
