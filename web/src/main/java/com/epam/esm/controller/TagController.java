@@ -43,12 +43,8 @@ public class TagController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public TagDTO create(@RequestBody TagDTO tagDto, HttpServletRequest request, HttpServletResponse response) {
-        TagDTO tagDTO1 = tagService.create(tagDto);
-//        Long id = tagDTO1.getId();
-//        String url = request.getRequestURL().toString();
-//        response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
-        return tagDTO1;
+    public TagDTO create(@RequestBody TagDTO tagDto) {
+        return tagService.create(tagDto);
     }
 
     @DeleteMapping("/{id}")

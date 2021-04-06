@@ -1,6 +1,8 @@
 package com.epam.esm.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
@@ -8,16 +10,16 @@ public class CertificateDTO {
     private Long id;
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price;
     private Integer duration;
-    private LocalDate createDate;
-    private LocalDate lastUpdateDate;
+    private LocalDateTime createDate;
+    private LocalDateTime lastUpdateDate;
     private Set<TagDTO> tags;
 
     public CertificateDTO() {
     }
 
-    public CertificateDTO(Long id, String name, String description, Double price, Integer duration, LocalDate createDate, LocalDate lastUpdateDate, Set<TagDTO> tags) {
+    public CertificateDTO(Long id, String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<TagDTO> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -52,11 +54,11 @@ public class CertificateDTO {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -68,19 +70,19 @@ public class CertificateDTO {
         this.duration = duration;
     }
 
-    public LocalDate getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(LocalDate createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public LocalDate getLastUpdateDate() {
+    public LocalDateTime getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(LocalDate lastUpdateDate) {
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 

@@ -1,6 +1,8 @@
 package com.epam.esm.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -12,10 +14,10 @@ public class Certificate extends Entity {
 
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price;
     private Integer duration;
-    private LocalDate createDate;
-    private LocalDate lastUpdateDate;
+    private LocalDateTime createDate;
+    private LocalDateTime lastUpdateDate;
     private Set<Tag> tags;
 
     public enum Columns {
@@ -44,21 +46,23 @@ public class Certificate extends Entity {
     public static class Builder {
         //Necessary parameters
         private String name;
-        private LocalDate createDate;
-        private LocalDate lastUpdateDate;
+        private String description;
+        private BigDecimal price;
+        private Integer duration;
+
 
         //optional parameters
         private Long id;
-        private String description;
-        private Double price;
-        private Integer duration;
+        private LocalDateTime createDate;
+        private LocalDateTime lastUpdateDate;
         private Set<Tag> tags = new HashSet<>();
 
 
-        public Builder(String name, LocalDate createDate, LocalDate lastUpdateDate) {
+        public Builder(String name,String description, BigDecimal price, Integer duration) {
             this.name = name;
-            this.createDate = createDate;
-            this.lastUpdateDate = lastUpdateDate;
+            this.description = description;
+            this.price = price;
+            this.duration = duration;
         }
 
         public Builder id(Long id) {
@@ -66,18 +70,13 @@ public class Certificate extends Entity {
             return this;
         }
 
-        public Builder description(String description) {
-            this.description = description;
+        public Builder createDate(LocalDateTime createDate) {
+            this.createDate = createDate;
             return this;
         }
 
-        public Builder price(Double price) {
-            this.price = price;
-            return this;
-        }
-
-        public Builder duration(Integer duration) {
-            this.duration = duration;
+        public Builder lastUpdateDate(LocalDateTime lastUpdateDate) {
+            this.lastUpdateDate = lastUpdateDate;
             return this;
         }
 
@@ -118,11 +117,11 @@ public class Certificate extends Entity {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -134,19 +133,19 @@ public class Certificate extends Entity {
         this.duration = duration;
     }
 
-    public LocalDate getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(LocalDate createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public LocalDate getLastUpdateDate() {
+    public LocalDateTime getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(LocalDate lastUpdateDate) {
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 

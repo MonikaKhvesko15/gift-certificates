@@ -12,6 +12,4 @@ public interface Repository<T extends Entity> {
     List<T> query(SqlSpecification specification);
 
     T getById(Long id);
-
-    T update(T t);
 }

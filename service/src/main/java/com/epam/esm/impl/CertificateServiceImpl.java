@@ -6,6 +6,7 @@ import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.converter.CertificateConverterDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.Repository;
 import com.epam.esm.specification.CertificateAllSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class CertificateServiceImpl implements CertificateService {
-    private final Repository<Certificate> certificateRepository;
+    private final CertificateRepository certificateRepository;
     private final Repository<Tag> tagRepository;
 
 
     @Autowired
-    public CertificateServiceImpl(Repository<Certificate> certificateRepository, Repository<Tag> tagRepository) {
+    public CertificateServiceImpl(CertificateRepository certificateRepository, Repository<Tag> tagRepository) {
         this.certificateRepository = certificateRepository;
         this.tagRepository = tagRepository;
     }
@@ -46,24 +47,8 @@ public class CertificateServiceImpl implements CertificateService {
     @Transactional
     public CertificateDTO create(CertificateDTO certificateDTO) {
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
-        Set<Tag> tags = certificate.getTags();
-        if (!tags.isEmpty()) {
-            saveNotExistTags(tags);
-        }
         certificate = certificateRepository.save(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
-    }
-
-    private Set<Tag> saveNotExistTags(Set<Tag> tagSet) {
-        Set<Tag> savedTags = new HashSet<>();
-        tagSet.forEach(tag -> {
-            if (tagRepository.getById(tag.getId()) == null) {
-                savedTags.add(tagRepository.save(tag));
-            } else {
-                savedTags.add(tag);
-            }
-        });
-        return savedTags;
     }
 
     @Override
@@ -75,11 +60,6 @@ public class CertificateServiceImpl implements CertificateService {
     @Transactional
     public CertificateDTO update(CertificateDTO certificateDTO) {
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
-        Set<Tag> tags = certificate.getTags();
-        if (!tags.isEmpty()) {
-            tags = saveNotExistTags(tags);
-        }
-        certificate.setTags(tags);
         certificate = certificateRepository.update(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
