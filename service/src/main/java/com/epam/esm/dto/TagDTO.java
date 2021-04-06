@@ -4,16 +4,16 @@ import com.epam.esm.entity.Tag;
 
 import java.util.Objects;
 
-public class TagDto {
+public class TagDTO {
     private Long id;
     private String name;
 
-    public TagDto(Long id, String name) {
+    public TagDTO(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public TagDto(Tag tag) {
+    public TagDTO(Tag tag) {
         this.id = tag.getId();
         this.name = tag.getName();
     }
@@ -38,7 +38,7 @@ public class TagDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TagDto tagDto = (TagDto) o;
+        TagDTO tagDto = (TagDTO) o;
         return Objects.equals(id, tagDto.id) &&
                 Objects.equals(name, tagDto.name);
     }

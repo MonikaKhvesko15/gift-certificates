@@ -8,7 +8,8 @@ CREATE TABLE gift_certificates
     price            double precision,
     duration         int,
     create_date      timestamptz           NOT NULL,
-    last_update_date timestamptz          NOT NULL
+    last_update_date timestamptz          NOT NULL,
+    isDeleted        int DEFAULT 0
 );
 
 DROP TABLE tags CASCADE;
@@ -26,6 +27,6 @@ CREATE TABLE gift_certificates_tags
 (
     gift_certificate_id BIGINT NOT NULL REFERENCES gift_certificates (id) ON DELETE CASCADE ,
     tag_id              BIGINT NOT NULL REFERENCES tags (id) ON DELETE CASCADE,
-    PRIMARY KEY (tag_id,gift_certificate_id, )
+    PRIMARY KEY (tag_id,gift_certificate_id )
 );
 

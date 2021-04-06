@@ -1,12 +1,10 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.entity.Tag;
-
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
 
-public class CertificateDto {
+public class CertificateDTO {
     private Long id;
     private String name;
     private String description;
@@ -14,12 +12,12 @@ public class CertificateDto {
     private Integer duration;
     private LocalDate createDate;
     private LocalDate lastUpdateDate;
-    private Set<TagDto> tags;
+    private Set<TagDTO> tags;
 
-    public CertificateDto() {
+    public CertificateDTO() {
     }
 
-    public CertificateDto(Long id, String name, String description, Double price, Integer duration, LocalDate createDate, LocalDate lastUpdateDate, Set<TagDto> tags) {
+    public CertificateDTO(Long id, String name, String description, Double price, Integer duration, LocalDate createDate, LocalDate lastUpdateDate, Set<TagDTO> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -86,11 +84,11 @@ public class CertificateDto {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Set<TagDto> getTags() {
+    public Set<TagDTO> getTags() {
         return tags;
     }
 
-    public void setTags(Set<TagDto> tags) {
+    public void setTags(Set<TagDTO> tags) {
         this.tags = tags;
     }
 
@@ -98,7 +96,7 @@ public class CertificateDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CertificateDto that = (CertificateDto) o;
+        CertificateDTO that = (CertificateDTO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(description, that.description) &&

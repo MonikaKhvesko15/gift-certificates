@@ -3,29 +3,31 @@ package com.epam.esm.repository;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Certificate.Columns;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.mapper.CertificateMapper;
-import com.epam.esm.specification.CertificateIdSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import javax.sql.DataSource;
 import java.util.Set;
 
 @Repository
 public class CertificateRepository extends AbstractRepository<Certificate> {
-
+    private final NamedParameterJdbcTemplate template;
     private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date) VALUES\n" +
-            "(?, ?, ?, ?, ?, ?);";
-    private static final String INSERT_TAG_CERTIFICATE_QUERY = "INSERT INTO gift_certificates_tags (gift_certificate_id,tag_id) VALUES\n" +
-            "(?, ?);";
+            "(:name, :description, :price, :duration, now(),now());";
+    private static final String ADD_TAGS_QUERY = "INSERT INTO gift_certificates_tags(gift_certificate_id, tag_id) VALUES (:gift_certificate_id, :tag_id);";
+    private static final String UPDATE_GIFT_CERTIFICATE_QUERY = "UPDATE  gift_certificates SET (name, description, price, duration, last_update_date)= (:name, :description, :price, :duration ,now()) WHERE id=:id";
+    private static final String DELETE_QUERY = "UPDATE  gift_certificates SET (isDeleted) = 1 WHERE id=:id";
 
     @Autowired
-    protected CertificateRepository(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
+    protected CertificateRepository(DataSource dataSource) {
+        super(dataSource);
+        template = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
@@ -40,35 +42,48 @@ public class CertificateRepository extends AbstractRepository<Certificate> {
 
     @Override
     public Certificate save(Certificate certificate) {
-        Long id = insertData(INSERT_GIFT_CERTIFICATE_QUERY, extractFields(certificate));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Columns.NAME.getColumn(), certificate.getName())
+                .addValue(Columns.DESCRIPTION.getColumn(), certificate.getDescription())
+                .addValue(Columns.PRICE.getColumn(), certificate.getPrice())
+                .addValue(Columns.DURATION.getColumn(), certificate.getDuration());
+        template.update(INSERT_GIFT_CERTIFICATE_QUERY, params, keyHolder);
+
         Set<Tag> tags = certificate.getTags();
         Long certificateId = certificate.getId();
-        tags.forEach(tag -> jdbcTemplate.update(INSERT_TAG_CERTIFICATE_QUERY, certificateId, tag.getId()));
-        return queryForSingleResult(new CertificateIdSpecification(id.toString())).orElseThrow(EntityNotFoundException::new);
+        MapSqlParameterSource tagParams = new MapSqlParameterSource();
+        tagParams.addValue("gift_certificate_id", certificateId);
+        tags.forEach(tag -> tagParams.addValue("tag_id", tag.getId()));
+        template.update(ADD_TAGS_QUERY, tagParams);
+
+        Long id = (Long) keyHolder.getKey();
+        return getById(id);
     }
 
-//    public Certificate update(){
-//
-//    }
+    public Certificate update(Certificate certificate) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Columns.ID.getColumn(), certificate.getId())
+                .addValue(Columns.NAME.getColumn(), certificate.getName())
+                .addValue(Columns.DESCRIPTION.getColumn(), certificate.getDescription())
+                .addValue(Columns.PRICE.getColumn(), certificate.getPrice())
+                .addValue(Columns.DURATION.getColumn(), certificate.getDuration());
+        template.update(UPDATE_GIFT_CERTIFICATE_QUERY, params);
 
-//    private List<Object> extractFields(Certificate certificate) {
-//        return Arrays.asList(
-//                certificate.getName(),
-//                certificate.getDescription(),
-//                certificate.getPrice(),
-//                certificate.getDuration(),
-//                certificate.getCreateDate(),
-//                certificate.getLastUpdateDate());
-//    }
+        Set<Tag> tags = certificate.getTags();
+        Long certificateId = certificate.getId();
+        MapSqlParameterSource tagParams = new MapSqlParameterSource();
+        tagParams.addValue("gift_certificate_id", certificateId);
+        tags.forEach(tag -> tagParams.addValue("tag_id", tag.getId()));
+        template.update(ADD_TAGS_QUERY, tagParams);
 
-    private Map<String, Object> extractFields(Certificate certificate) {
-        Map<String, Object> fields = new LinkedHashMap<>();
-        fields.put(Columns.NAME.getColumn(), certificate.getName());
-        fields.put(Columns.DESCRIPTION.getColumn(), certificate.getDescription());
-        fields.put(Columns.PRICE.getColumn(), certificate.getPrice());
-        fields.put(Columns.DURATION.getColumn(), certificate.getDuration());
-        fields.put(Columns.CREATE_DATE.getColumn(), certificate.getCreateDate());
-        fields.put(Columns.LAST_UPDATE_DATE.getColumn(), certificate.getLastUpdateDate());
-        return fields;
+        return getById(certificateId);
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Columns.ID.getColumn(), id);
+        return template.update(DELETE_QUERY, params) == 1;
     }
 }

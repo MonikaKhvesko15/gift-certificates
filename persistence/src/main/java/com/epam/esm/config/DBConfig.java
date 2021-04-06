@@ -18,7 +18,6 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource("classpath:db/jdbc.properties")
-@ComponentScan(basePackages = "com.epam.esm")
 public class DBConfig {
 
     @Value("${driverClassName}")
@@ -46,7 +45,8 @@ public class DBConfig {
     public DataSource h2DataSource() {
         EmbeddedDatabaseBuilder databaseBuilder = new EmbeddedDatabaseBuilder();
         return databaseBuilder.setType(EmbeddedDatabaseType.H2)
-                .addScripts("classpath:sql/ddl.sql", "classpath:sql/script.sql", "classpath:sql/test-data.sql")
+                .setName("test")
+                .addScripts("classpath:sql/script.sql", "classpath:sql/test-data.sql")
                 .build();
     }
 
@@ -60,15 +60,5 @@ public class DBConfig {
         dataSource.setPassword(password);
         dataSource.setMaximumPoolSize(maxPoolSize);
         return dataSource;
-    }
-
-    @Bean
-    public JdbcTemplate getJdbcTemplate() {
-        return new JdbcTemplate(postgresDataSource());
-    }
-
-    @Bean
-    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate(){
-        return new NamedParameterJdbcTemplate(postgresDataSource());
     }
 }

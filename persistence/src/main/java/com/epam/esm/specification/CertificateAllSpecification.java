@@ -4,6 +4,6 @@ public class CertificateAllSpecification implements SqlSpecification{
 
     @Override
     public String getSqlQuery() {
-        return "SELECT * FROM gift_certificates;";
+        return "SELECT * FROM gift_certificates WHERE isDeleted = 0;";
     }
 }

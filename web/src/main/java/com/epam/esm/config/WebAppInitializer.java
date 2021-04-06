@@ -14,7 +14,6 @@ public class WebAppInitializer implements WebApplicationInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         // Load Spring web application configuration
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(DBConfig.class);
         context.register(WebConfig.class);
 
         // Create and register DispatcherServlet
@@ -23,6 +22,8 @@ public class WebAppInitializer implements WebApplicationInitializer {
         registration.setLoadOnStartup(1);
         registration.addMapping("/");
     }
+
+
 }
 
 

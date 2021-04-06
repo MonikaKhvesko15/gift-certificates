@@ -1,21 +1,26 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.mapper.TagMapper;
-import com.epam.esm.specification.TagIdSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
+import java.sql.PreparedStatement;
 
 @Repository
 public class TagRepository extends AbstractRepository<Tag> {
-    private static final String INSERT_TAG_QUERY = "INSERT INTO tags(name) VALUES (?);";
+    private final JdbcTemplate jdbcTemplate;
+    private static final String INSERT_TAG_QUERY = "INSERT INTO tags (name) VALUES (?);";
 
     @Autowired
-    protected TagRepository(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
+    protected TagRepository(DataSource dataSource) {
+        super(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
@@ -30,8 +35,22 @@ public class TagRepository extends AbstractRepository<Tag> {
 
     @Override
     public Tag save(Tag tag) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         String name = tag.getName();
-        Long id = insertData(INSERT_TAG_QUERY, name);
-        return queryForSingleResult(new TagIdSpecification(id.toString())).orElseThrow(EntityNotFoundException::new);
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection
+                    .prepareStatement(INSERT_TAG_QUERY);
+            ps.setString(1, name);
+            return ps;
+        }, keyHolder);
+
+        Long id = (Long) keyHolder.getKey();
+        return getById(id);
+    }
+
+    @Override
+    public Tag update(Tag tag) {
+        return null;
     }
 }
+

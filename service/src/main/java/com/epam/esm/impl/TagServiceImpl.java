@@ -1,18 +1,15 @@
 package com.epam.esm.impl;
 
 import com.epam.esm.TagService;
-import com.epam.esm.dto.TagDto;
-import com.epam.esm.dto.converter.TagConverterDto;
+import com.epam.esm.dto.TagDTO;
+import com.epam.esm.dto.converter.TagConverterDTO;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;
 import com.epam.esm.specification.TagAllSpecification;
-import com.epam.esm.specification.TagIdSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,23 +22,22 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDto create(TagDto tagDto) {
+    public TagDTO create(TagDTO tagDto) {
         Tag tag = new Tag(tagDto.getId(), tagDto.getName());
         tag = tagRepository.save(tag);
-        return TagConverterDto.convertToDto(tag);
+        return TagConverterDTO.convertToDto(tag);
     }
 
     @Override
-    public TagDto getById(String id) {
-        Optional<Tag> optionalTag = tagRepository.queryForSingleResult(new TagIdSpecification(id));
-        Tag tag = optionalTag.orElseThrow(EntityNotFoundException::new);
-        return TagConverterDto.convertToDto(tag);
+    public TagDTO getById(Long id) {
+        Tag tag = tagRepository.getById(id);
+        return TagConverterDTO.convertToDto(tag);
     }
 
     @Override
-    public List<TagDto> getAll() {
-        List<Tag> tags = tagRepository.queryForListResult(new TagAllSpecification());
-        return tags.stream().map(TagConverterDto::convertToDto).collect(Collectors.toList());
+    public List<TagDTO> getAll() {
+        List<Tag> tags = tagRepository.query(new TagAllSpecification());
+        return tags.stream().map(TagConverterDTO::convertToDto).collect(Collectors.toList());
     }
 
     @Override
