@@ -1,8 +1,9 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.CertificateQuery;
+import com.epam.esm.dto.query.CertificateQuery;
 import com.epam.esm.CertificateService;
 import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.dto.query.PageQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,19 +47,25 @@ public class CertificateController {
     @GetMapping("/find")
     @ResponseStatus(HttpStatus.OK)
     public List<CertificateDTO> findByQuery(@RequestParam(defaultValue = "") String tagName, @RequestParam(defaultValue = "") String name,
-                                            @RequestParam(defaultValue = "") String description, @RequestParam(defaultValue = "") String sortDate,
-                                            @RequestParam(defaultValue = "") String sortName) {
-        CertificateQuery query = new CertificateQuery(tagName, name, description, sortDate, sortName);
+                                            @RequestParam(defaultValue = "") String description) {
+        CertificateQuery query = new CertificateQuery(tagName, name, description);
         return certificateService.findByQuery(query);
+    }
+
+    @GetMapping("/sort")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CertificateDTO> sortByQuery(@RequestParam(defaultValue = "") String sortBy, @RequestParam(defaultValue = "") String order) {
+        PageQueryDTO query = new PageQueryDTO(sortBy, order);
+        return certificateService.sortByQuery(query);
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED) //todo:RequestParam
-    public CertificateDTO create(@RequestBody CertificateDTO certificateDto/*, HttpServletRequest request, HttpServletResponse response*/) {
+    public CertificateDTO create(@RequestBody CertificateDTO certificateDto, HttpServletRequest request, HttpServletResponse response) {
         CertificateDTO certificateDTO1 = certificateService.create(certificateDto);
-//        Long id = certificateDTO1.getId();
-//        String url = request.getRequestURL().toString();
-//        response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
+        Long id = certificateDTO1.getId();
+        String url = request.getRequestURL().toString();
+        response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
         return certificateDTO1;
     }
 

@@ -1,4 +1,4 @@
-package com.epam.esm;
+package com.epam.esm.dto.query;
 
 import java.util.Objects;
 
@@ -6,18 +6,14 @@ public class CertificateQuery {
     private String tagName;
     private String name;
     private String description;
-    private String sortDate;
-    private String sortName;
 
     public CertificateQuery() {
     }
 
-    public CertificateQuery(String tagName, String name, String description, String sortDate, String sortName) {
+    public CertificateQuery(String tagName, String name, String description) {
         this.tagName = tagName;
         this.name = name;
         this.description = description;
-        this.sortDate = sortDate;
-        this.sortName = sortName;
     }
 
     public String getTagName() {
@@ -32,14 +28,6 @@ public class CertificateQuery {
         return description;
     }
 
-    public String getSortDate() {
-        return sortDate;
-    }
-
-    public String getSortName() {
-        return sortName;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,24 +35,20 @@ public class CertificateQuery {
         CertificateQuery that = (CertificateQuery) o;
         return Objects.equals(tagName, that.tagName) &&
                 Objects.equals(name, that.name) &&
-                Objects.equals(description, that.description) &&
-                Objects.equals(sortDate, that.sortDate) &&
-                Objects.equals(sortName, that.sortName);
+                Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tagName, name, description, sortDate, sortName);
+        return Objects.hash(tagName, name, description);
     }
 
     @Override
     public String toString() {
         return "CertificateQuery{" +
                 "tagName='" + tagName + '\'' +
-                ", partCertificateName='" + name + '\'' +
-                ", partCertificateDescription='" + description + '\'' +
-                ", sortDate='" + sortDate + '\'' +
-                ", sortCertificateName='" + sortName + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

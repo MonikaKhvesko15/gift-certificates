@@ -1,6 +1,8 @@
 package com.epam.esm;
 
 import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.dto.query.CertificateQuery;
+import com.epam.esm.dto.query.PageQueryDTO;
 
 import java.util.List;
 
@@ -17,6 +19,5 @@ public interface CertificateService {
 
     List<CertificateDTO> findByQuery(CertificateQuery certificateQuery);
 
-
-
+    List<CertificateDTO> sortByQuery(PageQueryDTO query);
 }
