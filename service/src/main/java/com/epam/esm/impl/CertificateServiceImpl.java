@@ -9,13 +9,17 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.Repository;
 import com.epam.esm.specification.CertificateAllSpecification;
+import com.epam.esm.specification.CertificateByPartOfDescriptionSpecification;
+import com.epam.esm.specification.CertificateSpecificationByPartOfName;
+import com.epam.esm.specification.CertificatesByTagNameSpecification;
+import com.epam.esm.specification.SqlSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,24 +71,46 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public List<CertificateDTO> findByQuery(CertificateQuery certificateQuery) {
         List<CertificateDTO> certificateDTOList = new ArrayList<>();
-        if (!certificateQuery.getTagName().isEmpty()) {
 
+        if (!certificateQuery.getTagName().isEmpty()) {
+            String tagName = certificateQuery.getTagName();
+            SqlSpecification specification = new CertificatesByTagNameSpecification(tagName);
+            List<Certificate> certificates = certificateRepository.query(specification);
+
+            certificates.forEach(certificate -> {
+                CertificateDTO certificateDTO = CertificateConverterDTO.convertToDto(certificate);
+                certificateDTOList.add(certificateDTO);
+            });
         }
 
         if (!certificateQuery.getName().isEmpty()) {
+            String name = certificateQuery.getName();
+            SqlSpecification specification = new CertificateSpecificationByPartOfName(name);
 
+            List<Certificate> certificates = certificateRepository.query(specification);
+            certificates.forEach(certificate -> {
+                CertificateDTO certificateDTO = CertificateConverterDTO.convertToDto(certificate);
+                certificateDTOList.add(certificateDTO);
+            });
         }
 
         if (!certificateQuery.getDescription().isEmpty()) {
+            String description = certificateQuery.getDescription();
+            SqlSpecification specification = new CertificateByPartOfDescriptionSpecification(description);
 
+            List<Certificate> certificates = certificateRepository.query(specification);
+            certificates.forEach(certificate -> {
+                CertificateDTO certificateDTO = CertificateConverterDTO.convertToDto(certificate);
+                certificateDTOList.add(certificateDTO);
+            });
         }
 
         if (!certificateQuery.getSortDate().isEmpty()) {
-
+            certificateDTOList.stream().sorted().collect(Collectors.toList());
         }
 
         if (certificateQuery.getSortName().isEmpty()) {
-
+            certificateDTOList.stream().sorted().collect(Collectors.toList());
         }
 
         return certificateDTOList;

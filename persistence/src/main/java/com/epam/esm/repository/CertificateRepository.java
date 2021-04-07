@@ -2,7 +2,9 @@ package com.epam.esm.repository;
 
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.specification.SqlSpecification;
 
+import java.util.List;
 import java.util.Set;
 
 public interface CertificateRepository extends Repository<Certificate> {
@@ -15,4 +17,6 @@ public interface CertificateRepository extends Repository<Certificate> {
     Set<Tag> createCertificateRefsToTags(Certificate certificate);
 
     void deleteOldCertificateRefsToTags(Long certificateId);
+
+    List<Certificate> query(SqlSpecification specification);
 }

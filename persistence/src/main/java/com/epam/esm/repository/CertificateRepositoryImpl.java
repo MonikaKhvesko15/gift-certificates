@@ -4,6 +4,7 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Certificate.Columns;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.mapper.CertificateMapper;
+import com.epam.esm.specification.SqlSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,7 +14,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -64,6 +67,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
             createNewTags(tags);
             createCertificateRefsToTags(certificate);
         }
+
         return getById(id);
     }
 
@@ -127,11 +131,25 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
         return getById(certificateId);
     }
 
-
     @Override
     public boolean deleteById(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Columns.ID.getColumn(), id);
         return template.update(DELETE_CERTIFICATE_QUERY, params) == 1;
     }
+
+    @Override
+    public List<Certificate> query(SqlSpecification specification) {
+        List<Certificate> certificates = super.query(specification);
+        List<Certificate> certificatesWithTags = new ArrayList<>();
+
+        certificates.forEach(certificate -> {
+            Set<Tag> tags = tagRepository.getTagsByCertificateId(certificate.getId());
+            certificate.setTags(tags);
+            certificatesWithTags.add(certificate);
+        });
+
+        return certificatesWithTags;
+    }
+
 }

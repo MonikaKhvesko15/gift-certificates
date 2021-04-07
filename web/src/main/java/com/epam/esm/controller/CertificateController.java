@@ -43,15 +43,18 @@ public class CertificateController {
         return certificateService.getById(id);
     }
 
-//    @GetMapping()
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<CertificateDTO> findByQuery(@RequestBody CertificateQuery query){
-//        return certificateService.findByQuery(query);
-//    }
+    @GetMapping("/find")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CertificateDTO> findByQuery(@RequestParam(defaultValue = "") String tagName, @RequestParam(defaultValue = "") String name,
+                                            @RequestParam(defaultValue = "") String description, @RequestParam(defaultValue = "") String sortDate,
+                                            @RequestParam(defaultValue = "") String sortName) {
+        CertificateQuery query = new CertificateQuery(tagName, name, description, sortDate, sortName);
+        return certificateService.findByQuery(query);
+    }
 
     @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public CertificateDTO create(@RequestBody CertificateDTO certificateDto, HttpServletRequest request, HttpServletResponse response) {
+    @ResponseStatus(HttpStatus.CREATED) //todo:RequestParam
+    public CertificateDTO create(@RequestBody CertificateDTO certificateDto/*, HttpServletRequest request, HttpServletResponse response*/) {
         CertificateDTO certificateDTO1 = certificateService.create(certificateDto);
 //        Long id = certificateDTO1.getId();
 //        String url = request.getRequestURL().toString();
@@ -67,9 +70,10 @@ public class CertificateController {
 
 
     @PutMapping()
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK) //todo:RequestParam
     public CertificateDTO update(@RequestBody CertificateDTO certificateDTO) {
         return certificateService.update(certificateDTO);
     }
+
 
 }

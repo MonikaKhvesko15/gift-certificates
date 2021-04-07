@@ -3,15 +3,18 @@ package com.epam.esm;
 import java.util.Objects;
 
 public class CertificateQuery {
-    private final String tagName;
-    private final String name;
-    private final String description;
-    private final String sortDate;
-    private final String sortName;
+    private String tagName;
+    private String name;
+    private String description;
+    private String sortDate;
+    private String sortName;
 
-    public CertificateQuery(String tagName, String Name, String description, String sortDate, String sortName) {
+    public CertificateQuery() {
+    }
+
+    public CertificateQuery(String tagName, String name, String description, String sortDate, String sortName) {
         this.tagName = tagName;
-        this.name = Name;
+        this.name = name;
         this.description = description;
         this.sortDate = sortDate;
         this.sortName = sortName;

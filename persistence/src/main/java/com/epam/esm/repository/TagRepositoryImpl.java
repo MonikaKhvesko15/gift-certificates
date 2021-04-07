@@ -2,6 +2,8 @@ package com.epam.esm.repository;
 
 import com.epam.esm.entity.Tag;
 import com.epam.esm.mapper.TagMapper;
+import com.epam.esm.specification.SqlSpecification;
+import com.epam.esm.specification.TagsByCertificateIdSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 @Repository
 public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRepository {
@@ -58,11 +62,19 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
 
     @Override
     public Tag getByName(String name) {
+        //todo: refactoring deprecated methods
         if (jdbcTemplate.query(GET_BY_NAME_QUERY, new Object[]{name}, getRowMapper()).isEmpty()) {
             return null;
         } else {
             return (Tag) jdbcTemplate.query(GET_BY_NAME_QUERY, new Object[]{name}, getRowMapper()).get(0);
         }
+    }
+
+    @Override
+    public Set<Tag> getTagsByCertificateId(Long certificateId) {
+        SqlSpecification specification = new TagsByCertificateIdSpecification(certificateId);
+        Set<Tag> tags = new HashSet<>(query(specification));
+        return tags;
     }
 }
 
