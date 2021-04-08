@@ -8,31 +8,25 @@ import com.epam.esm.specification.SqlSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Repository
 public class CertificateRepositoryImpl extends AbstractRepository<Certificate> implements CertificateRepository {
-    private final TagRepository tagRepository;
     private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date) VALUES\n" +
             "(:name, :description, :price, :duration, now(),now());";
-    private static final String ADD_TAGS_QUERY = "INSERT INTO gift_certificates_tags(gift_certificate_id, tag_id) VALUES (:gift_certificate_id, :tag_id)";
     private static final String DELETE_TAGS_QUERY = "DELETE FROM gift_certificates_tags WHERE gift_certificate_id= :gift_certificate_id";
     private static final String UPDATE_GIFT_CERTIFICATE_QUERY = "UPDATE  gift_certificates SET (name, description, price, duration, last_update_date)= (:name, :description, :price, :duration ,now()) WHERE id=:id";
     private static final String DELETE_CERTIFICATE_QUERY = "UPDATE  gift_certificates SET isDeleted = 1 WHERE id=:id";
 
     @Autowired
-    protected CertificateRepositoryImpl(DataSource dataSource, TagRepository tagRepository) {
+    protected CertificateRepositoryImpl(DataSource dataSource) {
         super(dataSource);
-        this.tagRepository = tagRepository;
     }
 
     @Override
@@ -53,59 +47,9 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
                 .addValue(Columns.DESCRIPTION.getColumn(), certificate.getDescription())
                 .addValue(Columns.PRICE.getColumn(), certificate.getPrice())
                 .addValue(Columns.DURATION.getColumn(), certificate.getDuration());
-
         template.update(INSERT_GIFT_CERTIFICATE_QUERY, params, keyHolder);
         Long id = (Long) keyHolder.getKeys().get("id");
-        certificate.setId(id);
-
-        Set<Tag> tags = certificate.getTags();
-
-        if (!tags.isEmpty()) {
-            createNewTags(tags);
-            createCertificateTags(certificate);
-        }
-
         return getById(id);
-    }
-
-    @Override
-    public Set<Tag> createNewTags(Set<Tag> tags) {
-        Set<Tag> newTags = findNewTags(tags);
-        newTags.forEach(tagRepository::save);
-        return newTags;
-    }
-
-    @Override
-    public Set<Tag> findNewTags(Set<Tag> tags) {
-        Set<Tag> newTags = new HashSet<>();
-        tags.forEach(tag -> {
-            if (tagRepository.getByName(tag.getName()) == null) {
-                newTags.add(tag);
-            }
-        });
-        return newTags;
-    }
-
-    @Override
-    public Set<Tag> createCertificateTags(Certificate certificate) {
-        Long certificateId = certificate.getId();
-        Set<Tag> tags = certificate.getTags();
-
-        tags.forEach(tag -> {
-                    MapSqlParameterSource tagParams = new MapSqlParameterSource();
-                    tagParams.addValue("gift_certificate_id", certificateId);
-                    tagParams.addValue("tag_id", tagRepository.getByName(tag.getName()).getId());
-                    template.update(ADD_TAGS_QUERY, tagParams);
-                }
-        );
-        return tags;
-    }
-
-    @Override
-    public void deleteCertificateTags(Long certificateId) {
-        MapSqlParameterSource tagParams = new MapSqlParameterSource();
-        tagParams.addValue("gift_certificate_id", certificateId);
-        template.update(DELETE_TAGS_QUERY, tagParams);
     }
 
     @Override
@@ -120,12 +64,14 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
 
         template.update(UPDATE_GIFT_CERTIFICATE_QUERY, params);
         Long certificateId = certificate.getId();
-
-        Set<Tag> tags = certificate.getTags();
-        createNewTags(tags);
-        deleteCertificateTags(certificateId);
-        createCertificateTags(certificate);
         return getById(certificateId);
+    }
+
+    @Override
+    public void deleteCertificateTags(Long certificateId) {
+        MapSqlParameterSource tagParams = new MapSqlParameterSource();
+        tagParams.addValue("gift_certificate_id", certificateId);
+        template.update(DELETE_TAGS_QUERY, tagParams);
     }
 
     @Override
@@ -138,15 +84,15 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     @Override
     public List<Certificate> query(SqlSpecification specification) {
         List<Certificate> certificates = super.query(specification);
-        List<Certificate> certificatesWithTags = new ArrayList<>();
+//        List<Certificate> certificatesWithTags = new ArrayList<>();
+//
+//        certificates.forEach(certificate -> {
+//            Set<Tag> tags = tagRepository.getTagsByCertificateId(certificate.getId());
+//            certificate.setTags(tags);
+//            certificatesWithTags.add(certificate);
+//        });
 
-        certificates.forEach(certificate -> {
-            Set<Tag> tags = tagRepository.getTagsByCertificateId(certificate.getId());
-            certificate.setTags(tags);
-            certificatesWithTags.add(certificate);
-        });
-
-        return certificatesWithTags;
+        return certificates;
     }
 
 }

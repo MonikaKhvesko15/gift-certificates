@@ -1,7 +1,6 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Entity;
-import com.epam.esm.entity.Tag;
 import com.epam.esm.specification.SqlSpecification;
 
 import java.util.List;
