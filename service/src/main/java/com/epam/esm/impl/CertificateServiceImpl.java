@@ -6,6 +6,7 @@ import com.epam.esm.dto.converter.CertificateConverterDTO;
 import com.epam.esm.dto.query.CertificatePageQueryDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.specification.CertificateAllSpecification;
@@ -36,7 +37,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public CertificateDTO getById(Long id) {
-        Certificate certificate = certificateRepository.getById(id);
+        Certificate certificate = certificateRepository.getById(id).orElseThrow(EntityNotFoundException::new);
         certificateWithTags(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
@@ -47,8 +48,8 @@ public class CertificateServiceImpl implements CertificateService {
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
         checkTags(certificate);
         certificate = certificateRepository.save(certificate);
+        tagRepository.createCertificateTags(certificate);
         certificateWithTags(certificate);
-        checkTags(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
 
@@ -56,9 +57,10 @@ public class CertificateServiceImpl implements CertificateService {
     @Transactional
     public CertificateDTO update(CertificateDTO certificateDTO) {
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
-        certificate = certificateRepository.update(certificate);
         certificateRepository.deleteCertificateTags(certificate.getId());
         checkTags(certificate);
+        certificate = certificateRepository.update(certificate);
+        tagRepository.createCertificateTags(certificate);
         certificateWithTags(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
@@ -68,7 +70,6 @@ public class CertificateServiceImpl implements CertificateService {
         Set<Tag> tags = certificate.getTags();
         if (!tags.isEmpty()) {
             tagRepository.createNewTags(tags);
-            tagRepository.createCertificateTags(certificate);
         }
     }
 

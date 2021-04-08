@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class AbstractRepository<T extends Entity> implements Repository<T> {
     protected final NamedParameterJdbcTemplate template;
@@ -36,16 +37,17 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     }
 
     @Override
-    public T getById(Long id) {
+    public Optional<T> getById(Long id) {
         String query = String.format(GET_BY_ID_QUERY, getTableName());
         SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-        return template.queryForObject(query, param, getRowMapper());
+        return template.query(query, param, getRowMapper()).stream().findAny();
     }
 
     @Override
-    public T getByName(String name) {
+    public Optional<T> getByName(String name) {
         String query = String.format(GET_BY_NAME_QUERY, getTableName());
         SqlParameterSource param = new MapSqlParameterSource().addValue("name", name);
-        return template.queryForObject(query, param, getRowMapper());
+
+        return template.query(query, param, getRowMapper()).stream().findAny();
     }
 }

@@ -4,11 +4,11 @@ import com.epam.esm.TagService;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.converter.TagConverterDTO;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;
 import com.epam.esm.specification.TagAllSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +30,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDTO getById(Long id) {
-        Tag tag = tagRepository.getById(id);
+        Tag tag = tagRepository.getById(id).orElseThrow(EntityNotFoundException::new);
         return TagConverterDTO.convertToDto(tag);
     }
 

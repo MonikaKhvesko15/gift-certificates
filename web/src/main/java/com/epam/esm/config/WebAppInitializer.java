@@ -15,15 +15,14 @@ public class WebAppInitializer implements WebApplicationInitializer {
         // Load Spring web application configuration
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(WebConfig.class);
-
+        servletContext.setInitParameter(
+                "spring.profiles.active", "prod");
         // Create and register DispatcherServlet
         DispatcherServlet servlet = new DispatcherServlet(context);
         ServletRegistration.Dynamic registration = servletContext.addServlet("app", servlet);
         registration.setLoadOnStartup(1);
         registration.addMapping("/");
     }
-
-
 }
 
 

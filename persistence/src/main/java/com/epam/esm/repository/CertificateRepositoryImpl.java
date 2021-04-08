@@ -3,6 +3,7 @@ package com.epam.esm.repository;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Certificate.Columns;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.mapper.CertificateMapper;
 import com.epam.esm.specification.SqlSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,8 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
                 .addValue(Columns.DURATION.getColumn(), certificate.getDuration());
         template.update(INSERT_GIFT_CERTIFICATE_QUERY, params, keyHolder);
         Long id = (Long) keyHolder.getKeys().get("id");
-        return getById(id);
+        certificate.setId(id);
+        return certificate;
     }
 
     @Override
@@ -64,7 +66,8 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
 
         template.update(UPDATE_GIFT_CERTIFICATE_QUERY, params);
         Long certificateId = certificate.getId();
-        return getById(certificateId);
+        certificate.setId(certificateId);
+        return certificate;
     }
 
     @Override
@@ -83,8 +86,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
 
     @Override
     public List<Certificate> query(SqlSpecification specification) {
-        List<Certificate> certificates = super.query(specification);
-        return certificates;
+        return super.query(specification);
     }
 
 }

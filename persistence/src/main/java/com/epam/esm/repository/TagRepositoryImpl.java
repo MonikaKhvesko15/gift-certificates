@@ -3,6 +3,7 @@ package com.epam.esm.repository;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.Tag.Columns;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.mapper.TagMapper;
 import com.epam.esm.specification.SqlSpecification;
 import com.epam.esm.specification.TagsByCertificateIdSpecification;
@@ -44,7 +45,7 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
         params.addValue(Columns.NAME.getColumn(), tag.getName());
         template.update(INSERT_TAG_QUERY, params, keyHolder);
         Long id = (Long) keyHolder.getKeys().get("id");
-        return getById(id);
+        return getById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -62,11 +63,11 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
 
     private Set<Tag> findNewTags(Set<Tag> tags) {
                 Set<Tag> newTags = new HashSet<>();
-        tags.forEach(tag -> {
-            if (getByName(tag.getName()) == null) {
+        for (Tag tag:tags) {
+            if (!getByName(tag.getName()).isPresent()) {
                 newTags.add(tag);
             }
-        });
+        }
         return newTags;
     }
 
@@ -74,13 +75,15 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
     public Set<Tag> createCertificateTags(Certificate certificate) {
         Long certificateId = certificate.getId();
         Set<Tag> tags = certificate.getTags();
-        tags.forEach(tag -> {
-                    MapSqlParameterSource tagParams = new MapSqlParameterSource();
-                    tagParams.addValue("gift_certificate_id", certificateId);
-                    tagParams.addValue("tag_id", getByName(tag.getName()).getId());
-                    template.update(ADD_TAGS_QUERY, tagParams);
-                }
-        );
+        if (!tags.isEmpty()) {
+            tags.forEach(tag -> {
+                        MapSqlParameterSource tagParams = new MapSqlParameterSource();
+                        tagParams.addValue("gift_certificate_id", certificateId);
+                        tagParams.addValue("tag_id", getByName(tag.getName()).orElseThrow(EntityNotFoundException::new).getId());
+                        template.update(ADD_TAGS_QUERY, tagParams);
+                    }
+            );
+        }
         return tags;
     }
 }
