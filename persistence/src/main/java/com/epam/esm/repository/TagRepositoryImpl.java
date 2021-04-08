@@ -74,6 +74,10 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
     public Set<Tag> createCertificateTags(Certificate certificate) {
         Long certificateId = certificate.getId();
         Set<Tag> tags = certificate.getTags();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14109588a72835d2e4eef70071d46783ca6e6c38
         tags.forEach(tag -> {
                     MapSqlParameterSource tagParams = new MapSqlParameterSource();
                     tagParams.addValue("gift_certificate_id", certificateId);

@@ -48,6 +48,7 @@ public class CertificateServiceImpl implements CertificateService {
         checkTags(certificate);
         certificate = certificateRepository.save(certificate);
         certificateWithTags(certificate);
+        checkTags(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
 
@@ -96,7 +97,11 @@ public class CertificateServiceImpl implements CertificateService {
         }
 
         certificates = certificateRepository.query(specification);
+<<<<<<< HEAD
         certificates = certificateListWithTags(certificates);
+=======
+        certificates = certificatesWithTags(certificates);
+>>>>>>> 14109588a72835d2e4eef70071d46783ca6e6c38
 
         List<CertificateDTO> certificateDTOList = new ArrayList<>();
         certificates.forEach(certificate -> {
@@ -107,11 +112,19 @@ public class CertificateServiceImpl implements CertificateService {
         return certificateDTOList;
     }
 
+<<<<<<< HEAD
     private List<Certificate> certificateListWithTags(List<Certificate> certificates) {
         List<Certificate> certificatesWithTags = new ArrayList<>();
 
         certificates.forEach(certificate -> {
             certificateWithTags(certificate);
+=======
+    private List<Certificate> certificatesWithTags(List<Certificate> certificates) {
+        List<Certificate> certificatesWithTags = new ArrayList<>();
+
+        certificates.forEach(certificate -> {
+            certificate = certificateWithTags(certificate);
+>>>>>>> 14109588a72835d2e4eef70071d46783ca6e6c38
             certificatesWithTags.add(certificate);
         });
         return certificatesWithTags;
