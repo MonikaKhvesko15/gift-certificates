@@ -21,8 +21,6 @@ import java.util.Set;
 
 @Repository
 public class CertificateRepositoryImpl extends AbstractRepository<Certificate> implements CertificateRepository {
-
-    private final NamedParameterJdbcTemplate template;
     private final TagRepository tagRepository;
     private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date) VALUES\n" +
             "(:name, :description, :price, :duration, now(),now());";
@@ -34,7 +32,6 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     @Autowired
     protected CertificateRepositoryImpl(DataSource dataSource, TagRepository tagRepository) {
         super(dataSource);
-        template = new NamedParameterJdbcTemplate(dataSource);
         this.tagRepository = tagRepository;
     }
 
@@ -65,7 +62,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
 
         if (!tags.isEmpty()) {
             createNewTags(tags);
-            createCertificateRefsToTags(certificate);
+            createCertificateTags(certificate);
         }
 
         return getById(id);
@@ -90,7 +87,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     }
 
     @Override
-    public Set<Tag> createCertificateRefsToTags(Certificate certificate) {
+    public Set<Tag> createCertificateTags(Certificate certificate) {
         Long certificateId = certificate.getId();
         Set<Tag> tags = certificate.getTags();
 
@@ -105,7 +102,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     }
 
     @Override
-    public void deleteOldCertificateRefsToTags(Long certificateId) {
+    public void deleteCertificateTags(Long certificateId) {
         MapSqlParameterSource tagParams = new MapSqlParameterSource();
         tagParams.addValue("gift_certificate_id", certificateId);
         template.update(DELETE_TAGS_QUERY, tagParams);
@@ -126,8 +123,8 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
 
         Set<Tag> tags = certificate.getTags();
         createNewTags(tags);
-        deleteOldCertificateRefsToTags(certificateId);
-        createCertificateRefsToTags(certificate);
+        deleteCertificateTags(certificateId);
+        createCertificateTags(certificate);
         return getById(certificateId);
     }
 

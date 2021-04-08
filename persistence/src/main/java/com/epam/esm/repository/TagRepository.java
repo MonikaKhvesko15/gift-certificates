@@ -4,8 +4,6 @@ import com.epam.esm.entity.Tag;
 
 import java.util.Set;
 
-public interface TagRepository extends Repository<Tag>{
-    Tag getByName(String name);
-
+public interface TagRepository extends Repository<Tag> {
     Set<Tag> getTagsByCertificateId(Long certificateId);
 }

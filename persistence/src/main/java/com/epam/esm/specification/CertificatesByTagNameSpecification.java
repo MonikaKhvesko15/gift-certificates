@@ -10,10 +10,6 @@ public class CertificatesByTagNameSpecification implements SqlSpecification {
 
     @Override
     public String getSqlQuery() {
-        return "SELECT * FROM gift_certificates JOIN gift_certificates_tags \n" +
-                "ON gift_certificates_tags.gift_certificate_id = gift_certificates.id \n" +
-                "JOIN tags\n" +
-                "ON gift_certificates_tags.tag_id = tags.id\n" +
-                "WHERE tags.name = '" + tagName + "'";
+        return "SELECT * FROM fn_getCertificateByTagName ('" + tagName + "')";
     }
 }

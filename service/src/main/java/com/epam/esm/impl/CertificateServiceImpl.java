@@ -1,26 +1,24 @@
 package com.epam.esm.impl;
 
-import com.epam.esm.dto.query.CertificateQuery;
 import com.epam.esm.CertificateService;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.converter.CertificateConverterDTO;
-import com.epam.esm.dto.query.PageQueryDTO;
+import com.epam.esm.dto.query.CertificatePageQueryDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.Repository;
 import com.epam.esm.specification.CertificateAllSpecification;
-import com.epam.esm.specification.CertificateByPartOfDescriptionSpecification;
-import com.epam.esm.specification.CertificateSpecificationByPartOfName;
+import com.epam.esm.specification.CertificateByPartOfContextSpecification;
 import com.epam.esm.specification.CertificatesByTagNameSpecification;
+import com.epam.esm.specification.SortCertificatesSpecification;
 import com.epam.esm.specification.SqlSpecification;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,73 +69,32 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public List<CertificateDTO> findByQuery(CertificateQuery certificateQuery) {
-        List<CertificateDTO> certificateDTOList = new ArrayList<>();
+    public List<CertificateDTO> executeQueryDTO(CertificatePageQueryDTO queryDTO) {
+        List<Certificate> certificates;
         SqlSpecification specification = new CertificateAllSpecification();
 
-        if (!certificateQuery.getTagName().isEmpty()) {
-            String tagName = certificateQuery.getTagName();
+        String tagName = queryDTO.getTagName();
+        if (StringUtils.isNoneEmpty(tagName)) {
             specification = new CertificatesByTagNameSpecification(tagName);
         }
-
-        if (!certificateQuery.getName().isEmpty()) {
-            String name = certificateQuery.getName();
-            specification = new CertificateSpecificationByPartOfName(name);
+        String context = queryDTO.getContext();
+        if (StringUtils.isNoneEmpty(context)) {
+            specification = new CertificateByPartOfContextSpecification(context);
+        }
+        String sortBy = queryDTO.getSortBy();
+        String order = queryDTO.getOrder();
+        if (StringUtils.isNoneEmpty(sortBy) && StringUtils.isNoneEmpty(order)) {
+            specification = new SortCertificatesSpecification(sortBy, order);
         }
 
-        if (!certificateQuery.getDescription().isEmpty()) {
-            String description = certificateQuery.getDescription();
-            specification = new CertificateByPartOfDescriptionSpecification(description);
-        }
+        certificates = certificateRepository.query(specification);
 
-        List<Certificate> certificates = certificateRepository.query(specification);
-
+        List<CertificateDTO> certificateDTOList = new ArrayList<>();
         certificates.forEach(certificate -> {
             CertificateDTO certificateDTO = CertificateConverterDTO.convertToDto(certificate);
             certificateDTOList.add(certificateDTO);
         });
 
-//        if (!certificateQuery.getSortDate().isEmpty()) {
-//            certificateDTOList.stream().sorted().collect(Collectors.toList());
-//        }
-//
-//        if (certificateQuery.getSortName().isEmpty()) {
-//            certificateDTOList.stream().sorted().collect(Collectors.toList());
-//        }
-
         return certificateDTOList;
     }
-
-    @Override
-    public List<CertificateDTO> sortByQuery(PageQueryDTO query) {
-        List<CertificateDTO> certificates = getAll();
-
-        String sortBy = query.getSortBy();
-        if (!sortBy.isEmpty()) {
-            switch (sortBy.toUpperCase()) {
-                case "NAME":
-                    certificates.stream().sorted(Comparator.comparing(CertificateDTO::getName)).collect(Collectors.toList());
-                    break;
-                case "DATE":
-                    certificates.stream().sorted(Comparator.comparing(CertificateDTO::getCreateDate)).collect(Collectors.toList());
-                    break;
-                default: //todo: throws exception
-            }
-        }
-
-        String order = query.getOrder();
-        if (!order.isEmpty()) {
-            switch (order.toUpperCase()) {
-                case "ASC":
-                    certificates.stream().sorted().collect(Collectors.toList());
-                    break;
-                case "DESC":
-                    certificates.stream().sorted(Collections.reverseOrder()).collect(Collectors.toList());
-                    break;
-                default: //todo: throws exception
-            }
-        }
-        return certificates;
-    }
-
 }

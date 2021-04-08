@@ -1,8 +1,8 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.query.CertificateQuery;
 import com.epam.esm.CertificateService;
 import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.dto.query.CertificatePageQueryDTO;
 import com.epam.esm.dto.query.PageQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -34,8 +34,10 @@ public class CertificateController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<CertificateDTO> findAll() {
-        return certificateService.getAll();
+    public List<CertificateDTO> find(@RequestParam(defaultValue = "") String tagName, @RequestParam(defaultValue = "") String sortBy,
+                                     @RequestParam(defaultValue = "") String order, @RequestParam(defaultValue = "") String context) {
+        CertificatePageQueryDTO queryDTO = new CertificatePageQueryDTO(tagName, sortBy, order, context);
+        return certificateService.executeQueryDTO(queryDTO);
     }
 
     @GetMapping("/{id}")
@@ -44,23 +46,9 @@ public class CertificateController {
         return certificateService.getById(id);
     }
 
-    @GetMapping("/find")
-    @ResponseStatus(HttpStatus.OK)
-    public List<CertificateDTO> findByQuery(@RequestParam(defaultValue = "") String tagName, @RequestParam(defaultValue = "") String name,
-                                            @RequestParam(defaultValue = "") String description) {
-        CertificateQuery query = new CertificateQuery(tagName, name, description);
-        return certificateService.findByQuery(query);
-    }
-
-    @GetMapping("/sort")
-    @ResponseStatus(HttpStatus.OK)
-    public List<CertificateDTO> sortByQuery(@RequestParam(defaultValue = "") String sortBy, @RequestParam(defaultValue = "") String order) {
-        PageQueryDTO query = new PageQueryDTO(sortBy, order);
-        return certificateService.sortByQuery(query);
-    }
 
     @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED) //todo:RequestParam
+    @ResponseStatus(HttpStatus.CREATED)
     public CertificateDTO create(@RequestBody CertificateDTO certificateDto, HttpServletRequest request, HttpServletResponse response) {
         CertificateDTO certificateDTO1 = certificateService.create(certificateDto);
         Long id = certificateDTO1.getId();
@@ -77,10 +65,8 @@ public class CertificateController {
 
 
     @PutMapping()
-    @ResponseStatus(HttpStatus.OK) //todo:RequestParam
+    @ResponseStatus(HttpStatus.OK)
     public CertificateDTO update(@RequestBody CertificateDTO certificateDTO) {
         return certificateService.update(certificateDTO);
     }
-
-
 }

@@ -14,9 +14,9 @@ public interface CertificateRepository extends Repository<Certificate> {
 
     Set<Tag> findNewTags(Set<Tag> tags);
 
-    Set<Tag> createCertificateRefsToTags(Certificate certificate);
+    Set<Tag> createCertificateTags(Certificate certificate);
 
-    void deleteOldCertificateRefsToTags(Long certificateId);
+    void deleteCertificateTags(Long certificateId);
 
     List<Certificate> query(SqlSpecification specification);
 }
