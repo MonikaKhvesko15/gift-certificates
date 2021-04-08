@@ -5,8 +5,6 @@ import com.epam.esm.dto.query.CertificatePageQueryDTO;
 import java.util.List;
 
 public interface CertificateService {
-    List<CertificateDTO> getAll();
-
     CertificateDTO getById(Long id);
 
     CertificateDTO create(CertificateDTO certificateDTO);

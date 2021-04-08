@@ -7,7 +7,7 @@ import com.epam.esm.dto.query.CertificatePageQueryDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CertificateRepository;
-import com.epam.esm.repository.Repository;
+import com.epam.esm.repository.TagRepository;
 import com.epam.esm.specification.CertificateAllSpecification;
 import com.epam.esm.specification.CertificateByPartOfContextSpecification;
 import com.epam.esm.specification.CertificatesByTagNameSpecification;
@@ -20,30 +20,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
 public class CertificateServiceImpl implements CertificateService {
     private final CertificateRepository certificateRepository;
-    private final Repository<Tag> tagRepository;
+    private final TagRepository tagRepository;
 
 
     @Autowired
-    public CertificateServiceImpl(CertificateRepository certificateRepository, Repository<Tag> tagRepository) {
+    public CertificateServiceImpl(CertificateRepository certificateRepository, TagRepository tagRepository) {
         this.certificateRepository = certificateRepository;
         this.tagRepository = tagRepository;
-    }
-
-
-    @Override
-    public List<CertificateDTO> getAll() {
-        List<Certificate> certificates = certificateRepository.query(new CertificateAllSpecification());
-        return certificates.stream().map(CertificateConverterDTO::convertToDto).collect(Collectors.toList());
     }
 
     @Override
     public CertificateDTO getById(Long id) {
         Certificate certificate = certificateRepository.getById(id);
+        certificateWithTags(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
 
@@ -51,13 +45,10 @@ public class CertificateServiceImpl implements CertificateService {
     @Transactional
     public CertificateDTO create(CertificateDTO certificateDTO) {
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
+        checkTags(certificate);
         certificate = certificateRepository.save(certificate);
+        certificateWithTags(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
-    }
-
-    @Override
-    public boolean remove(Long id) {
-        return certificateRepository.deleteById(id);
     }
 
     @Override
@@ -65,7 +56,24 @@ public class CertificateServiceImpl implements CertificateService {
     public CertificateDTO update(CertificateDTO certificateDTO) {
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
         certificate = certificateRepository.update(certificate);
+        certificateRepository.deleteCertificateTags(certificate.getId());
+        checkTags(certificate);
+        certificateWithTags(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
+    }
+
+
+    private void checkTags(Certificate certificate) {
+        Set<Tag> tags = certificate.getTags();
+        if (!tags.isEmpty()) {
+            tagRepository.createNewTags(tags);
+            tagRepository.createCertificateTags(certificate);
+        }
+    }
+
+    @Override
+    public boolean remove(Long id) {
+        return certificateRepository.deleteById(id);
     }
 
     @Override
@@ -88,6 +96,7 @@ public class CertificateServiceImpl implements CertificateService {
         }
 
         certificates = certificateRepository.query(specification);
+        certificates = certificateListWithTags(certificates);
 
         List<CertificateDTO> certificateDTOList = new ArrayList<>();
         certificates.forEach(certificate -> {
@@ -97,4 +106,23 @@ public class CertificateServiceImpl implements CertificateService {
 
         return certificateDTOList;
     }
+
+    private List<Certificate> certificateListWithTags(List<Certificate> certificates) {
+        List<Certificate> certificatesWithTags = new ArrayList<>();
+
+        certificates.forEach(certificate -> {
+            certificateWithTags(certificate);
+            certificatesWithTags.add(certificate);
+        });
+        return certificatesWithTags;
+    }
+
+    private Certificate certificateWithTags(Certificate certificate) {
+        Set<Tag> tags = tagRepository.getTagsByCertificateId(certificate.getId());
+        certificate.setTags(tags);
+        return certificate;
+    }
 }
+
+
+
