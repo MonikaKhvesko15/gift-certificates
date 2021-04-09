@@ -6,7 +6,9 @@ import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,7 +17,7 @@ public class CertificateConverterDTO {
 
     public static Certificate convertToEntity(CertificateDTO certificateDto) {
         Set<Tag> tags = new HashSet<>();
-        if(!certificateDto.getTags().isEmpty()){
+        if (!certificateDto.getTags().isEmpty()) {
             tags = certificateDto.getTags().stream().map(TagConverterDTO::convertToEntity).collect(Collectors.toSet());
         }
         return new Certificate.Builder(
@@ -41,5 +43,14 @@ public class CertificateConverterDTO {
                 certificate.getCreateDate(),
                 certificate.getLastUpdateDate(),
                 tags);
+    }
+
+    public static List<CertificateDTO> convertToListDTO(List<Certificate> certificates) {
+        List<CertificateDTO> certificateDTOList = new ArrayList<>();
+        certificates.forEach(certificate -> {
+            CertificateDTO certificateDTO = convertToDto(certificate);
+            certificateDTOList.add(certificateDTO);
+        });
+        return certificateDTOList;
     }
 }

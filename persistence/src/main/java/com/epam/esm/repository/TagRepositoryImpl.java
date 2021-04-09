@@ -45,7 +45,7 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
         params.addValue(Columns.NAME.getColumn(), tag.getName());
         template.update(INSERT_TAG_QUERY, params, keyHolder);
         Long id = (Long) keyHolder.getKeys().get("id");
-        return getById(id).orElseThrow(EntityNotFoundException::new);
+        return getById(id);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
     }
 
     private Set<Tag> findNewTags(Set<Tag> tags) {
-                Set<Tag> newTags = new HashSet<>();
+        Set<Tag> newTags = new HashSet<>();
         for (Tag tag:tags) {
             if (!getByName(tag.getName()).isPresent()) {
                 newTags.add(tag);

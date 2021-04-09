@@ -8,7 +8,7 @@ public class CertificatePageQueryDTO extends PageQueryDTO{
     public CertificatePageQueryDTO() {
     }
 
-    public CertificatePageQueryDTO(String tagName, String sortBy, String order,String context) {
+    public CertificatePageQueryDTO(String tagName,String context, String sortBy, String order) {
         super(sortBy,order,context);
         this.tagName = tagName;
     }

@@ -1,4 +1,4 @@
-package com.epam.esm;
+package com.epam.esm.service;
 
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.query.CertificatePageQueryDTO;

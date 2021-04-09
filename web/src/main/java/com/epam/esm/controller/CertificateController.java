@@ -1,9 +1,8 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.CertificateService;
+import com.epam.esm.service.CertificateService;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.query.CertificatePageQueryDTO;
-import com.epam.esm.dto.query.PageQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,9 +33,9 @@ public class CertificateController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<CertificateDTO> find(@RequestParam(defaultValue = "") String tagName, @RequestParam(defaultValue = "") String sortBy,
-                                     @RequestParam(defaultValue = "") String order, @RequestParam(defaultValue = "") String context) {
-        CertificatePageQueryDTO queryDTO = new CertificatePageQueryDTO(tagName, sortBy, order, context);
+    public List<CertificateDTO> find(@RequestParam(defaultValue = "") String tagName, @RequestParam(defaultValue = "") String context,
+                                     @RequestParam(defaultValue = "") String sortBy, @RequestParam(defaultValue = "") String order) {
+        CertificatePageQueryDTO queryDTO = new CertificatePageQueryDTO(tagName, context, sortBy, order);
         return certificateService.executeQueryDTO(queryDTO);
     }
 

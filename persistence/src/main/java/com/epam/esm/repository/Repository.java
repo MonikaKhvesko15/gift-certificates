@@ -13,7 +13,7 @@ public interface Repository<T extends Entity> {
 
     List<T> query(SqlSpecification specification);
 
-    Optional<T> getById(Long id);
+    T getById(Long id);
 
     Optional<T> getByName(String name);
 }

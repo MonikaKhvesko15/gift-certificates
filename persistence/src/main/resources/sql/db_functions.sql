@@ -1,40 +1,4 @@
--------------------------------------------------
-create function fn_getCertificateByPartOfContext(
- context varchar(255)
-)
-	returns table (
-		id               bigint,
-    name             varchar(255),
-    description      varchar(255),
-    price            double precision,
-    duration         int,
-    create_date      timestamptz      ,
-    last_update_date timestamptz      ,
-    isDeleted        int
-	)
-	language plpgsql
-as $$
-begin
-	return query
-		select
-			*
-		from
-			gift_certificates
-		where
-		gift_certificates.name ILIKE context OR gift_certificates.description ILIKE context;
-end;$$
----------------------------------------------------
-DROP FUNCTION fn_getCertificateByPartOfContext
- --------------------------------------------------
-SELECT * FROM fn_getCertificateByPartOfContext ('%test%');
----------------------------------------------------
-
-
-
----------------------------------------------------
-create function fn_getCertificateByTagName(
- tagName varchar(255)
-)
+create function fn_getCertificatesWithTags()
 	returns table (
 	id               bigint,
     name             varchar(255),
@@ -43,27 +7,43 @@ create function fn_getCertificateByTagName(
     duration         int,
     create_date      timestamptz      ,
     last_update_date timestamptz      ,
-    isDeleted        int
+    isDeleted        int,
+	tagName          varchar(255)
 	)
 	language plpgsql
 as $$
 begin
 	return query
-		select
+		select distinct
 			gift_certificates.id, gift_certificates.name, gift_certificates.description,
 			gift_certificates.price, gift_certificates.duration, gift_certificates.create_date,
-			gift_certificates.last_update_date, gift_certificates.isDeleted
+			gift_certificates.last_update_date, gift_certificates.isDeleted, tags.name
 		from
-			gift_certificates JOIN gift_certificates_tags ON gift_certificates_tags.gift_certificate_id = gift_certificates.id
-                JOIN tags ON gift_certificates_tags.tag_id = tags.id
-		where
-		tags.name =tagName;
+
+		gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id
+		LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id
+
+		WHERE gift_certificates.isDeleted = 0;
 end;$$
-----------------------------------------------------
- DROP FUNCTION  fn_getCertificateByTagName;
- ---------------------------------------------------
- SELECT * FROM fn_getCertificateByTagName ('test')
- ---------------------------------------------------
+---------------------------------------------------
+DROP FUNCTION fn_getCertificatesWithTags
+ --------------------------------------------------
+SELECT * FROM fn_getCertificatesWithTags();
+---------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

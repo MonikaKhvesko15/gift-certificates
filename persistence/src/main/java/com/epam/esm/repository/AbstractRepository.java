@@ -1,6 +1,7 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Entity;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.specification.SqlSpecification;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -37,10 +38,10 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     }
 
     @Override
-    public Optional<T> getById(Long id) {
+    public T getById(Long id) {
         String query = String.format(GET_BY_ID_QUERY, getTableName());
         SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-        return template.query(query, param, getRowMapper()).stream().findAny();
+        return template.query(query, param, getRowMapper()).stream().findAny().orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
