@@ -84,12 +84,12 @@ public class CertificateServiceImpl implements CertificateService {
         String whereSQL = " WHERE";
         String tagName = queryDTO.getTagName();
         if (StringUtils.isNoneEmpty(tagName)) {
-            whereSQL.concat(" tagName = " + tagName);
+            whereSQL = whereSQL + " tagName = '" + tagName + "'";
         }
 
         String context = queryDTO.getContext();
         if (StringUtils.isNoneEmpty(context)) {
-            whereSQL.concat(" name = " + context + " OR description = " + context);
+            whereSQL = whereSQL + " name LIKE '%" + context + "%' OR description LIKE '%" + context + "%'";
         }
         if (whereSQL.equals(" WHERE")) {
             whereSQL = "";
@@ -97,20 +97,23 @@ public class CertificateServiceImpl implements CertificateService {
 
         String orderBySQL = " ORDER BY ";
         String sortBy = queryDTO.getSortBy();
+        if (sortBy.equals("date")) {
+            sortBy = "create_date";
+        }
         String order = queryDTO.getOrder();
         if (StringUtils.isNoneEmpty(sortBy)) {
             if (StringUtils.isNoneEmpty(order)) {
-                orderBySQL.concat(sortBy + " " + order + "");
+                orderBySQL = orderBySQL + sortBy + " " + order.toUpperCase() + "";
             } else {
-                orderBySQL.concat(sortBy + " " + "ASC");
+                orderBySQL = orderBySQL + sortBy + " " + "ASC";
             }
         }
         if (orderBySQL.equals(" ORDER BY ")) {
-            whereSQL = "";
+            orderBySQL = "";
         }
 
 
-        SqlSpecification specification = new CertificateAllSpecification(whereSQL,orderBySQL);
+        SqlSpecification specification = new CertificateAllSpecification(whereSQL, orderBySQL);
         List<Certificate> certificates = certificateRepository.query(specification);
 
         addTagsToListCertificates(certificates);
