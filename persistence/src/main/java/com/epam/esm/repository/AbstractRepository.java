@@ -48,7 +48,6 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     public Optional<T> getByName(String name) {
         String query = String.format(GET_BY_NAME_QUERY, getTableName());
         SqlParameterSource param = new MapSqlParameterSource().addValue("name", name);
-
         return template.query(query, param, getRowMapper()).stream().findAny();
     }
 }

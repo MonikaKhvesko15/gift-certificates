@@ -28,6 +28,7 @@ public class CertificateConverterDTO {
                 .id(certificateDto.getId())
                 .createDate(certificateDto.getCreateDate())
                 .lastUpdateDate(certificateDto.getLastUpdateDate())
+                .isDeleted(certificateDto.getDeletedStatus())
                 .tags(tags)
                 .build();
     }
@@ -42,6 +43,7 @@ public class CertificateConverterDTO {
                 certificate.getDuration(),
                 certificate.getCreateDate(),
                 certificate.getLastUpdateDate(),
+                certificate.getDeletedStatus(),
                 tags);
     }
 

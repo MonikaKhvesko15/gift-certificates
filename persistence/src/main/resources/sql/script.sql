@@ -1,4 +1,4 @@
-DROP TABLE gift_certificates CASCADE;
+DROP TABLE IF EXISTS gift_certificates CASCADE;
 
 CREATE TABLE gift_certificates
 (
@@ -12,7 +12,7 @@ CREATE TABLE gift_certificates
     isDeleted        int DEFAULT 0
 );
 
-DROP TABLE tags CASCADE;
+DROP TABLE IF EXISTS tags CASCADE;
 
 CREATE TABLE tags
 (
@@ -21,7 +21,7 @@ CREATE TABLE tags
     UNIQUE (name)
 );
 
-DROP TABLE gift_certificates_tags;
+DROP TABLE IF EXISTS gift_certificates_tags;
 
 CREATE TABLE gift_certificates_tags
 (

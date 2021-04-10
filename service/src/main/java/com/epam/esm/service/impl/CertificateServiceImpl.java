@@ -1,6 +1,5 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.service.CertificateService;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.converter.CertificateConverterDTO;
 import com.epam.esm.dto.query.CertificatePageQueryDTO;
@@ -8,20 +7,15 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.TagRepository;
+import com.epam.esm.service.CertificateService;
+import com.epam.esm.service.util.CertificateParamsRequestUtil;
 import com.epam.esm.specification.CertificateAllSpecification;
-import com.epam.esm.specification.CertificateByPartOfContextSpecification;
-import com.epam.esm.specification.CertificatesByTagNameSpecification;
-import com.epam.esm.specification.SortCertificatesSpecification;
 import com.epam.esm.specification.SqlSpecification;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -65,6 +59,7 @@ public class CertificateServiceImpl implements CertificateService {
         addTagsToCertificate(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
+    //todo: find from db
 
     private void checkTags(Certificate certificate) {
         Set<Tag> tags = certificate.getTags();
@@ -81,59 +76,22 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public List<CertificateDTO> executeQueryDTO(CertificatePageQueryDTO queryDTO) {
 
-        String whereSQL = " WHERE";
-        String tagName = queryDTO.getTagName();
-        if (StringUtils.isNoneEmpty(tagName)) {
-            whereSQL = whereSQL + " tagName = '" + tagName + "'";
-        }
-
-        String context = queryDTO.getContext();
-        if (StringUtils.isNoneEmpty(context)) {
-            whereSQL = whereSQL + " name LIKE '%" + context + "%' OR description LIKE '%" + context + "%'";
-        }
-        if (whereSQL.equals(" WHERE")) {
-            whereSQL = "";
-        }
-
-        String orderBySQL = " ORDER BY ";
-        String sortBy = queryDTO.getSortBy();
-        if (sortBy.equals("date")) {
-            sortBy = "create_date";
-        }
-        String order = queryDTO.getOrder();
-        if (StringUtils.isNoneEmpty(sortBy)) {
-            if (StringUtils.isNoneEmpty(order)) {
-                orderBySQL = orderBySQL + sortBy + " " + order.toUpperCase() + "";
-            } else {
-                orderBySQL = orderBySQL + sortBy + " " + "ASC";
-            }
-        }
-        if (orderBySQL.equals(" ORDER BY ")) {
-            orderBySQL = "";
-        }
-
-
-        SqlSpecification specification = new CertificateAllSpecification(whereSQL, orderBySQL);
+        CertificateParamsRequestUtil paramsRequestUtil = new CertificateParamsRequestUtil(queryDTO);
+        String whereSQL = paramsRequestUtil.getWhereQueryWithParams();
+        String sortSQL = paramsRequestUtil.getSortQueryWithParams();
+        SqlSpecification specification = new CertificateAllSpecification(whereSQL, sortSQL);
         List<Certificate> certificates = certificateRepository.query(specification);
-
         addTagsToListCertificates(certificates);
         return CertificateConverterDTO.convertToListDTO(certificates);
     }
 
-    private List<Certificate> addTagsToListCertificates(List<Certificate> certificates) {
-        List<Certificate> certificatesWithTags = new ArrayList<>();
-
-        certificates.forEach(certificate -> {
-            addTagsToCertificate(certificate);
-            certificatesWithTags.add(certificate);
-        });
-        return certificatesWithTags;
+    private void addTagsToListCertificates(List<Certificate> certificates) {
+        certificates.forEach(this::addTagsToCertificate);
     }
 
-    private Certificate addTagsToCertificate(Certificate certificate) {
+    private void addTagsToCertificate(Certificate certificate) {
         Set<Tag> tags = tagRepository.getTagsByCertificateId(certificate.getId());
         certificate.setTags(tags);
-        return certificate;
     }
 }
 

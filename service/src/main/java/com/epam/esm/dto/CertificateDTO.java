@@ -14,12 +14,13 @@ public class CertificateDTO {
     private Integer duration;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
+    private Boolean isDeleted;
     private Set<TagDTO> tags;
 
     public CertificateDTO() {
     }
 
-    public CertificateDTO(Long id, String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<TagDTO> tags) {
+    public CertificateDTO(Long id, String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Boolean isDeleted, Set<TagDTO> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -27,6 +28,7 @@ public class CertificateDTO {
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
+        this.isDeleted = isDeleted;
         this.tags = tags;
     }
 
@@ -62,6 +64,14 @@ public class CertificateDTO {
         return tags;
     }
 
+    public Boolean getDeletedStatus() {
+        return isDeleted;
+    }
+
+    public void setDeletedStatus(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,17 +84,18 @@ public class CertificateDTO {
                 Objects.equals(duration, that.duration) &&
                 Objects.equals(createDate, that.createDate) &&
                 Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
+                Objects.equals(isDeleted, that.isDeleted) &&
                 Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, tags);
+        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, isDeleted, tags);
     }
 
     @Override
     public String toString() {
-        return "CertificateDto{" +
+        return "CertificateDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
@@ -92,6 +103,7 @@ public class CertificateDTO {
                 ", duration=" + duration +
                 ", createDate=" + createDate +
                 ", lastUpdateDate=" + lastUpdateDate +
+                ", isDeleted=" + isDeleted +
                 ", tags=" + tags +
                 '}';
     }

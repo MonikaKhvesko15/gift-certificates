@@ -18,6 +18,7 @@ public class Certificate extends Entity {
     private Integer duration;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
+    private Boolean isDeleted;
     private Set<Tag> tags;
 
     public enum Columns {
@@ -27,7 +28,8 @@ public class Certificate extends Entity {
         PRICE("price"),
         DURATION("duration"),
         CREATE_DATE("create_date"),
-        LAST_UPDATE_DATE("last_update_date");
+        LAST_UPDATE_DATE("last_update_date"),
+        IS_DELETED("isDeleted");
 
         private String column;
 
@@ -55,6 +57,7 @@ public class Certificate extends Entity {
         private Long id;
         private LocalDateTime createDate;
         private LocalDateTime lastUpdateDate;
+        private Boolean isDeleted;
         private Set<Tag> tags = new HashSet<>();
 
 
@@ -80,6 +83,11 @@ public class Certificate extends Entity {
             return this;
         }
 
+        public Builder isDeleted(Boolean isDeleted){
+            this.isDeleted = isDeleted;
+            return this;
+        }
+
         public Builder tags(Set<Tag> tags) {
             this.tags = tags;
             return this;
@@ -98,6 +106,7 @@ public class Certificate extends Entity {
         duration = builder.duration;
         createDate = builder.createDate;
         lastUpdateDate = builder.lastUpdateDate;
+        isDeleted = builder.isDeleted;
         tags = builder.tags;
     }
 
@@ -149,6 +158,14 @@ public class Certificate extends Entity {
         this.lastUpdateDate = lastUpdateDate;
     }
 
+    public Boolean getDeletedStatus() {
+        return isDeleted;
+    }
+
+    public void setDeletedStatus(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
     public Set<Tag> getTags() {
         return tags;
     }
@@ -168,12 +185,13 @@ public class Certificate extends Entity {
                 Objects.equals(duration, that.duration) &&
                 Objects.equals(createDate, that.createDate) &&
                 Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
+                Objects.equals(isDeleted, that.isDeleted) &&
                 Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, price, duration, createDate, lastUpdateDate, tags);
+        return Objects.hash(name, description, price, duration, createDate, lastUpdateDate, isDeleted, tags);
     }
 
     @Override
@@ -185,6 +203,7 @@ public class Certificate extends Entity {
                 ", duration=" + duration +
                 ", createDate=" + createDate +
                 ", lastUpdateDate=" + lastUpdateDate +
+                ", isDeleted=" + isDeleted +
                 ", tags=" + tags +
                 '}';
     }
