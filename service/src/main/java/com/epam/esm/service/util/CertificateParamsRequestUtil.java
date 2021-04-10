@@ -34,10 +34,12 @@ public class CertificateParamsRequestUtil {
     public String getSortQueryWithParams() {
         String orderBySQL = " ORDER BY ";
         String sortBy = queryDTO.getSortBy();
-        if (sortBy.equals("date")) {
+        if (sortBy.equalsIgnoreCase("DATE")) {
             sortBy = "create_date";
         }
-
+        if (sortBy.equalsIgnoreCase("NAME")) {
+            sortBy = "name";
+        }
         String order = queryDTO.getOrder();
         if (StringUtils.isNoneEmpty(sortBy)) {
             if (StringUtils.isNoneEmpty(order)) {

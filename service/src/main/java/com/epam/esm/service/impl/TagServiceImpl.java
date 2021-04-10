@@ -1,11 +1,12 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.exception.ServiceException;
-import com.epam.esm.service.TagService;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.converter.TagConverterDTO;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.EntityAlreadyExistsException;
+import com.epam.esm.exception.ValidatorException;
 import com.epam.esm.repository.TagRepository;
+import com.epam.esm.service.TagService;
 import com.epam.esm.specification.TagAllSpecification;
 import com.epam.esm.validator.TagDTOValidator;
 import com.epam.esm.validator.Validator;
@@ -30,11 +31,11 @@ public class TagServiceImpl implements TagService {
     public TagDTO create(TagDTO tagDto) {
         validator.cleanErrorMessages();
         if (!validator.isValid(tagDto)) {
-            throw new ServiceException(validator.getErrorMessage());
+            throw new ValidatorException(validator.getErrorMessage());
         }
         String tagName = tagDto.getName();
         if (tagRepository.getByName(tagName).isPresent()) {
-            throw new ServiceException("The tag with this name (" + tagName + ") is already exists.");
+            throw new EntityAlreadyExistsException("The tag with this name (" + tagName + ") is already exists.");
         }
         Tag tag = TagConverterDTO.convertToEntity(tagDto);
         tag = tagRepository.save(tag);

@@ -11,6 +11,7 @@ public interface CertificateService {
 
     boolean remove(Long id);
 
+    //create/update
     CertificateDTO update(CertificateDTO certificateDTO);
 
     List<CertificateDTO> executeQueryDTO(CertificatePageQueryDTO queryDTO);

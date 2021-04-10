@@ -1,10 +1,10 @@
 package com.epam.esm.validator;
 
 import com.epam.esm.dto.CertificateDTO;
-
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
+@Component
 public class CertificateDTOValidator extends Validator<CertificateDTO> {
 
     private static final int MAX_NAME_LENGTH = 100;
@@ -27,8 +27,7 @@ public class CertificateDTOValidator extends Validator<CertificateDTO> {
             result = checkName(certificateDTO.getName())
                     && checkDescription(certificateDTO.getDescription())
                     && checkPrice(certificateDTO.getPrice())
-                    && checkDuration(certificateDTO.getDuration())
-                    && checkCreateUpdateDate(certificateDTO.getCreateDate(), certificateDTO.getLastUpdateDate());
+                    && checkDuration(certificateDTO.getDuration());
         }
         return result;
     }
@@ -59,7 +58,7 @@ public class CertificateDTOValidator extends Validator<CertificateDTO> {
         if (price == null) {
             addErrorMessage("Cannot add certificate with empty price.");
             result = false;
-        } else if (price.longValueExact() < MIN_PRICE_VALUE || price.longValueExact() > MAX_PRICE_VALUE) {
+        } else if (price.compareTo(BigDecimal.valueOf(MIN_PRICE_VALUE)) < 1 || price.compareTo(BigDecimal.valueOf(MAX_PRICE_VALUE)) > -1) {
             addErrorMessage("Cannot add certificate with invalid size price.");
             result = false;
         }
@@ -76,9 +75,5 @@ public class CertificateDTOValidator extends Validator<CertificateDTO> {
             result = false;
         }
         return result;
-    }
-
-    private boolean checkCreateUpdateDate(LocalDateTime createdDate, LocalDateTime updateDate) {
-        return updateDate.isAfter(createdDate);
     }
 }

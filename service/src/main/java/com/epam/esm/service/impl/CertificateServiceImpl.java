@@ -5,7 +5,8 @@ import com.epam.esm.dto.converter.CertificateConverterDTO;
 import com.epam.esm.dto.query.CertificatePageQueryDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.ServiceException;
+import com.epam.esm.exception.EntityAlreadyExistsException;
+import com.epam.esm.exception.ValidatorException;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.CertificateService;
@@ -13,10 +14,12 @@ import com.epam.esm.service.util.CertificateParamsRequestUtil;
 import com.epam.esm.specification.CertificateAllSpecification;
 import com.epam.esm.specification.SqlSpecification;
 import com.epam.esm.validator.CertificateDTOValidator;
+import com.epam.esm.validator.CertificatePageQueryDTOValidator;
 import com.epam.esm.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Set;
 
@@ -24,14 +27,16 @@ import java.util.Set;
 public class CertificateServiceImpl implements CertificateService {
     private final CertificateRepository certificateRepository;
     private final TagRepository tagRepository;
-    private final Validator<CertificateDTO> validator;
+    private final Validator<CertificateDTO> certificateDTOValidator;
+    private final Validator<CertificatePageQueryDTO> pageQueryDTOValidator;
 
 
     @Autowired
-    public CertificateServiceImpl(CertificateRepository certificateRepository, TagRepository tagRepository, CertificateDTOValidator validator) {
+    public CertificateServiceImpl(CertificateRepository certificateRepository, TagRepository tagRepository, CertificateDTOValidator certificateDTOValidator, CertificatePageQueryDTOValidator pageQueryDTOValidator) {
         this.certificateRepository = certificateRepository;
         this.tagRepository = tagRepository;
-        this.validator = validator;
+        this.certificateDTOValidator = certificateDTOValidator;
+        this.pageQueryDTOValidator = pageQueryDTOValidator;
     }
 
     @Override
@@ -44,13 +49,9 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     @Transactional
     public CertificateDTO create(CertificateDTO certificateDTO) {
-        validator.cleanErrorMessages();
-        if (!validator.isValid(certificateDTO)) {
-            throw new ServiceException(validator.getErrorMessage());
-        }
-        String certificateName = certificateDTO.getName();
-        if (!certificateRepository.getByName(certificateName).isPresent()) {
-            throw new ServiceException("The certificate with this name (" + certificateName + ") is already exists.");
+        certificateDTOValidator.cleanErrorMessages();
+        if (!certificateDTOValidator.isValid(certificateDTO)) {
+            throw new ValidatorException(certificateDTOValidator.getErrorMessage());
         }
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
         checkTags(certificate);
@@ -61,16 +62,13 @@ public class CertificateServiceImpl implements CertificateService {
         return CertificateConverterDTO.convertToDto(certificate);
     }
 
+
     @Override
     @Transactional
     public CertificateDTO update(CertificateDTO certificateDTO) {
-        validator.cleanErrorMessages();
-        if (!validator.isValid(certificateDTO)){
-            throw new ServiceException(validator.getErrorMessage());
-        }
-        String certificateName = certificateDTO.getName();
-        if (!certificateRepository.getByName(certificateName).isPresent()) {
-            throw new ServiceException("The certificate with this name (" + certificateName + ") is already exists.");
+        certificateDTOValidator.cleanErrorMessages();
+        if (!certificateDTOValidator.isValid(certificateDTO)) {
+            throw new ValidatorException(certificateDTOValidator.getErrorMessage());
         }
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
         certificateRepository.deleteCertificateTags(certificate.getId());
@@ -96,6 +94,10 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<CertificateDTO> executeQueryDTO(CertificatePageQueryDTO queryDTO) {
+        pageQueryDTOValidator.cleanErrorMessages();
+        if (!pageQueryDTOValidator.isValid(queryDTO)) {
+            throw new ValidatorException(pageQueryDTOValidator.getErrorMessage());
+        }
         CertificateParamsRequestUtil paramsRequestUtil = new CertificateParamsRequestUtil(queryDTO);
         String whereSQL = paramsRequestUtil.getWhereQueryWithParams();
         String sortSQL = paramsRequestUtil.getSortQueryWithParams();

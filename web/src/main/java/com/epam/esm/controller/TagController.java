@@ -52,8 +52,9 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public Boolean delete(@PathVariable Long id) {
+        //tagService.remove(id);
+        // return new ResponseEntity(HttpStatus.NO_CONTENT);
         return tagService.remove(id);
     }
 }
