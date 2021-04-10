@@ -5,11 +5,12 @@ CREATE TABLE gift_certificates
     id               bigserial      NOT NULL PRIMARY KEY,
     name             varchar(255) NOT NULL,
     description      varchar(255),
-    price            double precision,
-    duration         int,
+    price            double precision NOT NULL,
+    duration         int NOT NULL,
     create_date      timestamptz           NOT NULL,
     last_update_date timestamptz          NOT NULL,
-    isDeleted        int DEFAULT 0
+    isDeleted        int DEFAULT 0,
+    UNIQUE (name)
 );
 
 DROP TABLE IF EXISTS tags CASCADE;
