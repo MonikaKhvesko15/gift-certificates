@@ -12,7 +12,7 @@ public class TagDTOValidator extends Validator<TagDTO> {
     public boolean isValid(TagDTO tagDTO) {
         boolean result = true;
         if (tagDTO == null) {
-            result=false;
+            result = false;
             addErrorMessage("Cannot create empty entity.");
         } else {
             String tagName = tagDTO.getName();

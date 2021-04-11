@@ -22,6 +22,7 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     }
 
     protected abstract String getTableName();
+
     protected abstract RowMapper<T> getRowMapper();
 
     @Override

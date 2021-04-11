@@ -1,6 +1,6 @@
 package com.epam.esm.exception;
 
-public class ValidatorException extends RuntimeException{
+public class ValidatorException extends RuntimeException {
 
     public ValidatorException() {
     }

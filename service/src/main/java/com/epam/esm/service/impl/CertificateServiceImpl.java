@@ -42,7 +42,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public CertificateDTO getById(Long id) {
-        Certificate certificate = certificateRepository.getById(id).orElseThrow(EntityNotFoundException::new);
+        Certificate certificate = certificateRepository.getById(id).orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
         addTagsToCertificate(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
@@ -56,7 +56,7 @@ public class CertificateServiceImpl implements CertificateService {
         }
         String name = certificateDTO.getName();
         if (certificateRepository.getByName(name).isPresent()) {
-            throw new EntityAlreadyExistsException("The certificate with this name (" + name + ") is already exists.");
+            throw new EntityAlreadyExistsException(" (name = " + name + ")");
         }
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
         checkTags(certificate);
@@ -78,7 +78,7 @@ public class CertificateServiceImpl implements CertificateService {
         String name = certificateDTO.getName();
         if (certificateRepository.getByName(name).isPresent()
                 && !name.equals(certificateRepository.getById(certificateDTO.getId()).get().getName())) {
-            throw new EntityAlreadyExistsException("The certificate with this name (" + name + ") is already exists.");
+            throw new EntityAlreadyExistsException(" (name = " + name + ")");
         }
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
         certificateRepository.deleteCertificateTags(certificate.getId());

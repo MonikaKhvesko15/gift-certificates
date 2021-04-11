@@ -1,7 +1,6 @@
 package com.epam.esm.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -40,7 +39,7 @@ public class Certificate extends Entity {
         public String getColumn() {
             return column;
         }
-        }
+    }
 
     public Certificate() {
     }
@@ -61,7 +60,7 @@ public class Certificate extends Entity {
         private Set<Tag> tags = new HashSet<>();
 
 
-        public Builder(String name,String description, BigDecimal price, Integer duration) {
+        public Builder(String name, String description, BigDecimal price, Integer duration) {
             this.name = name;
             this.description = description;
             this.price = price;
@@ -83,7 +82,7 @@ public class Certificate extends Entity {
             return this;
         }
 
-        public Builder isDeleted(Boolean isDeleted){
+        public Builder isDeleted(Boolean isDeleted) {
             this.isDeleted = isDeleted;
             return this;
         }

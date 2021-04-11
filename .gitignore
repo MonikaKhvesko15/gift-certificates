@@ -6,6 +6,7 @@ build
 *.jar
 
 
+.gitattributes
 #IDEA
 *.iml
 .idea
@@ -14,3 +15,8 @@ build
 log
 logs
 *.log
+#gradle
+gradle/wrapper
+gradlew
+gradlew.bat
+gradle/

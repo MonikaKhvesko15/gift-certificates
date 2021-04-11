@@ -29,6 +29,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public TagDTO getById(Long id) {
+        Tag tag = tagRepository.getById(id).orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
+        return TagConverterDTO.convertToDto(tag);
+    }
+
+    @Override
     public TagDTO create(TagDTO tagDto) {
         validator.cleanErrorMessages();
         if (!validator.isValid(tagDto)) {
@@ -36,18 +42,14 @@ public class TagServiceImpl implements TagService {
         }
         String tagName = tagDto.getName();
         if (tagRepository.getByName(tagName).isPresent()) {
-            throw new EntityAlreadyExistsException("The tag with this name (" + tagName + ") is already exists.");
+            throw new EntityAlreadyExistsException(" (name = " + tagName + ")");
         }
         Tag tag = TagConverterDTO.convertToEntity(tagDto);
         tag = tagRepository.save(tag);
         return TagConverterDTO.convertToDto(tag);
     }
 
-    @Override
-    public TagDTO getById(Long id) {
-        Tag tag = tagRepository.getById(id).orElseThrow(EntityNotFoundException::new);
-        return TagConverterDTO.convertToDto(tag);
-    }
+
 
     @Override
     public List<TagDTO> getAll() {

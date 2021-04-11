@@ -33,7 +33,7 @@ public class DBConfig {
     private int maxPoolSize;
 
     @Bean
-    public static PropertySourcesPlaceholderConfigurer configurer(){
+    public static PropertySourcesPlaceholderConfigurer configurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
 

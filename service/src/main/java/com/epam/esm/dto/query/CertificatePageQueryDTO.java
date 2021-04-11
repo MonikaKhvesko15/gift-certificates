@@ -2,14 +2,14 @@ package com.epam.esm.dto.query;
 
 import java.util.Objects;
 
-public class CertificatePageQueryDTO extends PageQueryDTO{
+public class CertificatePageQueryDTO extends PageQueryDTO {
     private String tagName;
 
     public CertificatePageQueryDTO() {
     }
 
-    public CertificatePageQueryDTO(String tagName,String context, String sortBy, String order) {
-        super(sortBy,order,context);
+    public CertificatePageQueryDTO(String tagName, String context, String sortBy, String order) {
+        super(sortBy, order, context);
         this.tagName = tagName;
     }
 

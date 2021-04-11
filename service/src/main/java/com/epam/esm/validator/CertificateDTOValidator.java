@@ -17,7 +17,6 @@ public class CertificateDTOValidator extends Validator<CertificateDTO> {
     private static final int MIN_DURATION_VALUE = 1;
     private static final int MAX_DURATION_VALUE = 150;
 
-
     @Override
     public boolean isValid(CertificateDTO certificateDTO) {
         boolean result;
