@@ -25,6 +25,10 @@ subprojects {
         //utils
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
 
+        //validator
+//        compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+//        compile group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.0.Final'
+
     }
 
     test {

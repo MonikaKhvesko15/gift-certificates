@@ -4,6 +4,7 @@ import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.converter.TagConverterDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityAlreadyExistsException;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.exception.ValidatorException;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
@@ -44,7 +45,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDTO getById(Long id) {
-        Tag tag = tagRepository.getById(id);
+        Tag tag = tagRepository.getById(id).orElseThrow(EntityNotFoundException::new);
         return TagConverterDTO.convertToDto(tag);
     }
 

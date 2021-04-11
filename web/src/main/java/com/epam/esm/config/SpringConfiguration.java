@@ -15,6 +15,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 import java.util.List;
 
 @Configuration
@@ -23,13 +24,14 @@ import java.util.List;
 public class SpringConfiguration implements WebMvcConfigurer {
     private static final String EXCEPTION_MESSAGE_BUNDLE = "exception.message";
     private static final String DEFAULT_ENCODING = "UTF-8";
+
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
 
     @Bean
-    public ObjectMapper objectMapper(){
+    public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         //Jackson to ignore null fields when serializing
@@ -37,14 +39,12 @@ public class SpringConfiguration implements WebMvcConfigurer {
 
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         objectMapper.registerModule(javaTimeModule);
-        //next line?
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.setDateFormat(new StdDateFormat());
         return objectMapper;
     }
 
     @Bean
-    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper());
         return mappingJackson2HttpMessageConverter;

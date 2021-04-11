@@ -6,6 +6,7 @@ import com.epam.esm.dto.query.CertificatePageQueryDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityAlreadyExistsException;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.exception.ValidatorException;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.TagRepository;
@@ -41,7 +42,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public CertificateDTO getById(Long id) {
-        Certificate certificate = certificateRepository.getById(id);
+        Certificate certificate = certificateRepository.getById(id).orElseThrow(EntityNotFoundException::new);
         addTagsToCertificate(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
@@ -53,11 +54,15 @@ public class CertificateServiceImpl implements CertificateService {
         if (!certificateDTOValidator.isValid(certificateDTO)) {
             throw new ValidatorException(certificateDTOValidator.getErrorMessage());
         }
+        String name = certificateDTO.getName();
+        if (certificateRepository.getByName(name).isPresent()) {
+            throw new EntityAlreadyExistsException("The certificate with this name (" + name + ") is already exists.");
+        }
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
         checkTags(certificate);
         certificate = certificateRepository.save(certificate);
         tagRepository.createCertificateTags(certificate);
-        certificate = certificateRepository.getById(certificate.getId());
+        certificate = certificateRepository.getById(certificate.getId()).orElseThrow(EntityNotFoundException::new);
         addTagsToCertificate(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
@@ -70,12 +75,17 @@ public class CertificateServiceImpl implements CertificateService {
         if (!certificateDTOValidator.isValid(certificateDTO)) {
             throw new ValidatorException(certificateDTOValidator.getErrorMessage());
         }
+        String name = certificateDTO.getName();
+        if (certificateRepository.getByName(name).isPresent()
+                && !name.equals(certificateRepository.getById(certificateDTO.getId()).get().getName())) {
+            throw new EntityAlreadyExistsException("The certificate with this name (" + name + ") is already exists.");
+        }
         Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
         certificateRepository.deleteCertificateTags(certificate.getId());
         checkTags(certificate);
         certificate = certificateRepository.update(certificate);
         tagRepository.createCertificateTags(certificate);
-        certificate = certificateRepository.getById(certificate.getId());
+        certificate = certificateRepository.getById(certificate.getId()).orElseThrow(EntityNotFoundException::new);
         addTagsToCertificate(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }

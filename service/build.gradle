@@ -9,5 +9,4 @@ dependencies {
     api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.1'
 
     //implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
-
 }

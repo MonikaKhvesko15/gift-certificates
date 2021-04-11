@@ -2,6 +2,7 @@ package com.epam.esm.validator;
 
 import com.epam.esm.dto.CertificateDTO;
 import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 
 @Component

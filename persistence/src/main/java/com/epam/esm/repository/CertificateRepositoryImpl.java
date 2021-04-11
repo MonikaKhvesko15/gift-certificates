@@ -2,7 +2,6 @@ package com.epam.esm.repository;
 
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Certificate.Columns;
-import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.mapper.CertificateMapper;
 import com.epam.esm.specification.SqlSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CertificateRepositoryImpl extends AbstractRepository<Certificate> implements CertificateRepository {
@@ -90,8 +90,8 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     }
 
     @Override
-    public Certificate getById(Long id) {
+    public Optional<Certificate> getById(Long id) {
         SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-        return template.query(GET_BY_ID_QUERY, param, getRowMapper()).stream().findAny().orElseThrow(EntityNotFoundException::new);
+        return template.query(GET_BY_ID_QUERY, param, getRowMapper()).stream().findAny();
     }
 }

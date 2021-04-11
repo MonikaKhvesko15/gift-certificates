@@ -39,9 +39,9 @@ public class ExceptionResponse {
     @Override
     public String
     toString() {
-        return new StringJoiner(", ", ExceptionResponse.class.getSimpleName() + "[", "]")
-                .add("code=" + code)
-                .add("messages=" + messages)
+        return new StringJoiner(". ", "[", "]")
+                .add("errorCode: " + code)
+                .add("error messages:" + messages)
                 .toString();
     }
 }

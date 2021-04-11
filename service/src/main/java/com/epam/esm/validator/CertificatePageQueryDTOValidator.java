@@ -36,7 +36,7 @@ public class CertificatePageQueryDTOValidator extends Validator<CertificatePageQ
 
     private boolean checkSort(String sort) {
         boolean result = true;
-        if (!sort.equalsIgnoreCase("NAME") && !sort.equalsIgnoreCase("DATE")) {
+        if (!sort.equalsIgnoreCase("NAME") && !sort.equalsIgnoreCase("DATE") && !sort.isEmpty()) {
             addErrorMessage("Invalid sort parameter.");
             result = false;
         }
@@ -45,7 +45,7 @@ public class CertificatePageQueryDTOValidator extends Validator<CertificatePageQ
 
     private boolean checkOrder(String order) {
         boolean result = true;
-        if (!order.equalsIgnoreCase("ASC") && !order.equalsIgnoreCase("DESC")) {
+        if (!order.equalsIgnoreCase("ASC") && !order.equalsIgnoreCase("DESC") && !order.isEmpty()) {
             addErrorMessage("Invalid order sort parameter.");
             result = false;
         }

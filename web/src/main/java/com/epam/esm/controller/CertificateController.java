@@ -58,10 +58,9 @@ public class CertificateController {
     }
 
     @DeleteMapping("/{id}")
-    public Boolean delete(@PathVariable Long id) {
-        return certificateService.remove(id);
-        //certificateService.remove(id);
-        // return new ResponseEntity(HttpStatus.NO_CONTENT);
+    public ResponseEntity delete(@PathVariable Long id) {
+        certificateService.remove(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 
