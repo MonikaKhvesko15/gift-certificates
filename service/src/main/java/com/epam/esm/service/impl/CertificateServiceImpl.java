@@ -31,7 +31,6 @@ public class CertificateServiceImpl implements CertificateService {
     private final Validator<CertificateDTO> certificateDTOValidator;
     private final Validator<CertificatePageQueryDTO> pageQueryDTOValidator;
 
-
     @Autowired
     public CertificateServiceImpl(CertificateRepository certificateRepository, TagRepository tagRepository, CertificateDTOValidator certificateDTOValidator, CertificatePageQueryDTOValidator pageQueryDTOValidator) {
         this.certificateRepository = certificateRepository;
@@ -46,6 +45,7 @@ public class CertificateServiceImpl implements CertificateService {
         addTagsToCertificate(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
+
 
     @Override
     @Transactional
@@ -66,7 +66,6 @@ public class CertificateServiceImpl implements CertificateService {
         addTagsToCertificate(certificate);
         return CertificateConverterDTO.convertToDto(certificate);
     }
-
 
     @Override
     @Transactional
