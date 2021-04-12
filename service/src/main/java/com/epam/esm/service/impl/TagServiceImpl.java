@@ -35,6 +35,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public List<TagDTO> getAll() {
+        List<Tag> tags = tagRepository.query(new TagAllSpecification());
+        return tags.stream().map(TagConverterDTO::convertToDto).collect(Collectors.toList());
+    }
+
+    @Override
     public TagDTO create(TagDTO tagDto) {
         validator.cleanErrorMessages();
         if (!validator.isValid(tagDto)) {
@@ -51,11 +57,6 @@ public class TagServiceImpl implements TagService {
 
 
 
-    @Override
-    public List<TagDTO> getAll() {
-        List<Tag> tags = tagRepository.query(new TagAllSpecification());
-        return tags.stream().map(TagConverterDTO::convertToDto).collect(Collectors.toList());
-    }
 
     @Override
     public boolean remove(Long id) {
