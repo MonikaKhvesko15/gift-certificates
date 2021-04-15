@@ -71,6 +71,10 @@ public class CertificateDTO {
         isDeleted = deleted;
     }
 
+    public void setTags(Set<TagDTO> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

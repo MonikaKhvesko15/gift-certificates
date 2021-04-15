@@ -5,6 +5,9 @@ import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,42 +15,35 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
+@Component
 public class CertificateConverterDTO {
+    private final ModelMapper modelMapper;
+    private final TagConverterDTO tagConverter;
 
-    public static Certificate convertToEntity(CertificateDTO certificateDto) {
+    @Autowired
+    public CertificateConverterDTO(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+        this.tagConverter = new TagConverterDTO(modelMapper);
+    }
+
+    public Certificate convertToEntity(CertificateDTO certificateDto) {
         Set<Tag> tags = new HashSet<>();
         if (!certificateDto.getTags().isEmpty()) {
-            tags = certificateDto.getTags().stream().map(TagConverterDTO::convertToEntity).collect(Collectors.toSet());
+            tags = certificateDto.getTags().stream().map(tagConverter::convertToEntity).collect(Collectors.toSet());
         }
-        return new Certificate.Builder(
-                certificateDto.getName(),
-                certificateDto.getDescription(),
-                certificateDto.getPrice(),
-                certificateDto.getDuration())
-                .id(certificateDto.getId())
-                .createDate(certificateDto.getCreateDate())
-                .lastUpdateDate(certificateDto.getLastUpdateDate())
-                .isDeleted(certificateDto.getDeletedStatus())
-                .tags(tags)
-                .build();
+        Certificate certificate = modelMapper.map(certificateDto, Certificate.class);
+        certificate.setTags(tags);
+        return certificate;
     }
 
-    public static CertificateDTO convertToDto(Certificate certificate) {
-        Set<TagDTO> tags = certificate.getTags().stream().map(TagConverterDTO::convertToDto).collect(Collectors.toSet());
-        return new CertificateDTO(
-                certificate.getId(),
-                certificate.getName(),
-                certificate.getDescription(),
-                certificate.getPrice(),
-                certificate.getDuration(),
-                certificate.getCreateDate(),
-                certificate.getLastUpdateDate(),
-                certificate.getDeletedStatus(),
-                tags);
+    public CertificateDTO convertToDto(Certificate certificate) {
+        Set<TagDTO> tags = certificate.getTags().stream().map(tagConverter::convertToDto).collect(Collectors.toSet());
+        CertificateDTO certificateDTO = modelMapper.map(certificate, CertificateDTO.class);
+        certificateDTO.setTags(tags);
+        return certificateDTO;
     }
 
-    public static List<CertificateDTO> convertToListDTO(List<Certificate> certificates) {
+    public List<CertificateDTO> convertToListDTO(List<Certificate> certificates) {
         List<CertificateDTO> certificateDTOList = new ArrayList<>();
         certificates.forEach(certificate -> {
             CertificateDTO certificateDTO = convertToDto(certificate);

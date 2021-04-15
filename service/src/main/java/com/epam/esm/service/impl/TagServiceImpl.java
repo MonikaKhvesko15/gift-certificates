@@ -21,23 +21,25 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final Validator<TagDTO> validator;
+    private final TagConverterDTO converter;
 
     @Autowired
-    public TagServiceImpl(TagRepository tagRepository, TagDTOValidator validator) {
+    public TagServiceImpl(TagRepository tagRepository, TagDTOValidator validator, TagConverterDTO converter) {
         this.tagRepository = tagRepository;
         this.validator = validator;
+        this.converter = converter;
     }
 
     @Override
     public TagDTO getById(Long id) {
         Tag tag = tagRepository.getById(id).orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
-        return TagConverterDTO.convertToDto(tag);
+        return converter.convertToDto(tag);
     }
 
     @Override
     public List<TagDTO> getAll() {
         List<Tag> tags = tagRepository.query(new TagAllSpecification());
-        return tags.stream().map(TagConverterDTO::convertToDto).collect(Collectors.toList());
+        return tags.stream().map(converter::convertToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -50,12 +52,10 @@ public class TagServiceImpl implements TagService {
         if (tagRepository.getByName(tagName).isPresent()) {
             throw new EntityAlreadyExistsException(" (name = " + tagName + ")");
         }
-        Tag tag = TagConverterDTO.convertToEntity(tagDto);
+        Tag tag = converter.convertToEntity(tagDto);
         tag = tagRepository.save(tag);
-        return TagConverterDTO.convertToDto(tag);
+        return converter.convertToDto(tag);
     }
-
-
 
 
     @Override

@@ -63,4 +63,5 @@ public class SpringConfiguration implements WebMvcConfigurer {
         messageSource.setDefaultEncoding(DEFAULT_ENCODING);
         return messageSource;
     }
+
 }

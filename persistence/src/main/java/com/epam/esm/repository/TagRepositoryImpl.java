@@ -23,7 +23,7 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
     private static final String ADD_TAGS_QUERY = "INSERT INTO gift_certificates_tags(gift_certificate_id, tag_id) VALUES (:gift_certificate_id, :tag_id)";
 
     @Autowired
-    protected TagRepositoryImpl(DataSource dataSource) {
+    public TagRepositoryImpl(DataSource dataSource) {
         super(dataSource);
     }
 

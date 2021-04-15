@@ -26,7 +26,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     private static final String GET_BY_ID_QUERY = "SELECT * FROM gift_certificates WHERE isDeleted = 0 AND id = :id";
 
     @Autowired
-    protected CertificateRepositoryImpl(DataSource dataSource) {
+    public CertificateRepositoryImpl(DataSource dataSource) {
         super(dataSource);
     }
 

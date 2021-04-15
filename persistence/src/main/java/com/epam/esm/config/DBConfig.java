@@ -43,7 +43,9 @@ public class DBConfig {
         EmbeddedDatabaseBuilder databaseBuilder = new EmbeddedDatabaseBuilder();
         return databaseBuilder.setType(EmbeddedDatabaseType.H2)
                 .setName("test")
-                .addScripts("classpath:sql/script.sql", "classpath:sql/test-data.sql")
+                .addScripts("classpath:sql/script.sql")
+                .addScript("classpath:sql/db_functions.sql")
+                .addScript("classpath:sql/test-data.sql")
                 .build();
     }
 

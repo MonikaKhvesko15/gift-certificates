@@ -30,20 +30,24 @@ public class CertificateServiceImpl implements CertificateService {
     private final TagRepository tagRepository;
     private final Validator<CertificateDTO> certificateDTOValidator;
     private final Validator<CertificatePageQueryDTO> pageQueryDTOValidator;
+    private final CertificateConverterDTO converter;
 
     @Autowired
-    public CertificateServiceImpl(CertificateRepository certificateRepository, TagRepository tagRepository, CertificateDTOValidator certificateDTOValidator, CertificatePageQueryDTOValidator pageQueryDTOValidator) {
+    public CertificateServiceImpl(CertificateRepository certificateRepository, TagRepository tagRepository,
+                                  CertificateDTOValidator certificateDTOValidator, CertificatePageQueryDTOValidator pageQueryDTOValidator,
+                                  CertificateConverterDTO converter) {
         this.certificateRepository = certificateRepository;
         this.tagRepository = tagRepository;
         this.certificateDTOValidator = certificateDTOValidator;
         this.pageQueryDTOValidator = pageQueryDTOValidator;
+        this.converter = converter;
     }
 
     @Override
     public CertificateDTO getById(Long id) {
         Certificate certificate = certificateRepository.getById(id).orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
         addTagsToCertificate(certificate);
-        return CertificateConverterDTO.convertToDto(certificate);
+        return converter.convertToDto(certificate);
     }
 
 
@@ -58,13 +62,13 @@ public class CertificateServiceImpl implements CertificateService {
         if (certificateRepository.getByName(name).isPresent()) {
             throw new EntityAlreadyExistsException(" (name = " + name + ")");
         }
-        Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
+        Certificate certificate = converter.convertToEntity(certificateDTO);
         checkTags(certificate);
         certificate = certificateRepository.save(certificate);
         tagRepository.createCertificateTags(certificate);
         certificate = certificateRepository.getById(certificate.getId()).orElseThrow(EntityNotFoundException::new);
         addTagsToCertificate(certificate);
-        return CertificateConverterDTO.convertToDto(certificate);
+        return converter.convertToDto(certificate);
     }
 
     @Override
@@ -79,14 +83,14 @@ public class CertificateServiceImpl implements CertificateService {
                 && !name.equals(certificateRepository.getById(certificateDTO.getId()).get().getName())) {
             throw new EntityAlreadyExistsException(" (name = " + name + ")");
         }
-        Certificate certificate = CertificateConverterDTO.convertToEntity(certificateDTO);
+        Certificate certificate = converter.convertToEntity(certificateDTO);
         certificateRepository.deleteCertificateTags(certificate.getId());
         checkTags(certificate);
         certificate = certificateRepository.update(certificate);
         tagRepository.createCertificateTags(certificate);
         certificate = certificateRepository.getById(certificate.getId()).orElseThrow(EntityNotFoundException::new);
         addTagsToCertificate(certificate);
-        return CertificateConverterDTO.convertToDto(certificate);
+        return converter.convertToDto(certificate);
     }
 
     private void checkTags(Certificate certificate) {
@@ -113,7 +117,7 @@ public class CertificateServiceImpl implements CertificateService {
         SqlSpecification specification = new CertificateAllSpecification(whereSQL, sortSQL);
         List<Certificate> certificates = certificateRepository.query(specification);
         addTagsToListCertificates(certificates);
-        return CertificateConverterDTO.convertToListDTO(certificates);
+        return converter.convertToListDTO(certificates);
     }
 
     private void addTagsToListCertificates(List<Certificate> certificates) {
