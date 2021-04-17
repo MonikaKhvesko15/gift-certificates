@@ -1,5 +1,6 @@
 package com.epam.esm.repository;
 
+import com.epam.esm.entity.Certificate.Columns;
 import com.epam.esm.entity.Entity;
 import com.epam.esm.specification.SqlSpecification;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractRepository<T extends Entity> implements Repository<T> {
+    private static final int NUMBER_UPDATED_ROWS = 1;
     protected final NamedParameterJdbcTemplate template;
     private static final String GET_BY_ID_QUERY = "SELECT * FROM %s WHERE id = :id";
     private static final String GET_BY_NAME_QUERY = "SELECT * FROM %s WHERE name = :name";
@@ -28,8 +30,8 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     @Override
     public boolean deleteById(Long id) {
         String query = String.format(DELETE_BY_ID_QUERY, getTableName());
-        SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-        return template.update(query, param) == 1;
+        SqlParameterSource param = new MapSqlParameterSource().addValue(Columns.ID.getColumn(), id);
+        return template.update(query, param) == NUMBER_UPDATED_ROWS;
     }
 
     @Override
@@ -40,14 +42,14 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
     @Override
     public Optional<T> getById(Long id) {
         String query = String.format(GET_BY_ID_QUERY, getTableName());
-        SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+        SqlParameterSource param = new MapSqlParameterSource().addValue(Columns.ID.getColumn(), id);
         return template.query(query, param, getRowMapper()).stream().findAny();
     }
 
     @Override
     public Optional<T> getByName(String name) {
         String query = String.format(GET_BY_NAME_QUERY, getTableName());
-        SqlParameterSource param = new MapSqlParameterSource().addValue("name", name);
+        SqlParameterSource param = new MapSqlParameterSource().addValue(Columns.NAME.getColumn(), name);
         return template.query(query, param, getRowMapper()).stream().findAny();
     }
 }

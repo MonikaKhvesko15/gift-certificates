@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,10 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/certificates")
+@Validated
 public class CertificateController {
     private final CertificateService certificateService;
 
@@ -34,8 +38,10 @@ public class CertificateController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<CertificateDTO> find(@RequestParam(defaultValue = "") String tagName, @RequestParam(defaultValue = "") String context,
-                                     @RequestParam(defaultValue = "") String sortBy, @RequestParam(defaultValue = "") String order) {
+    public List<CertificateDTO> find(@Size(max = 50) @RequestParam(required = false, defaultValue = "") String tagName,
+                                     @Size(max = 700) @RequestParam(required = false, defaultValue = "") String context,
+                                     @RequestParam(required = false, defaultValue = "") String sortBy,
+                                     @RequestParam(required = false, defaultValue = "") String order) {
         CertificatePageQueryDTO queryDTO = new CertificatePageQueryDTO(tagName, context, sortBy, order);
         return certificateService.executeQueryDTO(queryDTO);
     }
@@ -46,10 +52,11 @@ public class CertificateController {
         return certificateService.getById(id);
     }
 
-
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public CertificateDTO create(@RequestBody CertificateDTO certificateDto, HttpServletRequest request, HttpServletResponse response) {
+    public CertificateDTO create(@RequestBody @Valid CertificateDTO certificateDto,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) {
         CertificateDTO certificateDTO1 = certificateService.create(certificateDto);
         Long id = certificateDTO1.getId();
         String url = request.getRequestURL().toString();
@@ -63,10 +70,9 @@ public class CertificateController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
-    public CertificateDTO update(@RequestBody CertificateDTO certificateDTO) {
+    public CertificateDTO update(@RequestBody @Valid CertificateDTO certificateDTO) {
         return certificateService.update(certificateDTO);
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import javax.sql.DataSource;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +19,8 @@ import java.util.Set;
 @Repository
 public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRepository {
     private static final String INSERT_TAG_QUERY = "INSERT INTO tags (name) VALUES (:name)";
-    private static final String ADD_TAGS_QUERY = "INSERT INTO gift_certificates_tags(gift_certificate_id, tag_id) VALUES (:gift_certificate_id, :tag_id)";
+    private static final String ADD_TAGS_QUERY = "INSERT INTO gift_certificates_tags(gift_certificate_id, tag_id) " +
+            "VALUES (:gift_certificate_id, :tag_id)";
 
     @Autowired
     public TagRepositoryImpl(DataSource dataSource) {
@@ -43,7 +43,7 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Columns.NAME.getColumn(), tag.getName());
         template.update(INSERT_TAG_QUERY, params, keyHolder);
-        Long id = (Long) keyHolder.getKeys().get("id");
+        Long id = (Long) keyHolder.getKeys().get(Columns.ID.getColumn());
         return getById(id).get();
     }
 

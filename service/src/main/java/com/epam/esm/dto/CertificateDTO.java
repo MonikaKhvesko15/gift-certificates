@@ -1,5 +1,11 @@
 package com.epam.esm.dto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -7,19 +13,34 @@ import java.util.Set;
 
 public class CertificateDTO {
     private Long id;
+
+    @NotBlank(message = "name must not be empty")
+    @Max(value = 150,message = "name cannot be more then 150 characters")
     private String name;
+
+    @Max(value = 700, message = "description cannot be more then 700 characters")
     private String description;
+
+    @NotNull(message = "price cannot be null")
+    @Positive(message = "price must be positive")
     private BigDecimal price;
-    private Integer duration;
+
+
+    @NotNull(message = "duration cannot be null")
+    @Max(value = 150, message = "duration cannot be more then 150")
+    @Min(value = 1, message = "duration cannot be less then 1")
+    private int duration;
+
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-    private Boolean isDeleted;
+    private boolean isDeleted;
+    @Valid
     private Set<TagDTO> tags;
 
     public CertificateDTO() {
     }
 
-    public CertificateDTO(Long id, String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Boolean isDeleted, Set<TagDTO> tags) {
+    public CertificateDTO(Long id, String name, String description, BigDecimal price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, boolean isDeleted, Set<TagDTO> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -47,7 +68,7 @@ public class CertificateDTO {
         return price;
     }
 
-    public Integer getDuration() {
+    public int getDuration() {
         return duration;
     }
 
@@ -63,11 +84,11 @@ public class CertificateDTO {
         return tags;
     }
 
-    public Boolean getDeletedStatus() {
+    public boolean getDeletedStatus() {
         return isDeleted;
     }
 
-    public void setDeletedStatus(Boolean deleted) {
+    public void setDeletedStatus(boolean deleted) {
         isDeleted = deleted;
     }
 

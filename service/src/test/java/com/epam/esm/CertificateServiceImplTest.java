@@ -6,13 +6,11 @@ import com.epam.esm.dto.query.CertificatePageQueryDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
-import com.epam.esm.exception.ValidatorException;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import com.epam.esm.specification.CertificateAllSpecification;
 import com.epam.esm.validator.CertificateDTOValidator;
-import com.epam.esm.validator.CertificatePageQueryDTOValidator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -38,12 +36,11 @@ public class CertificateServiceImplTest {
         CertificateRepository certificateRepository = Mockito.mock(CertificateRepository.class);
         TagRepository tagRepository = Mockito.mock(TagRepository.class);
         CertificateDTOValidator certificateDTOValidator = Mockito.mock(CertificateDTOValidator.class);
-        CertificatePageQueryDTOValidator pageQueryDTOValidator = Mockito.mock(CertificatePageQueryDTOValidator.class);
         CertificateConverterDTO converterDTO = Mockito.mock(CertificateConverterDTO.class);
 
         Mockito.when(certificateRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(certificate));
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator, pageQueryDTOValidator,converterDTO);
+                , certificateDTOValidator, converterDTO);
         CertificateDTO expected = converterDTO.convertToDto(certificate);
 
         CertificateDTO actual = service.getById((long) 1);
@@ -56,13 +53,12 @@ public class CertificateServiceImplTest {
         CertificateRepository certificateRepository = Mockito.mock(CertificateRepository.class);
         TagRepository tagRepository = Mockito.mock(TagRepository.class);
         CertificateDTOValidator certificateDTOValidator = Mockito.mock(CertificateDTOValidator.class);
-        CertificatePageQueryDTOValidator pageQueryDTOValidator = Mockito.mock(CertificatePageQueryDTOValidator.class);
         CertificateConverterDTO converterDTO = Mockito.mock(CertificateConverterDTO.class);
 
 
         Mockito.when(certificateRepository.getById(Mockito.anyLong())).thenReturn(Optional.empty());
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator, pageQueryDTOValidator, converterDTO);
+                , certificateDTOValidator, converterDTO);
 
         assertThrows(EntityNotFoundException.class, () -> service.getById((long) 1));
     }
@@ -79,7 +75,6 @@ public class CertificateServiceImplTest {
         CertificateRepository certificateRepository = Mockito.mock(CertificateRepository.class);
         TagRepository tagRepository = Mockito.mock(TagRepository.class);
         CertificateDTOValidator certificateDTOValidator = Mockito.mock(CertificateDTOValidator.class);
-        CertificatePageQueryDTOValidator pageQueryDTOValidator = Mockito.mock(CertificatePageQueryDTOValidator.class);
         CertificateConverterDTO converterDTO = Mockito.mock(CertificateConverterDTO.class);
         CertificateDTO expected = converterDTO.convertToDto(certificate);
 
@@ -89,7 +84,7 @@ public class CertificateServiceImplTest {
         Mockito.when(certificateRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(certificate));
 
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator, pageQueryDTOValidator, converterDTO);
+                , certificateDTOValidator, converterDTO);
 
         CertificateDTO actual = service.create(expected);
 
@@ -108,7 +103,6 @@ public class CertificateServiceImplTest {
         CertificateRepository certificateRepository = Mockito.mock(CertificateRepository.class);
         TagRepository tagRepository = Mockito.mock(TagRepository.class);
         CertificateDTOValidator certificateDTOValidator = Mockito.mock(CertificateDTOValidator.class);
-        CertificatePageQueryDTOValidator pageQueryDTOValidator = Mockito.mock(CertificatePageQueryDTOValidator.class);
         CertificateConverterDTO converterDTO = Mockito.mock(CertificateConverterDTO.class);
         CertificateDTO expected = converterDTO.convertToDto(certificate);
 
@@ -118,7 +112,7 @@ public class CertificateServiceImplTest {
         Mockito.when(certificateRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(certificate));
 
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator, pageQueryDTOValidator, converterDTO);
+                , certificateDTOValidator, converterDTO);
 
         assertThrows(EntityAlreadyExistsException.class, () -> service.create(expected));
     }
@@ -135,7 +129,6 @@ public class CertificateServiceImplTest {
         CertificateRepository certificateRepository = Mockito.mock(CertificateRepository.class);
         TagRepository tagRepository = Mockito.mock(TagRepository.class);
         CertificateDTOValidator certificateDTOValidator = Mockito.mock(CertificateDTOValidator.class);
-        CertificatePageQueryDTOValidator pageQueryDTOValidator = Mockito.mock(CertificatePageQueryDTOValidator.class);
         CertificateConverterDTO converterDTO = Mockito.mock(CertificateConverterDTO.class);
         CertificateDTO expected = converterDTO.convertToDto(certificate);
 
@@ -145,7 +138,7 @@ public class CertificateServiceImplTest {
         Mockito.when(certificateRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(certificate));
 
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator, pageQueryDTOValidator, converterDTO);
+                , certificateDTOValidator, converterDTO);
 
         CertificateDTO actual = service.update(expected);
 
@@ -170,7 +163,6 @@ public class CertificateServiceImplTest {
         CertificateRepository certificateRepository = Mockito.mock(CertificateRepository.class);
         TagRepository tagRepository = Mockito.mock(TagRepository.class);
         CertificateDTOValidator certificateDTOValidator = Mockito.mock(CertificateDTOValidator.class);
-        CertificatePageQueryDTOValidator pageQueryDTOValidator = Mockito.mock(CertificatePageQueryDTOValidator.class);
         CertificateConverterDTO converterDTO = Mockito.mock(CertificateConverterDTO.class);
         CertificateDTO expected = converterDTO.convertToDto(certificate);
 
@@ -180,7 +172,7 @@ public class CertificateServiceImplTest {
         Mockito.when(certificateRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(certificate1));
 
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator, pageQueryDTOValidator, converterDTO);
+                , certificateDTOValidator, converterDTO);
 
         assertThrows(EntityAlreadyExistsException.class, () -> service.update(expected));
     }
@@ -190,12 +182,11 @@ public class CertificateServiceImplTest {
         CertificateRepository certificateRepository = Mockito.mock(CertificateRepository.class);
         TagRepository tagRepository = Mockito.mock(TagRepository.class);
         CertificateDTOValidator certificateDTOValidator = Mockito.mock(CertificateDTOValidator.class);
-        CertificatePageQueryDTOValidator pageQueryDTOValidator = Mockito.mock(CertificatePageQueryDTOValidator.class);
         CertificateConverterDTO converterDTO = Mockito.mock(CertificateConverterDTO.class);
 
         Mockito.when(certificateRepository.deleteById(Mockito.anyLong())).thenReturn(true);
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator, pageQueryDTOValidator, converterDTO);
+                , certificateDTOValidator,converterDTO);
 
 
         assertTrue(service.remove((long) 1));
@@ -206,12 +197,11 @@ public class CertificateServiceImplTest {
         CertificateRepository certificateRepository = Mockito.mock(CertificateRepository.class);
         TagRepository tagRepository = Mockito.mock(TagRepository.class);
         CertificateDTOValidator certificateDTOValidator = Mockito.mock(CertificateDTOValidator.class);
-        CertificatePageQueryDTOValidator pageQueryDTOValidator = Mockito.mock(CertificatePageQueryDTOValidator.class);
         CertificateConverterDTO converterDTO = Mockito.mock(CertificateConverterDTO.class);
 
         Mockito.when(certificateRepository.deleteById(Mockito.anyLong())).thenReturn(false);
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator, pageQueryDTOValidator, converterDTO);
+                , certificateDTOValidator, converterDTO);
 
 
         assertFalse(service.remove((long) 1));
@@ -239,13 +229,11 @@ public class CertificateServiceImplTest {
         CertificateRepository certificateRepository = Mockito.mock(CertificateRepository.class);
         TagRepository tagRepository = Mockito.mock(TagRepository.class);
         CertificateDTOValidator certificateDTOValidator = Mockito.mock(CertificateDTOValidator.class);
-        CertificatePageQueryDTOValidator pageQueryDTOValidator = Mockito.mock(CertificatePageQueryDTOValidator.class);
         CertificateConverterDTO converterDTO = Mockito.mock(CertificateConverterDTO.class);
 
         Mockito.when(certificateRepository.query(Mockito.isA(CertificateAllSpecification.class))).thenReturn(certificates);
-        Mockito.when(pageQueryDTOValidator.isValid(queryDTO)).thenReturn(true);
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator, pageQueryDTOValidator, converterDTO);
+                , certificateDTOValidator,converterDTO);
         List<CertificateDTO> expected = converterDTO.convertToListDTO(certificates);
         List<CertificateDTO> actual = service.executeQueryDTO(queryDTO);
 
@@ -274,16 +262,13 @@ public class CertificateServiceImplTest {
         CertificateRepository certificateRepository = Mockito.mock(CertificateRepository.class);
         TagRepository tagRepository = Mockito.mock(TagRepository.class);
         CertificateDTOValidator certificateDTOValidator = Mockito.mock(CertificateDTOValidator.class);
-        CertificatePageQueryDTOValidator pageQueryDTOValidator = Mockito.mock(CertificatePageQueryDTOValidator.class);
         CertificateConverterDTO converterDTO = Mockito.mock(CertificateConverterDTO.class);
 
 
         Mockito.when(certificateRepository.query(Mockito.isA(CertificateAllSpecification.class))).thenReturn(certificates);
-        Mockito.when(pageQueryDTOValidator.isValid(queryDTO)).thenReturn(false);
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator, pageQueryDTOValidator, converterDTO);
+                , certificateDTOValidator,converterDTO);
 
-        assertThrows(ValidatorException.class, () -> service.executeQueryDTO(queryDTO));
+        assertThrows(Exception.class, () -> service.executeQueryDTO(queryDTO));
     }
-
 }

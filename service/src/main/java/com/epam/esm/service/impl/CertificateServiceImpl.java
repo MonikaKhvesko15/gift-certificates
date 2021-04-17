@@ -7,7 +7,6 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
-import com.epam.esm.exception.ValidatorException;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.CertificateService;
@@ -15,8 +14,7 @@ import com.epam.esm.service.util.CertificateParamsRequestUtil;
 import com.epam.esm.specification.CertificateAllSpecification;
 import com.epam.esm.specification.SqlSpecification;
 import com.epam.esm.validator.CertificateDTOValidator;
-import com.epam.esm.validator.CertificatePageQueryDTOValidator;
-import com.epam.esm.validator.Validator;
+import com.epam.esm.validator.DTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,18 +26,16 @@ import java.util.Set;
 public class CertificateServiceImpl implements CertificateService {
     private final CertificateRepository certificateRepository;
     private final TagRepository tagRepository;
-    private final Validator<CertificateDTO> certificateDTOValidator;
-    private final Validator<CertificatePageQueryDTO> pageQueryDTOValidator;
+    private final DTOValidator<CertificateDTO> certificateDTOValidator;
     private final CertificateConverterDTO converter;
 
     @Autowired
     public CertificateServiceImpl(CertificateRepository certificateRepository, TagRepository tagRepository,
-                                  CertificateDTOValidator certificateDTOValidator, CertificatePageQueryDTOValidator pageQueryDTOValidator,
+                                  CertificateDTOValidator certificateDTOValidator,
                                   CertificateConverterDTO converter) {
         this.certificateRepository = certificateRepository;
         this.tagRepository = tagRepository;
         this.certificateDTOValidator = certificateDTOValidator;
-        this.pageQueryDTOValidator = pageQueryDTOValidator;
         this.converter = converter;
     }
 
@@ -54,10 +50,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     @Transactional
     public CertificateDTO create(CertificateDTO certificateDTO) {
-        certificateDTOValidator.cleanErrorMessages();
-        if (!certificateDTOValidator.isValid(certificateDTO)) {
-            throw new ValidatorException(certificateDTOValidator.getErrorMessage());
-        }
+        certificateDTOValidator.isValid(certificateDTO);
         String name = certificateDTO.getName();
         if (certificateRepository.getByName(name).isPresent()) {
             throw new EntityAlreadyExistsException(" (name = " + name + ")");
@@ -74,10 +67,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     @Transactional
     public CertificateDTO update(CertificateDTO certificateDTO) {
-        certificateDTOValidator.cleanErrorMessages();
-        if (!certificateDTOValidator.isValid(certificateDTO)) {
-            throw new ValidatorException(certificateDTOValidator.getErrorMessage());
-        }
+        certificateDTOValidator.isValid(certificateDTO);
         String name = certificateDTO.getName();
         if (certificateRepository.getByName(name).isPresent()
                 && !name.equals(certificateRepository.getById(certificateDTO.getId()).get().getName())) {
@@ -107,10 +97,6 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<CertificateDTO> executeQueryDTO(CertificatePageQueryDTO queryDTO) {
-        pageQueryDTOValidator.cleanErrorMessages();
-        if (!pageQueryDTOValidator.isValid(queryDTO)) {
-            throw new ValidatorException(pageQueryDTOValidator.getErrorMessage());
-        }
         CertificateParamsRequestUtil paramsRequestUtil = new CertificateParamsRequestUtil(queryDTO);
         String whereSQL = paramsRequestUtil.getWhereQueryWithParams();
         String sortSQL = paramsRequestUtil.getSortQueryWithParams();

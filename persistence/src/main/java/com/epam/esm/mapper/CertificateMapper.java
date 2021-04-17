@@ -15,7 +15,7 @@ public class CertificateMapper implements RowMapper<Certificate> {
         Long id = rs.getLong(Columns.ID.getColumn());
         String description = rs.getString(Columns.DESCRIPTION.getColumn());
         BigDecimal price = rs.getBigDecimal(Columns.PRICE.getColumn());
-        Integer duration = rs.getInt(Columns.DURATION.getColumn());
+        int duration = rs.getInt(Columns.DURATION.getColumn());
 
         String name = rs.getString(Columns.NAME.getColumn());
         LocalDateTime createDate = rs.getTimestamp(Columns.CREATE_DATE.getColumn()).toLocalDateTime();

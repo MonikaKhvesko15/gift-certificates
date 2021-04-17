@@ -5,12 +5,11 @@ import com.epam.esm.dto.converter.TagConverterDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
-import com.epam.esm.exception.ValidatorException;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
 import com.epam.esm.specification.TagAllSpecification;
+import com.epam.esm.validator.DTOValidator;
 import com.epam.esm.validator.TagDTOValidator;
-import com.epam.esm.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +19,13 @@ import java.util.stream.Collectors;
 @Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
-    private final Validator<TagDTO> validator;
+    private final DTOValidator<TagDTO> DTOValidator;
     private final TagConverterDTO converter;
 
     @Autowired
     public TagServiceImpl(TagRepository tagRepository, TagDTOValidator validator, TagConverterDTO converter) {
         this.tagRepository = tagRepository;
-        this.validator = validator;
+        this.DTOValidator = validator;
         this.converter = converter;
     }
 
@@ -44,10 +43,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDTO create(TagDTO tagDto) {
-        validator.cleanErrorMessages();
-        if (!validator.isValid(tagDto)) {
-            throw new ValidatorException(validator.getErrorMessage());
-        }
+        DTOValidator.isValid(tagDto);
         String tagName = tagDto.getName();
         if (tagRepository.getByName(tagName).isPresent()) {
             throw new EntityAlreadyExistsException(" (name = " + tagName + ")");

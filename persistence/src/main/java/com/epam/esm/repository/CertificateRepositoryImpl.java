@@ -18,12 +18,17 @@ import java.util.Optional;
 
 @Repository
 public class CertificateRepositoryImpl extends AbstractRepository<Certificate> implements CertificateRepository {
-    private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificates (name, description, price, duration, create_date, last_update_date) VALUES\n" +
+    private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificates (name, " +
+            "description, price, duration, create_date, last_update_date) VALUES\n" +
             "(:name, :description, :price, :duration, now(),now());";
-    private static final String DELETE_TAGS_QUERY = "DELETE FROM gift_certificates_tags WHERE gift_certificate_id= :gift_certificate_id";
-    private static final String UPDATE_GIFT_CERTIFICATE_QUERY = "UPDATE  gift_certificates SET (name, description, price, duration, last_update_date)= (:name, :description, :price, :duration ,now()) WHERE id=:id";
+    private static final String DELETE_TAGS_QUERY = "DELETE FROM gift_certificates_tags " +
+            "WHERE gift_certificate_id= :gift_certificate_id";
+    private static final String UPDATE_GIFT_CERTIFICATE_QUERY = "UPDATE  gift_certificates " +
+            "SET (name, description, price, duration, last_update_date) = " +
+            "(:name, :description, :price, :duration ,now()) WHERE id=:id";
     private static final String DELETE_CERTIFICATE_QUERY = "UPDATE  gift_certificates SET isDeleted = 1 WHERE id=:id";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM gift_certificates WHERE isDeleted = 0 AND id = :id";
+    private static final int NUMBER_UPDATED_ROWS = 1;
 
     @Autowired
     public CertificateRepositoryImpl(DataSource dataSource) {
@@ -49,7 +54,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
                 .addValue(Columns.PRICE.getColumn(), certificate.getPrice())
                 .addValue(Columns.DURATION.getColumn(), certificate.getDuration());
         template.update(INSERT_GIFT_CERTIFICATE_QUERY, params, keyHolder);
-        Long id = (Long) keyHolder.getKeys().get("id");
+        Long id = (Long) keyHolder.getKeys().get(Columns.ID.getColumn());
         certificate.setId(id);
         return certificate;
     }
@@ -81,7 +86,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     public boolean deleteById(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Columns.ID.getColumn(), id);
-        return template.update(DELETE_CERTIFICATE_QUERY, params) == 1;
+        return template.update(DELETE_CERTIFICATE_QUERY, params) == NUMBER_UPDATED_ROWS;
     }
 
     @Override
@@ -91,7 +96,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
 
     @Override
     public Optional<Certificate> getById(Long id) {
-        SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+        SqlParameterSource param = new MapSqlParameterSource().addValue(Columns.ID.getColumn(), id);
         return template.query(GET_BY_ID_QUERY, param, getRowMapper()).stream().findAny();
     }
 }

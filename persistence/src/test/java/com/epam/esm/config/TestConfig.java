@@ -1,12 +1,10 @@
 package com.epam.esm.config;
 
-import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.CertificateRepositoryImpl;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.TagRepositoryImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 

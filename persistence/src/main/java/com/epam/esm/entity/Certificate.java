@@ -14,10 +14,10 @@ public class Certificate extends Entity {
     private String name;
     private String description;
     private BigDecimal price;
-    private Integer duration;
+    private int duration;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-    private Boolean isDeleted;
+    private boolean isDeleted;
     private Set<Tag> tags;
 
     public enum Columns {
@@ -56,11 +56,11 @@ public class Certificate extends Entity {
         private Long id;
         private LocalDateTime createDate;
         private LocalDateTime lastUpdateDate;
-        private Boolean isDeleted;
+        private Boolean isDeleted = false;
         private Set<Tag> tags = new HashSet<>();
 
 
-        public Builder(String name, String description, BigDecimal price, Integer duration) {
+        public Builder(String name, String description, BigDecimal price, int duration) {
             this.name = name;
             this.description = description;
             this.price = price;
@@ -82,7 +82,7 @@ public class Certificate extends Entity {
             return this;
         }
 
-        public Builder isDeleted(Boolean isDeleted) {
+        public Builder isDeleted(boolean isDeleted) {
             this.isDeleted = isDeleted;
             return this;
         }
@@ -133,11 +133,11 @@ public class Certificate extends Entity {
         this.price = price;
     }
 
-    public Integer getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(Integer duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -157,11 +157,11 @@ public class Certificate extends Entity {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Boolean getDeletedStatus() {
+    public boolean getDeletedStatus() {
         return isDeleted;
     }
 
-    public void setDeletedStatus(Boolean deleted) {
+    public void setDeletedStatus(boolean deleted) {
         isDeleted = deleted;
     }
 
