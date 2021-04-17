@@ -4,16 +4,15 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.Tag.Columns;
 import com.epam.esm.mapper.TagMapper;
-import com.epam.esm.specification.SqlSpecification;
-import com.epam.esm.specification.TagsByCertificateIdSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 import javax.sql.DataSource;
-import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Repository
@@ -43,46 +42,26 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Columns.NAME.getColumn(), tag.getName());
         template.update(INSERT_TAG_QUERY, params, keyHolder);
-        Long id = (Long) keyHolder.getKeys().get(Columns.ID.getColumn());
-        return getById(id).get();
-    }
-
-    @Override
-    public Set<Tag> getTagsByCertificateId(Long certificateId) {
-        SqlSpecification specification = new TagsByCertificateIdSpecification(certificateId);
-        return new HashSet<>(query(specification));
-    }
-
-    @Override
-    public Set<Tag> createNewTags(Set<Tag> tags) {
-        Set<Tag> newTags = findNewTags(tags);
-        newTags.forEach(this::save);
-        return newTags;
-    }
-
-    private Set<Tag> findNewTags(Set<Tag> tags) {
-        Set<Tag> newTags = new HashSet<>();
-        for (Tag tag : tags) {
-            if (!getByName(tag.getName()).isPresent()) {
-                newTags.add(tag);
-            }
-        }
-        return newTags;
+        Map<String, Object> mapKey = keyHolder.getKeys();
+        assert mapKey != null;
+        Long id = (Long) mapKey.getOrDefault(Certificate.Columns.ID.getColumn(), null);
+        tag.setId(id);
+        return tag;
     }
 
     @Override
     public Set<Tag> createCertificateTags(Certificate certificate) {
         Long certificateId = certificate.getId();
         Set<Tag> tags = certificate.getTags();
-        if (!tags.isEmpty()) {
-            tags.forEach(tag -> {
-                        MapSqlParameterSource tagParams = new MapSqlParameterSource();
-                        tagParams.addValue("gift_certificate_id", certificateId);
-                        tagParams.addValue("tag_id", getByName(tag.getName()).get().getId());
-                        template.update(ADD_TAGS_QUERY, tagParams);
+        tags.forEach(tag -> {
+                    MapSqlParameterSource tagParams = new MapSqlParameterSource();
+                    tagParams.addValue(Certificate.Columns.GIFT_CERTIFICATE_ID.getColumn(), certificateId);
+                    if (getByName(tag.getName()).isPresent()) {
+                        tagParams.addValue(Columns.TAG_ID.getColumn(), getByName(tag.getName()).get().getId());
                     }
-            );
-        }
+                    template.update(ADD_TAGS_QUERY, tagParams);
+                }
+        );
         return tags;
     }
 }

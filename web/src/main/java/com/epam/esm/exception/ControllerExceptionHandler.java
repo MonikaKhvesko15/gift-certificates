@@ -6,12 +6,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Collections;
 import java.util.Locale;
 
 @ControllerAdvice
+@ResponseBody
 public class ControllerExceptionHandler {
     private final MessageSource messageSource;
     public static final String ENTITY_ALREADY_EXISTS = "entity_already_exists";
@@ -25,41 +30,41 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> entityNotFoundHandler(EntityNotFoundException e, Locale locale) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse entityNotFoundHandler(EntityNotFoundException e, Locale locale) {
         String message = messageSource.getMessage(ENTITY_NOT_FOUND, new Object[]{}, locale) + e.getMessage();
-        ExceptionResponse response = new ExceptionResponse(HttpStatus.NOT_FOUND.value(), Collections.singletonList(message));
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ExceptionResponse(HttpStatus.NOT_FOUND.value(), Collections.singletonList(message));
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
-    public ResponseEntity<ExceptionResponse> entityExistsHandler(EntityAlreadyExistsException e, Locale locale) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse entityExistsHandler(EntityAlreadyExistsException e, Locale locale) {
         String message = messageSource.getMessage(ENTITY_ALREADY_EXISTS, new Object[]{}, locale) + e.getMessage();
-        ExceptionResponse response = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> validatorExceptionHandler(MethodArgumentNotValidException e, Locale locale) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse validatorExceptionHandler(MethodArgumentNotValidException e, Locale locale) {
         String message = messageSource.getMessage(VALIDATOR_EXCEPTION, new Object[]{}, locale) + e.getLocalizedMessage();
-        ExceptionResponse response = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ExceptionResponse> handleValidationFailure(ConstraintViolationException ex) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleValidationFailure(ConstraintViolationException ex) {
         StringBuilder messages = new StringBuilder();
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             messages.append(violation.getMessage());
         }
-        ExceptionResponse response = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
                 Collections.singletonList(messages.toString()));
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ExceptionResponse> serverExceptionHandler(RuntimeException e, Locale locale) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionResponse serverExceptionHandler(RuntimeException e, Locale locale) {
         String message = messageSource.getMessage(INTERNAL_SERVER_ERROR, new Object[]{}, locale);
-        ExceptionResponse response = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), Collections.singletonList(message));
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), Collections.singletonList(message));
     }
 }

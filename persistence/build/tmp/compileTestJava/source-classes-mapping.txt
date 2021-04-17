@@ -1,0 +1,4 @@
+com/epam/esm/config/TestConfig.java
+ com.epam.esm.config.TestConfig
+com/epam/esm/repository/CertificateRepositoryTest.java
+ com.epam.esm.repository.CertificateRepositoryTest

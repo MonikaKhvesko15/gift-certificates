@@ -43,7 +43,7 @@ public class CertificateController {
                                      @RequestParam(required = false, defaultValue = "") String sortBy,
                                      @RequestParam(required = false, defaultValue = "") String order) {
         CertificatePageQueryDTO queryDTO = new CertificatePageQueryDTO(tagName, context, sortBy, order);
-        return certificateService.executeQueryDTO(queryDTO);
+        return certificateService.executeQuery(queryDTO);
     }
 
     @GetMapping("/{id}")

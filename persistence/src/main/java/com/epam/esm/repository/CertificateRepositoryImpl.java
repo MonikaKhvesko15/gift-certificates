@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -54,7 +56,9 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
                 .addValue(Columns.PRICE.getColumn(), certificate.getPrice())
                 .addValue(Columns.DURATION.getColumn(), certificate.getDuration());
         template.update(INSERT_GIFT_CERTIFICATE_QUERY, params, keyHolder);
-        Long id = (Long) keyHolder.getKeys().get(Columns.ID.getColumn());
+        Map<String, Object> mapKey = keyHolder.getKeys();
+        assert mapKey != null;
+        Long id = (Long) mapKey.getOrDefault(Columns.ID.getColumn(), null);
         certificate.setId(id);
         return certificate;
     }
@@ -78,7 +82,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     @Override
     public void deleteCertificateTags(Long certificateId) {
         MapSqlParameterSource tagParams = new MapSqlParameterSource();
-        tagParams.addValue("gift_certificate_id", certificateId);
+        tagParams.addValue(Columns.GIFT_CERTIFICATE_ID.getColumn(), certificateId);
         template.update(DELETE_TAGS_QUERY, tagParams);
     }
 
@@ -87,11 +91,6 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Columns.ID.getColumn(), id);
         return template.update(DELETE_CERTIFICATE_QUERY, params) == NUMBER_UPDATED_ROWS;
-    }
-
-    @Override
-    public List<Certificate> query(SqlSpecification specification) {
-        return super.query(specification);
     }
 
     @Override

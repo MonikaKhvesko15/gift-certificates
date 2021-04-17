@@ -14,5 +14,5 @@ public interface CertificateService {
 
     CertificateDTO update(CertificateDTO certificateDTO);
 
-    List<CertificateDTO> executeQueryDTO(CertificatePageQueryDTO queryDTO);
+    List<CertificateDTO> executeQuery(CertificatePageQueryDTO queryDTO);
 }

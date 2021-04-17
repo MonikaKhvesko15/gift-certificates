@@ -1,0 +1,34 @@
+com/epam/esm/dto/config/ServiceConfig.java
+ com.epam.esm.dto.config.ServiceConfig
+com/epam/esm/exception/EntityAlreadyExistsException.java
+ com.epam.esm.exception.EntityAlreadyExistsException
+com/epam/esm/validator/DTOValidator.java
+ com.epam.esm.validator.DTOValidator
+com/epam/esm/exception/EntityNotFoundException.java
+ com.epam.esm.exception.EntityNotFoundException
+com/epam/esm/service/util/CertificateParamsRequestUtil.java
+ com.epam.esm.service.util.CertificateParamsRequestUtil
+com/epam/esm/dto/query/CertificatePageQueryDTO.java
+ com.epam.esm.dto.query.CertificatePageQueryDTO
+com/epam/esm/dto/query/PageQueryDTO.java
+ com.epam.esm.dto.query.PageQueryDTO
+com/epam/esm/dto/converter/TagConverterDTO.java
+ com.epam.esm.dto.converter.TagConverterDTO
+com/epam/esm/validator/CertificateDTOValidator.java
+ com.epam.esm.validator.CertificateDTOValidator
+com/epam/esm/service/TagService.java
+ com.epam.esm.service.TagService
+com/epam/esm/dto/TagDTO.java
+ com.epam.esm.dto.TagDTO
+com/epam/esm/validator/TagDTOValidator.java
+ com.epam.esm.validator.TagDTOValidator
+com/epam/esm/dto/CertificateDTO.java
+ com.epam.esm.dto.CertificateDTO
+com/epam/esm/service/CertificateService.java
+ com.epam.esm.service.CertificateService
+com/epam/esm/dto/converter/CertificateConverterDTO.java
+ com.epam.esm.dto.converter.CertificateConverterDTO
+com/epam/esm/service/impl/TagServiceImpl.java
+ com.epam.esm.service.impl.TagServiceImpl
+com/epam/esm/service/impl/CertificateServiceImpl.java
+ com.epam.esm.service.impl.CertificateServiceImpl

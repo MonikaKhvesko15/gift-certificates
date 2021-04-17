@@ -6,8 +6,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,10 +17,10 @@ public class CertificateDTO {
     private Long id;
 
     @NotBlank(message = "name must not be empty")
-    @Max(value = 150,message = "name cannot be more then 150 characters")
+    @Size(max = 150, message = "name cannot be more then 150 characters")
     private String name;
 
-    @Max(value = 700, message = "description cannot be more then 700 characters")
+    @Size(max = 700, message = "description cannot be more then 700 characters")
     private String description;
 
     @NotNull(message = "price cannot be null")
@@ -35,12 +37,19 @@ public class CertificateDTO {
     private LocalDateTime lastUpdateDate;
     private boolean isDeleted;
     @Valid
-    private Set<TagDTO> tags;
+    private Set<TagDTO> tags = new HashSet<>();
 
     public CertificateDTO() {
     }
 
-    public CertificateDTO(Long id, String name, String description, BigDecimal price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, boolean isDeleted, Set<TagDTO> tags) {
+    public CertificateDTO(Long id,
+                          String name,
+                          String description,
+                          BigDecimal price,
+                          int duration,
+                          LocalDateTime createDate,
+                          LocalDateTime lastUpdateDate,
+                          boolean isDeleted, Set<TagDTO> tags) {
         this.id = id;
         this.name = name;
         this.description = description;

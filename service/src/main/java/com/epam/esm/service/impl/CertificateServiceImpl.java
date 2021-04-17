@@ -13,12 +13,14 @@ import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.util.CertificateParamsRequestUtil;
 import com.epam.esm.specification.CertificateAllSpecification;
 import com.epam.esm.specification.SqlSpecification;
+import com.epam.esm.specification.TagsByCertificateIdSpecification;
 import com.epam.esm.validator.CertificateDTOValidator;
 import com.epam.esm.validator.DTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -86,7 +88,13 @@ public class CertificateServiceImpl implements CertificateService {
     private void checkTags(Certificate certificate) {
         Set<Tag> tags = certificate.getTags();
         if (!tags.isEmpty()) {
-            tagRepository.createNewTags(tags);
+            Set<Tag> newTags = new HashSet<>();
+            for (Tag tag : tags) {
+                if (!tagRepository.getByName(tag.getName()).isPresent()) {
+                    newTags.add(tag);
+                }
+            }
+            newTags.forEach(tagRepository::save);
         }
     }
 
@@ -96,7 +104,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public List<CertificateDTO> executeQueryDTO(CertificatePageQueryDTO queryDTO) {
+    public List<CertificateDTO> executeQuery(CertificatePageQueryDTO queryDTO) {
         CertificateParamsRequestUtil paramsRequestUtil = new CertificateParamsRequestUtil(queryDTO);
         String whereSQL = paramsRequestUtil.getWhereQueryWithParams();
         String sortSQL = paramsRequestUtil.getSortQueryWithParams();
@@ -111,7 +119,8 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private void addTagsToCertificate(Certificate certificate) {
-        Set<Tag> tags = tagRepository.getTagsByCertificateId(certificate.getId());
+        SqlSpecification specification = new TagsByCertificateIdSpecification(certificate.getId());
+        Set<Tag> tags = new HashSet<>(tagRepository.query(specification));
         certificate.setTags(tags);
     }
 }

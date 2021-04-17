@@ -14,7 +14,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         // Load Spring web application configuration
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(SpringConfiguration.class);
+        context.register(WebAppConfiguration.class);
         servletContext.setInitParameter(
                 "spring.profiles.active", "prod");
         // Create and register DispatcherServlet

@@ -32,21 +32,6 @@ public class PageQueryDTO {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PageQueryDTO that = (PageQueryDTO) o;
-        return Objects.equals(sortBy, that.sortBy) &&
-                Objects.equals(order, that.order) &&
-                Objects.equals(context, that.context);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(sortBy, order, context);
-    }
-
-    @Override
     public String toString() {
         return "PageQueryDTO{" +
                 "sortBy='" + sortBy + '\'' +

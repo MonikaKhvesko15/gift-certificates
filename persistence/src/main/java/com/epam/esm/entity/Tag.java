@@ -10,7 +10,8 @@ public class Tag extends Entity {
 
     public enum Columns {
         ID("id"),
-        NAME("name");
+        NAME("name"),
+        TAG_ID("tag_id");
 
         private String column;
 

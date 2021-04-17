@@ -235,7 +235,7 @@ public class CertificateServiceImplTest {
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
                 , certificateDTOValidator,converterDTO);
         List<CertificateDTO> expected = converterDTO.convertToListDTO(certificates);
-        List<CertificateDTO> actual = service.executeQueryDTO(queryDTO);
+        List<CertificateDTO> actual = service.executeQuery(queryDTO);
 
         assertEquals(expected, actual);
     }
@@ -269,6 +269,6 @@ public class CertificateServiceImplTest {
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
                 , certificateDTOValidator,converterDTO);
 
-        assertThrows(Exception.class, () -> service.executeQueryDTO(queryDTO));
+        assertThrows(Exception.class, () -> service.executeQuery(queryDTO));
     }
 }

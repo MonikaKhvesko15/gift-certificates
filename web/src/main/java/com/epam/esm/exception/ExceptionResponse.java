@@ -3,7 +3,6 @@ package com.epam.esm.exception;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.StringJoiner;
 
 public class ExceptionResponse {
@@ -21,19 +20,6 @@ public class ExceptionResponse {
 
     public List<String> getMessages() {
         return Collections.unmodifiableList(messages);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ExceptionResponse that = (ExceptionResponse) o;
-        return code == that.code && Objects.equals(messages, that.messages);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(code, messages);
     }
 
     @Override
