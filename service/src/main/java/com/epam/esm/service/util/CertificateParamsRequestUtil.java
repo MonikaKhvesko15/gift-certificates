@@ -4,7 +4,7 @@ import com.epam.esm.dto.query.CertificatePageQueryDTO;
 import org.apache.commons.lang3.StringUtils;
 
 public class CertificateParamsRequestUtil {
-    private CertificatePageQueryDTO queryDTO;
+    private final CertificatePageQueryDTO queryDTO;
 
     public CertificateParamsRequestUtil(CertificatePageQueryDTO queryDTO) {
         this.queryDTO = queryDTO;

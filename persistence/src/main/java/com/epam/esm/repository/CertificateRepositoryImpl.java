@@ -3,7 +3,6 @@ package com.epam.esm.repository;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Certificate.Columns;
 import com.epam.esm.mapper.CertificateMapper;
-import com.epam.esm.specification.SqlSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,9 +12,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -64,18 +61,17 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     }
 
     @Override
-    public Certificate update(Certificate certificate) {
+    public Certificate update(Long id, Certificate certificate) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(
-                Columns.ID.getColumn(), certificate.getId())
+                Columns.ID.getColumn(), id)
                 .addValue(Columns.NAME.getColumn(), certificate.getName())
                 .addValue(Columns.DESCRIPTION.getColumn(), certificate.getDescription())
                 .addValue(Columns.PRICE.getColumn(), certificate.getPrice())
                 .addValue(Columns.DURATION.getColumn(), certificate.getDuration());
 
         template.update(UPDATE_GIFT_CERTIFICATE_QUERY, params);
-        Long certificateId = certificate.getId();
-        certificate.setId(certificateId);
+        certificate.setId(id);
         return certificate;
     }
 

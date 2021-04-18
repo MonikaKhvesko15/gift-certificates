@@ -1,7 +1,5 @@
 package com.epam.esm.dto.query;
 
-import java.util.Objects;
-
 public class PageQueryDTO {
 
     private String sortBy;

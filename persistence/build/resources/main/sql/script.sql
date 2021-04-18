@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS gift_certificates CASCADE;
 CREATE TABLE gift_certificates
 (
     id               bigserial      NOT NULL PRIMARY KEY,
-    name             varchar(255) NOT NULL,
+    name             varchar(50) NOT NULL,
     description      varchar(255),
     price            double precision NOT NULL,
     duration         int NOT NULL,
@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS tags CASCADE;
 CREATE TABLE tags
 (
     id   bigserial      NOT NULL PRIMARY KEY,
-    name varchar(255) NOT NULL,
+    name varchar(150) NOT NULL,
     UNIQUE (name)
 );
 

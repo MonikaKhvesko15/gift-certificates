@@ -12,7 +12,7 @@ public interface CertificateService {
 
     boolean remove(Long id);
 
-    CertificateDTO update(CertificateDTO certificateDTO);
+    CertificateDTO update(Long id, CertificateDTO certificateDTO);
 
     List<CertificateDTO> executeQuery(CertificatePageQueryDTO queryDTO);
 }

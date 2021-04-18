@@ -43,7 +43,8 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public CertificateDTO getById(Long id) {
-        Certificate certificate = certificateRepository.getById(id).orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
+        Certificate certificate = certificateRepository.getById(id)
+                .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
         addTagsToCertificate(certificate);
         return converter.convertToDto(certificate);
     }
@@ -57,36 +58,43 @@ public class CertificateServiceImpl implements CertificateService {
         if (certificateRepository.getByName(name).isPresent()) {
             throw new EntityAlreadyExistsException(" (name = " + name + ")");
         }
+
         Certificate certificate = converter.convertToEntity(certificateDTO);
-        checkTags(certificate);
-        certificate = certificateRepository.save(certificate);
-        tagRepository.createCertificateTags(certificate);
-        certificate = certificateRepository.getById(certificate.getId()).orElseThrow(EntityNotFoundException::new);
-        addTagsToCertificate(certificate);
-        return converter.convertToDto(certificate);
+        Set<Tag> tags = certificate.getTags();
+        createNotExistingTag(tags);
+
+        Certificate createdCertificate = certificateRepository.save(certificate);
+        tagRepository.createCertificateTags(createdCertificate.getId(), tags);
+
+        addTagsToCertificate(createdCertificate);
+        return converter.convertToDto(createdCertificate);
     }
 
     @Override
     @Transactional
-    public CertificateDTO update(CertificateDTO certificateDTO) {
+    public CertificateDTO update(Long id, CertificateDTO certificateDTO) {
         certificateDTOValidator.isValid(certificateDTO);
-        String name = certificateDTO.getName();
-        if (certificateRepository.getByName(name).isPresent()
-                && !name.equals(certificateRepository.getById(certificateDTO.getId()).get().getName())) {
-            throw new EntityAlreadyExistsException(" (name = " + name + ")");
+        Certificate formerCertificate = certificateRepository.getById(id)
+                .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
+
+        String newName = certificateDTO.getName();
+        if (certificateRepository.getByName(newName).isPresent()
+                && !newName.equals(formerCertificate.getName())) {
+            throw new EntityAlreadyExistsException(" (name = " + newName + ")");
         }
-        Certificate certificate = converter.convertToEntity(certificateDTO);
-        certificateRepository.deleteCertificateTags(certificate.getId());
-        checkTags(certificate);
-        certificate = certificateRepository.update(certificate);
-        tagRepository.createCertificateTags(certificate);
-        certificate = certificateRepository.getById(certificate.getId()).orElseThrow(EntityNotFoundException::new);
-        addTagsToCertificate(certificate);
-        return converter.convertToDto(certificate);
+
+        Certificate certificateWithChanges = converter.convertToEntity(certificateDTO);
+        certificateRepository.deleteCertificateTags(id);
+        Set<Tag> updatedTags = certificateWithChanges.getTags();
+        createNotExistingTag(updatedTags);
+        tagRepository.createCertificateTags(id, updatedTags);
+
+        Certificate updatedCertificate = certificateRepository.update(id, certificateWithChanges);
+        addTagsToCertificate(updatedCertificate);
+        return converter.convertToDto(updatedCertificate);
     }
 
-    private void checkTags(Certificate certificate) {
-        Set<Tag> tags = certificate.getTags();
+    private void createNotExistingTag(Set<Tag> tags) {
         if (!tags.isEmpty()) {
             Set<Tag> newTags = new HashSet<>();
             for (Tag tag : tags) {

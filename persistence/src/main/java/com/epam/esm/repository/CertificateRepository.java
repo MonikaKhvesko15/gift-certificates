@@ -6,7 +6,7 @@ import com.epam.esm.specification.SqlSpecification;
 import java.util.List;
 
 public interface CertificateRepository extends Repository<Certificate> {
-    Certificate update(Certificate certificate);
+    Certificate update(Long id, Certificate certificate);
 
     void deleteCertificateTags(Long certificateId);
 

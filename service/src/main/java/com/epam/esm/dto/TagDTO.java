@@ -2,7 +2,6 @@ package com.epam.esm.dto;
 
 import com.epam.esm.entity.Tag;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -12,8 +11,8 @@ public class TagDTO {
 
     private Long id;
 
-    @NotBlank(message = "name must not be empty")
-    @Size(max = 50, message = "name cannot be more then 50 characters")
+    @NotBlank
+    @Size(max = 50)
     private String name;
 
     public TagDTO(Long id, String name) {

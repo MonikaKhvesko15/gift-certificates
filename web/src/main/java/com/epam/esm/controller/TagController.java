@@ -5,8 +5,6 @@ import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,16 +45,16 @@ public class TagController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public TagDTO create(@RequestBody @Valid TagDTO tagDto, HttpServletRequest request, HttpServletResponse response) {
-        TagDTO tagDTO1 = tagService.create(tagDto);
-        Long id = tagDTO1.getId();
+        TagDTO createdTagDTO = tagService.create(tagDto);
+        Long id = createdTagDTO.getId();
         String url = request.getRequestURL().toString();
         response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
-        return tagDTO1;
+        return createdTagDTO;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
         tagService.remove(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

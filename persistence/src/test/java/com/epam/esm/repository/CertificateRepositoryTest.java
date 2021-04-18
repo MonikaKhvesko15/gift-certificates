@@ -2,7 +2,6 @@ package com.epam.esm.repository;
 
 import com.epam.esm.config.TestConfig;
 import com.epam.esm.entity.Certificate;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -31,7 +31,8 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDTO getById(Long id) {
-        Tag tag = tagRepository.getById(id).orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
+        Tag tag = tagRepository.getById(id)
+                .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
         return converter.convertToDto(tag);
     }
 

@@ -6,7 +6,6 @@ import com.epam.esm.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,22 +56,23 @@ public class CertificateController {
     public CertificateDTO create(@RequestBody @Valid CertificateDTO certificateDto,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
-        CertificateDTO certificateDTO1 = certificateService.create(certificateDto);
-        Long id = certificateDTO1.getId();
+        CertificateDTO createdCertificateDTO = certificateService.create(certificateDto);
+        Long id = createdCertificateDTO.getId();
         String url = request.getRequestURL().toString();
         response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
-        return certificateDTO1;
+        return createdCertificateDTO;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
         certificateService.remove(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping()
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CertificateDTO update(@RequestBody @Valid CertificateDTO certificateDTO) {
-        return certificateService.update(certificateDTO);
+    public CertificateDTO update(@RequestBody @Valid CertificateDTO certificateDTO,
+                                 @PathVariable Long id) {
+        return certificateService.update(id, certificateDTO);
     }
 }

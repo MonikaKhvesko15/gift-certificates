@@ -16,21 +16,21 @@ import java.util.Set;
 public class CertificateDTO {
     private Long id;
 
-    @NotBlank(message = "name must not be empty")
-    @Size(max = 150, message = "name cannot be more then 150 characters")
+    @NotBlank
+    @Size(max = 150)
     private String name;
 
-    @Size(max = 700, message = "description cannot be more then 700 characters")
+    @Size(max = 255)
     private String description;
 
-    @NotNull(message = "price cannot be null")
-    @Positive(message = "price must be positive")
+    @NotNull
+    @Positive
     private BigDecimal price;
 
 
-    @NotNull(message = "duration cannot be null")
-    @Max(value = 150, message = "duration cannot be more then 150")
-    @Min(value = 1, message = "duration cannot be less then 1")
+    @NotNull
+    @Max(value = 150)
+    @Min(value = 1)
     private int duration;
 
     private LocalDateTime createDate;

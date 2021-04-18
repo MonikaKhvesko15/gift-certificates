@@ -50,15 +50,11 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
     }
 
     @Override
-    public Set<Tag> createCertificateTags(Certificate certificate) {
-        Long certificateId = certificate.getId();
-        Set<Tag> tags = certificate.getTags();
+    public Set<Tag> createCertificateTags(Long certificateId, Set<Tag> tags) {
         tags.forEach(tag -> {
                     MapSqlParameterSource tagParams = new MapSqlParameterSource();
                     tagParams.addValue(Certificate.Columns.GIFT_CERTIFICATE_ID.getColumn(), certificateId);
-                    if (getByName(tag.getName()).isPresent()) {
-                        tagParams.addValue(Columns.TAG_ID.getColumn(), getByName(tag.getName()).get().getId());
-                    }
+                    tagParams.addValue(Columns.TAG_ID.getColumn(), tag.getId());
                     template.update(ADD_TAGS_QUERY, tagParams);
                 }
         );

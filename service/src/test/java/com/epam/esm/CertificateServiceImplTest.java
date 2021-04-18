@@ -186,7 +186,7 @@ public class CertificateServiceImplTest {
 
         Mockito.when(certificateRepository.deleteById(Mockito.anyLong())).thenReturn(true);
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator,converterDTO);
+                , certificateDTOValidator, converterDTO);
 
 
         assertTrue(service.remove((long) 1));
@@ -233,7 +233,7 @@ public class CertificateServiceImplTest {
 
         Mockito.when(certificateRepository.query(Mockito.isA(CertificateAllSpecification.class))).thenReturn(certificates);
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator,converterDTO);
+                , certificateDTOValidator, converterDTO);
         List<CertificateDTO> expected = converterDTO.convertToListDTO(certificates);
         List<CertificateDTO> actual = service.executeQuery(queryDTO);
 
@@ -267,7 +267,7 @@ public class CertificateServiceImplTest {
 
         Mockito.when(certificateRepository.query(Mockito.isA(CertificateAllSpecification.class))).thenReturn(certificates);
         CertificateServiceImpl service = new CertificateServiceImpl(certificateRepository, tagRepository
-                , certificateDTOValidator,converterDTO);
+                , certificateDTOValidator, converterDTO);
 
         assertThrows(Exception.class, () -> service.executeQuery(queryDTO));
     }
