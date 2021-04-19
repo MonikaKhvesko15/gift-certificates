@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class CertificateParamsRequestUtil {
     private String sortBy;
-    private String order;
+    private final String order;
 
 
     public CertificateParamsRequestUtil(String sortBy, String order) {

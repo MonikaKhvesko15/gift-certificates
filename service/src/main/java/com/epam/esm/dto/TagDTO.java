@@ -1,7 +1,5 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.entity.Tag;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -15,17 +13,7 @@ public class TagDTO {
     @Size(max = 50)
     private String name;
 
-    public TagDTO(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public TagDTO() {
-    }
-
-    public TagDTO(Tag tag) {
-        this.id = tag.getId();
-        this.name = tag.getName();
     }
 
     public Long getId() {

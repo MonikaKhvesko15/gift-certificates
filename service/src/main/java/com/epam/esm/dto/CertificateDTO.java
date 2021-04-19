@@ -42,25 +42,6 @@ public class CertificateDTO {
     public CertificateDTO() {
     }
 
-    public CertificateDTO(Long id,
-                          String name,
-                          String description,
-                          BigDecimal price,
-                          int duration,
-                          LocalDateTime createDate,
-                          LocalDateTime lastUpdateDate,
-                          boolean isDeleted, Set<TagDTO> tags) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.isDeleted = isDeleted;
-        this.tags = tags;
-    }
-
     public Long getId() {
         return id;
     }

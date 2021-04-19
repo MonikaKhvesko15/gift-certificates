@@ -1,4 +1,4 @@
-com/epam/esm/CertificateServiceImplTest.java
- com.epam.esm.CertificateServiceImplTest
 com/epam/esm/TagServiceImplTest.java
  com.epam.esm.TagServiceImplTest
+com/epam/esm/CertificateServiceImplTest.java
+ com.epam.esm.CertificateServiceImplTest

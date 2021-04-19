@@ -13,5 +13,5 @@ dependencies {
     api 'org.hibernate:hibernate-validator:6.2.0.Final'
 
     //model mapper
-    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
+    implementation 'org.modelmapper:modelmapper:2.4.0'
 }

@@ -18,26 +18,16 @@ public class TestConfig {
         return databaseBuilder.setType(EmbeddedDatabaseType.H2)
                 .setName("test")
                 .ignoreFailedDrops(true)
-                .addScripts("classpath:sql/script.sql")
+                .addScript("classpath:sql/script.sql")
                 .addScript("classpath:sql/db_functions.sql")
                 .addScript("classpath:sql/test-data.sql")
                 .build();
     }
 
-//    @Bean
-//    public TagMapper tagMapper() {
-//        return new TagMapper();
-//    }
-
     @Bean
     public TagRepository tagRepository() {
         return new TagRepositoryImpl(h2DataSource());
     }
-
-//    @Bean
-//    public CertificateMapper certificateMapper() {
-//        return new CertificateMapper();
-//    }
 
     @Bean
     public CertificateRepositoryImpl certificateRepositoryImpl() {

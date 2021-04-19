@@ -35,11 +35,11 @@ begin
 
         WHERE gift_certificates.isdeleted = 0
           AND (
-                    (
+                (
                         (gift_certificates.name ILIKE concat('%', context, '%')) OR
                         (gift_certificates.description ILIKE concat('%', context, '%'))
                     ) AND
                 (tags.name ILIKE concat('%', tag_name, '%'))
-              );
+            );
 end;
 $$

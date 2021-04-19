@@ -17,25 +17,22 @@ subprojects {
 
     dependencies {
         //spring
-
         implementation "org.springframework:spring-core:$springVersion"
         implementation "org.springframework:spring-beans:$springVersion"
         implementation "org.springframework:spring-context:$springVersion"
-        implementation "org.springframework:spring-web:$springVersion"
-        implementation "org.springframework:spring-webmvc:$springVersion"
         implementation "org.springframework:spring-jdbc:$springVersion"
 
         //test
+        testImplementation "org.springframework:spring-test:$springVersion"
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
         testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.9.0'
         testImplementation 'org.mockito:mockito-core:2.1.0'
-        testImplementation 'org.springframework:spring-test:5.3.5'
         testImplementation 'org.glassfish:javax.servlet:3.1'
         testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.0'
 
         //utils
-        implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+        implementation 'org.apache.commons:commons-lang3:3.10'
     }
 
     test {

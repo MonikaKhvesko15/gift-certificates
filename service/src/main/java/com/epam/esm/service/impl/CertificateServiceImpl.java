@@ -13,11 +13,10 @@ import com.epam.esm.service.CertificateService;
 import com.epam.esm.specification.CertificateAllSpecification;
 import com.epam.esm.specification.SqlSpecification;
 import com.epam.esm.specification.TagsByCertificateIdSpecification;
-import com.epam.esm.validator.CertificateDTOValidator;
-import com.epam.esm.validator.DTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,16 +25,14 @@ import java.util.Set;
 public class CertificateServiceImpl implements CertificateService {
     private final CertificateRepository certificateRepository;
     private final TagRepository tagRepository;
-    private final DTOValidator<CertificateDTO> certificateDTOValidator;
     private final CertificateConverterDTO converter;
 
     @Autowired
-    public CertificateServiceImpl(CertificateRepository certificateRepository, TagRepository tagRepository,
-                                  CertificateDTOValidator certificateDTOValidator,
+    public CertificateServiceImpl(CertificateRepository certificateRepository,
+                                  TagRepository tagRepository,
                                   CertificateConverterDTO converter) {
         this.certificateRepository = certificateRepository;
         this.tagRepository = tagRepository;
-        this.certificateDTOValidator = certificateDTOValidator;
         this.converter = converter;
     }
 
@@ -51,7 +48,6 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     @Transactional
     public CertificateDTO create(CertificateDTO certificateDTO) {
-        certificateDTOValidator.isValid(certificateDTO);
         String name = certificateDTO.getName();
         if (certificateRepository.getByName(name).isPresent()) {
             throw new EntityAlreadyExistsException(" (name = " + name + ")");
@@ -71,7 +67,6 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     @Transactional
     public CertificateDTO update(Long id, CertificateDTO certificateDTO) {
-        certificateDTOValidator.isValid(certificateDTO);
         Certificate formerCertificate = certificateRepository.getById(id)
                 .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
 

@@ -11,5 +11,5 @@ public interface TagService {
 
     List<TagDTO> getAll();
 
-    boolean remove(Long id);
+    void remove(Long id);
 }
