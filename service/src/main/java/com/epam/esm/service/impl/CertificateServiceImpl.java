@@ -10,7 +10,6 @@ import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.CertificateService;
-import com.epam.esm.service.util.CertificateParamsRequestUtil;
 import com.epam.esm.specification.CertificateAllSpecification;
 import com.epam.esm.specification.SqlSpecification;
 import com.epam.esm.specification.TagsByCertificateIdSpecification;
@@ -19,7 +18,6 @@ import com.epam.esm.validator.DTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -113,10 +111,8 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<CertificateDTO> executeQuery(CertificatePageQueryDTO queryDTO) {
-        CertificateParamsRequestUtil paramsRequestUtil = new CertificateParamsRequestUtil(queryDTO);
-        String whereSQL = paramsRequestUtil.getWhereQueryWithParams();
-        String sortSQL = paramsRequestUtil.getSortQueryWithParams();
-        SqlSpecification specification = new CertificateAllSpecification(whereSQL, sortSQL);
+        SqlSpecification specification = new CertificateAllSpecification(queryDTO.getTagName(),
+                queryDTO.getContext(), queryDTO.getSortBy(), queryDTO.getOrder());
         List<Certificate> certificates = certificateRepository.query(specification);
         addTagsToListCertificates(certificates);
         return converter.convertToListDTO(certificates);

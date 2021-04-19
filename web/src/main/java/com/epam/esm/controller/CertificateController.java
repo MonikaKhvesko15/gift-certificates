@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -37,8 +36,8 @@ public class CertificateController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<CertificateDTO> find(@Size(max = 50) @RequestParam(required = false, defaultValue = "") String tagName,
-                                     @Size(max = 700) @RequestParam(required = false, defaultValue = "") String context,
+    public List<CertificateDTO> find(@Size(max = 50) @RequestParam(required = false) String tagName,
+                                     @Size(max = 255) @RequestParam(required = false) String context,
                                      @RequestParam(required = false, defaultValue = "") String sortBy,
                                      @RequestParam(required = false, defaultValue = "") String order) {
         CertificatePageQueryDTO queryDTO = new CertificatePageQueryDTO(tagName, context, sortBy, order);

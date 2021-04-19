@@ -11,7 +11,9 @@ import com.epam.esm.service.impl.TagServiceImpl;
 import com.epam.esm.specification.TagAllSpecification;
 import com.epam.esm.validator.TagDTOValidator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TagServiceImplTest {
+@ExtendWith({MockitoExtension.class})
+class TagServiceImplTest {
     @Test
     void testGetByIdShouldReturnTagDTOWhenEntityExists() {
         Tag tag = new Tag((long) 1, "test");

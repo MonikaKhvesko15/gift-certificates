@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.epam.esm.repository.CertificateRepositoryTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2021-04-14T10:36:12" hostname="DESKTOP-ELV7FJ8" time="0.006">
+<testsuite name="com.epam.esm.repository.CertificateRepositoryTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2021-04-18T14:43:43" hostname="DESKTOP-ELV7FJ8" time="0.006">
   <properties/>
   <testcase name="testSaveShouldAddCertificateToDataSourceIfCertificateNotCreated()" classname="com.epam.esm.repository.CertificateRepositoryTest" time="0.006">
     <failure message="org.junit.jupiter.api.extension.ParameterResolutionException: Failed to resolve parameter [com.epam.esm.repository.CertificateRepositoryImpl arg0] in constructor [public com.epam.esm.repository.CertificateRepositoryTest(com.epam.esm.repository.CertificateRepositoryImpl)]: Failed to load ApplicationContext" type="org.junit.jupiter.api.extension.ParameterResolutionException">org.junit.jupiter.api.extension.ParameterResolutionException: Failed to resolve parameter [com.epam.esm.repository.CertificateRepositoryImpl arg0] in constructor [public com.epam.esm.repository.CertificateRepositoryTest(com.epam.esm.repository.CertificateRepositoryImpl)]: Failed to load ApplicationContext
@@ -123,12 +123,12 @@ Syntax error in SQL statement &quot;CREATE ALIAS fn_getCertificatesWithTags AS [
 	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory.initDatabase(EmbeddedDatabaseFactory.java:201)
 	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory.getDatabase(EmbeddedDatabaseFactory.java:158)
 	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder.build(EmbeddedDatabaseBuilder.java:283)
-	at com.epam.esm.config.TestConfig.h2DataSource(TestConfig.java:26)
-	at com.epam.esm.config.TestConfig$$EnhancerBySpringCGLIB$$c8a41cd2.CGLIB$h2DataSource$2(&lt;generated&gt;)
-	at com.epam.esm.config.TestConfig$$EnhancerBySpringCGLIB$$c8a41cd2$$FastClassBySpringCGLIB$$8a39fc1a.invoke(&lt;generated&gt;)
+	at com.epam.esm.config.TestConfig.h2DataSource(TestConfig.java:24)
+	at com.epam.esm.config.TestConfig$$EnhancerBySpringCGLIB$$74f8d79d.CGLIB$h2DataSource$1(&lt;generated&gt;)
+	at com.epam.esm.config.TestConfig$$EnhancerBySpringCGLIB$$74f8d79d$$FastClassBySpringCGLIB$$e4c4769f.invoke(&lt;generated&gt;)
 	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244)
 	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:331)
-	at com.epam.esm.config.TestConfig$$EnhancerBySpringCGLIB$$c8a41cd2.h2DataSource(&lt;generated&gt;)
+	at com.epam.esm.config.TestConfig$$EnhancerBySpringCGLIB$$74f8d79d.h2DataSource(&lt;generated&gt;)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

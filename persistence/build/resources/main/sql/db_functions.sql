@@ -1,6 +1,8 @@
-DROP FUNCTION IF EXISTS fn_getCertificatesWithTags();
+DROP FUNCTION IF EXISTS fn_getCertificatesWithTags(tag_name VARCHAR(50),
+    context VARCHAR(255));
 ---------------------------------------------------
-create function fn_getCertificatesWithTags()
+create function fn_getCertificatesWithTags(tag_name VARCHAR(50),
+                                           context VARCHAR(255))
     returns table
             (
                 id               bigint,
@@ -25,16 +27,19 @@ begin
                         gift_certificates.duration,
                         gift_certificates.create_date,
                         gift_certificates.last_update_date,
-                        gift_certificates.isDeleted,
+                        gift_certificates.isdeleted,
                         tags.name
         from gift_certificates
                  LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id
                  LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id
 
-        WHERE gift_certificates.isDeleted = 0;
+        WHERE gift_certificates.isdeleted = 0
+          AND (
+                    (
+                        (gift_certificates.name ILIKE concat('%', context, '%')) OR
+                        (gift_certificates.description ILIKE concat('%', context, '%'))
+                    ) AND
+                (tags.name ILIKE concat('%', tag_name, '%'))
+              );
 end;
 $$
---------------------------------------------------
-SELECT *
-FROM fn_getCertificatesWithTags();
----------------------------------------------------

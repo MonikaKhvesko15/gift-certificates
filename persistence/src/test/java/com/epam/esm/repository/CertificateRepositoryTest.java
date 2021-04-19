@@ -14,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfig.class})
-public class CertificateRepositoryTest {
+class CertificateRepositoryTest {
 
     private static final Certificate TEST_CERTIFICATE = new Certificate.
             Builder("test", "certificate for test",
             BigDecimal.valueOf(10.0), 10)
-            .id((long) 5)
+            .id(5L)
             .build();
 
     private final CertificateRepositoryImpl certificateRepository;
