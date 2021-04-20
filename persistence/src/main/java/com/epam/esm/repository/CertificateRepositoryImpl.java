@@ -6,13 +6,13 @@ import com.epam.esm.mapper.CertificateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 import javax.sql.DataSource;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 @Repository
 public class CertificateRepositoryImpl extends AbstractRepository<Certificate> implements CertificateRepository {
@@ -26,6 +26,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
             "(:name, :description, :price, :duration ,now()) WHERE id=:id";
     private static final String DELETE_CERTIFICATE_QUERY = "UPDATE  gift_certificates SET isDeleted = 1 WHERE id=:id";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM gift_certificates WHERE isDeleted = 0 AND id = :id";
+    private static final String GET_BY_NAME_QUERY = "SELECT * FROM gift_certificates WHERE isDeleted = 0 AND name = :name";
     private static final int NUMBER_UPDATED_ROWS = 1;
 
     @Autowired
@@ -33,14 +34,25 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
         super(dataSource);
     }
 
-    @Override
-    protected String getTableName() {
-        return Certificate.GIFT_CERTIFICATES_TABLE_NAME;
-    }
 
     @Override
     protected RowMapper<Certificate> getRowMapper() {
         return new CertificateMapper();
+    }
+
+    @Override
+    protected String getGetByIdQuery() {
+        return GET_BY_ID_QUERY;
+    }
+
+    @Override
+    protected String getGetByNameQuery() {
+        return GET_BY_NAME_QUERY;
+    }
+
+    @Override
+    protected String getDeleteByIdQuery() {
+        return DELETE_CERTIFICATE_QUERY;
     }
 
     @Override
@@ -52,9 +64,8 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
                 .addValue(Columns.PRICE.getColumn(), certificate.getPrice())
                 .addValue(Columns.DURATION.getColumn(), certificate.getDuration());
         template.update(INSERT_GIFT_CERTIFICATE_QUERY, params, keyHolder);
-        Map<String, Object> mapKey = keyHolder.getKeys();
-        assert mapKey != null;
-        Long id = (Long) mapKey.getOrDefault(Columns.ID.getColumn(), null);
+        Map<String, Object> mapKey = Objects.requireNonNull(keyHolder.getKeys());
+        Long id = (Long) mapKey.get(Columns.ID.getColumn());
         certificate.setId(id);
         return certificate;
     }
@@ -79,18 +90,5 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
         MapSqlParameterSource tagParams = new MapSqlParameterSource();
         tagParams.addValue(Columns.GIFT_CERTIFICATE_ID.getColumn(), certificateId);
         template.update(DELETE_TAGS_QUERY, tagParams);
-    }
-
-    @Override
-    public boolean deleteById(Long id) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Columns.ID.getColumn(), id);
-        return template.update(DELETE_CERTIFICATE_QUERY, params) == NUMBER_UPDATED_ROWS;
-    }
-
-    @Override
-    public Optional<Certificate> getById(Long id) {
-        SqlParameterSource param = new MapSqlParameterSource().addValue(Columns.ID.getColumn(), id);
-        return template.query(GET_BY_ID_QUERY, param, getRowMapper()).stream().findAny();
     }
 }

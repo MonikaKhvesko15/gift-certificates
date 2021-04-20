@@ -38,101 +38,47 @@ class TagServiceImplTest {
     TagConverterDTO converterDTO;
 
     Tag tag = new Tag(1L, "test");
+    TagDTO tagDTO = new TagDTO(1L, "test");
 
-//
-//    @BeforeEach
-//    void init(@Mock TagRepository repository,
-//              @Mock TagConverterDTO converterDTO) {
+    @Test
+    void testGetByIdShouldReturnTagDTOWhenEntityExists() {
+        Mockito.when(repository.getById(Mockito.anyLong())).thenReturn(Optional.of(tag));
+        Mockito.when(converterDTO.convertToDto(tag)).thenReturn(tagDTO);
+        TagDTO actual = tagService.getById(1L);
+        assertEquals(tagDTO, actual);
+    }
 
-//    }
+    @Test
+    void testGetByIdShouldThrowExceptionWhenEntityNotFound() {
+        Mockito.when(repository.getById(Mockito.anyLong())).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> tagService.getById((long) 1));
+    }
 
-//    @Test
-//    void testGetByIdShouldReturnTagDTOWhenEntityExists() {
-//        Mockito.when(repository.getById(Mockito.anyLong())).thenReturn(Optional.of(tag));
-//        TagDTO actual = tagService.getById(1L);
-//        assertEquals(tag, actual);
-//    }
+    @Test
+    void testCreateShouldReturnTagDTOIfNameUnique() {
+        Mockito.when(repository.save(Mockito.isA(Tag.class))).thenReturn(tag);
+        Mockito.when(converterDTO.convertToDto(tag)).thenReturn(tagDTO);
+        Mockito.when(converterDTO.convertToEntity(tagDTO)).thenReturn(tag);
+        TagDTO actual = tagService.create(tagDTO);
+        assertEquals(tagDTO, actual);
+    }
 
-//    @Test
-//    void testGetByIdShouldThrowExceptionWhenEntityNotFound() {
-//        TagRepository repository = Mockito.mock(TagRepository.class);
-//        TagDTOValidator validator = Mockito.mock(TagDTOValidator.class);
-//        TagConverterDTO converterDTO = Mockito.mock(TagConverterDTO.class);
-//        Mockito.when(repository.getById(Mockito.anyLong())).thenReturn(Optional.empty());
-//        TagServiceImpl service = new TagServiceImpl(repository, validator, converterDTO);
-//        assertThrows(EntityNotFoundException.class, () -> service.getById((long) 1));
-//    }
-//
-//    @Test
-//    void testGetAllShouldReturnListTagsDTO() {
-//        List<Tag> tags = new ArrayList<>();
-//        tags.add(new Tag((long) 1, "test1"));
-//        tags.add(new Tag((long) 2, "test2"));
-//
-//        TagRepository repository = Mockito.mock(TagRepository.class);
-//        TagDTOValidator validator = Mockito.mock(TagDTOValidator.class);
-//        TagConverterDTO converterDTO = Mockito.mock(TagConverterDTO.class);
-//        Mockito.when(repository.query(Mockito.isA(TagAllSpecification.class))).thenReturn(tags);
-//        TagServiceImpl service = new TagServiceImpl(repository, validator, converterDTO);
-//
-//        List<TagDTO> expected = new ArrayList<>();
-//        expected.add(new TagDTO((long) 1, "test1"));
-//        expected.add(new TagDTO((long) 2, "test2"));
-//
-//        List<TagDTO> actual = service.getAll();
-//
-//        assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void testCreateShouldReturnTagDTOIfNameUnique() {
-//        Tag tag = new Tag((long) 1, "test");
-//        TagDTO expected = new TagDTO((long) 1, "test");
-//        TagRepositoryImpl repository = Mockito.mock(TagRepositoryImpl.class);
-//        TagDTOValidator validator = Mockito.mock(TagDTOValidator.class);
-//        TagConverterDTO converterDTO = Mockito.mock(TagConverterDTO.class);
-//        Mockito.when(validator.isValid(expected)).thenReturn(true);
-//        Mockito.when(repository.save(Mockito.isA(Tag.class))).thenReturn(tag);
-//        TagServiceImpl service = new TagServiceImpl(repository, validator, converterDTO);
-//
-//        TagDTO actual = service.create(expected);
-//
-//        assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void testCreateThrowsExceptionWhenNameNotUnique() {
-//        TagDTO tagDTO = new TagDTO((long) 1, "test");
-//        Optional<Tag> optionalTag = Optional.of(new Tag((long) 1, "test"));
-//        TagRepositoryImpl repository = Mockito.mock(TagRepositoryImpl.class);
-//        TagDTOValidator validator = Mockito.mock(TagDTOValidator.class);
-//        TagConverterDTO converterDTO = Mockito.mock(TagConverterDTO.class);
-//        Mockito.when(validator.isValid(tagDTO)).thenReturn(true);
-//        Mockito.when(repository.getByName(Mockito.anyString())).thenReturn(optionalTag);
-//        TagServiceImpl service = new TagServiceImpl(repository, validator, converterDTO);
-//
-//        assertThrows(EntityAlreadyExistsException.class, () -> service.create(tagDTO));
-//    }
-//
-//    @Test
-//    void testRemoveShouldReturnTrueWhenEntityDeleted() {
-//        TagRepository repository = Mockito.mock(TagRepository.class);
-//        TagDTOValidator validator = Mockito.mock(TagDTOValidator.class);
-//        TagConverterDTO converterDTO = Mockito.mock(TagConverterDTO.class);
-//        Mockito.when(repository.deleteById(Mockito.anyLong())).thenReturn(true);
-//        TagServiceImpl service = new TagServiceImpl(repository, validator, converterDTO);
-//
-//        assertTrue(service.remove((long) 1));
-//    }
-//
-//    @Test
-//    void testRemoveShouldReturnFalseWhenEntityNotDeleted() {
-//        TagRepository repository = Mockito.mock(TagRepository.class);
-//        TagDTOValidator validator = Mockito.mock(TagDTOValidator.class);
-//        TagConverterDTO converterDTO = Mockito.mock(TagConverterDTO.class);
-//        Mockito.when(repository.deleteById(Mockito.anyLong())).thenReturn(false);
-//        TagServiceImpl service = new TagServiceImpl(repository, validator, converterDTO);
-//
-//        assertFalse(service.remove((long) 1));
-//    }
+
+    @Test
+    void testCreateThrowsExceptionWhenNameNotUnique() {
+        Mockito.when(repository.getByName(Mockito.anyString())).thenReturn(Optional.of(tag));
+        assertThrows(EntityAlreadyExistsException.class, () -> tagService.create(tagDTO));
+    }
+
+    @Test
+    void testRemoveShouldReturnTrueWhenEntityDeleted() {
+        Mockito.when(repository.deleteById(Mockito.anyLong())).thenReturn(true);
+        assertTrue(tagService.remove(1L));
+    }
+
+    @Test
+    void testRemoveShouldReturnFalseWhenEntityNotDeleted() {
+        Mockito.when(repository.deleteById(Mockito.anyLong())).thenReturn(false);
+        assertFalse(tagService.remove(1L));
+    }
 }

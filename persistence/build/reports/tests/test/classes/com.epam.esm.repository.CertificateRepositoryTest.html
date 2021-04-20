@@ -29,7 +29,7 @@
 </td>
 <td>
 <div class="infoBox" id="failures">
-<div class="counter">1</div>
+<div class="counter">0</div>
 <p>failures</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.005s</div>
+<div class="counter">0.083s</div>
 <p>duration</p>
 </div>
 </td>
@@ -50,8 +50,8 @@
 </div>
 </td>
 <td>
-<div class="infoBox failures" id="successRate">
-<div class="percent">0%</div>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
 <p>successful</p>
 </div>
 </td>
@@ -61,172 +61,13 @@
 <div id="tabs">
 <ul class="tabLinks">
 <li>
-<a href="#tab0">Failed tests</a>
+<a href="#tab0">Tests</a>
 </li>
 <li>
-<a href="#tab1">Tests</a>
-</li>
-<li>
-<a href="#tab2">Standard error</a>
+<a href="#tab1">Standard error</a>
 </li>
 </ul>
 <div id="tab0" class="tab">
-<h2>Failed tests</h2>
-<div class="test">
-<a name="testSaveShouldAddCertificateToDataSourceIfCertificateNotCreated()"></a>
-<h3 class="failures">testSaveShouldAddCertificateToDataSourceIfCertificateNotCreated()</h3>
-<span class="code">
-<pre>org.junit.jupiter.api.extension.ParameterResolutionException: Failed to resolve parameter [com.epam.esm.repository.CertificateRepositoryImpl arg0] in constructor [public com.epam.esm.repository.CertificateRepositoryTest(com.epam.esm.repository.CertificateRepositoryImpl)]: Failed to load ApplicationContext
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.resolveParameter(ExecutableInvoker.java:239)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.resolveParameters(ExecutableInvoker.java:183)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:74)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestClassConstructor(ClassBasedTestDescriptor.java:342)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateTestClass(ClassBasedTestDescriptor.java:289)
-	at org.junit.jupiter.engine.descriptor.ClassTestDescriptor.instantiateTestClass(ClassTestDescriptor.java:79)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:267)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$2(ClassBasedTestDescriptor.java:259)
-	at java.util.Optional.orElseGet(Optional.java:267)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$3(ClassBasedTestDescriptor.java:258)
-	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:31)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$0(TestMethodTestDescriptor.java:101)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:100)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:65)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$1(NodeTestTask.java:111)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:111)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:79)
-	at java.util.ArrayList.forEach(ArrayList.java:1259)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
-	at java.util.ArrayList.forEach(ArrayList.java:1259)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:96)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:75)
-	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.processAllTestClasses(JUnitPlatformTestClassProcessor.java:99)
-	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.access$000(JUnitPlatformTestClassProcessor.java:79)
-	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor.stop(JUnitPlatformTestClassProcessor.java:75)
-	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:61)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
-	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
-	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
-	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
-	at com.sun.proxy.$Proxy2.stop(Unknown Source)
-	at org.gradle.api.internal.tasks.testing.worker.TestWorker.stop(TestWorker.java:133)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
-	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
-	at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:182)
-	at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:164)
-	at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:414)
-	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
-	at org.gradle.internal.concurrent.ManagedExecutorImpl$1.run(ManagedExecutorImpl.java:48)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
-	at org.gradle.internal.concurrent.ThreadFactoryImpl$ManagedThreadRunnable.run(ThreadFactoryImpl.java:56)
-	at java.lang.Thread.run(Thread.java:748)
-Caused by: java.lang.IllegalStateException: Failed to load ApplicationContext
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:132)
-	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124)
-	at org.springframework.test.context.junit.jupiter.SpringExtension.getApplicationContext(SpringExtension.java:283)
-	at org.springframework.test.context.junit.jupiter.SpringExtension.resolveParameter(SpringExtension.java:269)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.resolveParameter(ExecutableInvoker.java:216)
-	... 77 more
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'h2DataSource' defined in com.epam.esm.config.TestConfig: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [javax.sql.DataSource]: Factory method 'h2DataSource' threw exception; nested exception is org.springframework.jdbc.datasource.init.ScriptStatementFailedException: Failed to execute SQL script statement #1 of class path resource [sql/db_functions.sql]: create ALIAS fn_getCertificatesWithTags AS $$ @CODE ResultSet getCertificatesWithTags(String tag_name, String context) throws SQLException{ } begin return query select distinct gift_certificates.id, gift_certificates.name, gift_certificates.description, gift_certificates.price, gift_certificates.duration, gift_certificates.create_date, gift_certificates.last_update_date, gift_certificates.isdeleted, tags.name from gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id WHERE gift_certificates.isdeleted = 0 AND ( ( (gift_certificates.name ILIKE concat('%', context, '%')) OR (gift_certificates.description ILIKE concat('%', context, '%')) ) AND (tags.name ILIKE concat('%', tag_name, '%')) ); nested exception is org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL &quot;create ALIAS fn_getCertificatesWithTags AS [*]$$ @CODE ResultSet getCertificatesWithTags(String tag_name, String context) throws SQLException{ } begin return query select distinct gift_certificates.id, gift_certificates.name, gift_certificates.description, gift_certificates.price, gift_certificates.duration, gift_certificates.create_date, gift_certificates.last_update_date, gift_certificates.isdeleted, tags.name from gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id WHERE gift_certificates.isdeleted = 0 AND ( ( (gift_certificates.name ILIKE concat('%', context, '%')) OR (gift_certificates.description ILIKE concat('%', context, '%')) ) AND (tags.name ILIKE concat('%', tag_name, '%')) )&quot;
-Syntax error in SQL statement &quot;create ALIAS fn_getCertificatesWithTags AS [*]$$ @CODE ResultSet getCertificatesWithTags(String tag_name, String context) throws SQLException{ } begin return query select distinct gift_certificates.id, gift_certificates.name, gift_certificates.description, gift_certificates.price, gift_certificates.duration, gift_certificates.create_date, gift_certificates.last_update_date, gift_certificates.isdeleted, tags.name from gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id WHERE gift_certificates.isdeleted = 0 AND ( ( (gift_certificates.name ILIKE concat('%', context, '%')) OR (gift_certificates.description ILIKE concat('%', context, '%')) ) AND (tags.name ILIKE concat('%', tag_name, '%')) )&quot; [42000-200]
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:658)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:486)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1334)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1177)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:564)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
-	at org.springframework.test.context.support.AbstractGenericContextLoader.loadContext(AbstractGenericContextLoader.java:127)
-	at org.springframework.test.context.support.AbstractGenericContextLoader.loadContext(AbstractGenericContextLoader.java:60)
-	at org.springframework.test.context.support.AbstractDelegatingSmartContextLoader.delegateLoading(AbstractDelegatingSmartContextLoader.java:275)
-	at org.springframework.test.context.support.AbstractDelegatingSmartContextLoader.loadContext(AbstractDelegatingSmartContextLoader.java:243)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:99)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
-	... 81 more
-Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [javax.sql.DataSource]: Factory method 'h2DataSource' threw exception; nested exception is org.springframework.jdbc.datasource.init.ScriptStatementFailedException: Failed to execute SQL script statement #1 of class path resource [sql/db_functions.sql]: create ALIAS fn_getCertificatesWithTags AS $$ @CODE ResultSet getCertificatesWithTags(String tag_name, String context) throws SQLException{ } begin return query select distinct gift_certificates.id, gift_certificates.name, gift_certificates.description, gift_certificates.price, gift_certificates.duration, gift_certificates.create_date, gift_certificates.last_update_date, gift_certificates.isdeleted, tags.name from gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id WHERE gift_certificates.isdeleted = 0 AND ( ( (gift_certificates.name ILIKE concat('%', context, '%')) OR (gift_certificates.description ILIKE concat('%', context, '%')) ) AND (tags.name ILIKE concat('%', tag_name, '%')) ); nested exception is org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL &quot;create ALIAS fn_getCertificatesWithTags AS [*]$$ @CODE ResultSet getCertificatesWithTags(String tag_name, String context) throws SQLException{ } begin return query select distinct gift_certificates.id, gift_certificates.name, gift_certificates.description, gift_certificates.price, gift_certificates.duration, gift_certificates.create_date, gift_certificates.last_update_date, gift_certificates.isdeleted, tags.name from gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id WHERE gift_certificates.isdeleted = 0 AND ( ( (gift_certificates.name ILIKE concat('%', context, '%')) OR (gift_certificates.description ILIKE concat('%', context, '%')) ) AND (tags.name ILIKE concat('%', tag_name, '%')) )&quot;
-Syntax error in SQL statement &quot;create ALIAS fn_getCertificatesWithTags AS [*]$$ @CODE ResultSet getCertificatesWithTags(String tag_name, String context) throws SQLException{ } begin return query select distinct gift_certificates.id, gift_certificates.name, gift_certificates.description, gift_certificates.price, gift_certificates.duration, gift_certificates.create_date, gift_certificates.last_update_date, gift_certificates.isdeleted, tags.name from gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id WHERE gift_certificates.isdeleted = 0 AND ( ( (gift_certificates.name ILIKE concat('%', context, '%')) OR (gift_certificates.description ILIKE concat('%', context, '%')) ) AND (tags.name ILIKE concat('%', tag_name, '%')) )&quot; [42000-200]
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653)
-	... 99 more
-Caused by: org.springframework.jdbc.datasource.init.ScriptStatementFailedException: Failed to execute SQL script statement #1 of class path resource [sql/db_functions.sql]: create ALIAS fn_getCertificatesWithTags AS $$ @CODE ResultSet getCertificatesWithTags(String tag_name, String context) throws SQLException{ } begin return query select distinct gift_certificates.id, gift_certificates.name, gift_certificates.description, gift_certificates.price, gift_certificates.duration, gift_certificates.create_date, gift_certificates.last_update_date, gift_certificates.isdeleted, tags.name from gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id WHERE gift_certificates.isdeleted = 0 AND ( ( (gift_certificates.name ILIKE concat('%', context, '%')) OR (gift_certificates.description ILIKE concat('%', context, '%')) ) AND (tags.name ILIKE concat('%', tag_name, '%')) ); nested exception is org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL &quot;create ALIAS fn_getCertificatesWithTags AS [*]$$ @CODE ResultSet getCertificatesWithTags(String tag_name, String context) throws SQLException{ } begin return query select distinct gift_certificates.id, gift_certificates.name, gift_certificates.description, gift_certificates.price, gift_certificates.duration, gift_certificates.create_date, gift_certificates.last_update_date, gift_certificates.isdeleted, tags.name from gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id WHERE gift_certificates.isdeleted = 0 AND ( ( (gift_certificates.name ILIKE concat('%', context, '%')) OR (gift_certificates.description ILIKE concat('%', context, '%')) ) AND (tags.name ILIKE concat('%', tag_name, '%')) )&quot;
-Syntax error in SQL statement &quot;create ALIAS fn_getCertificatesWithTags AS [*]$$ @CODE ResultSet getCertificatesWithTags(String tag_name, String context) throws SQLException{ } begin return query select distinct gift_certificates.id, gift_certificates.name, gift_certificates.description, gift_certificates.price, gift_certificates.duration, gift_certificates.create_date, gift_certificates.last_update_date, gift_certificates.isdeleted, tags.name from gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id WHERE gift_certificates.isdeleted = 0 AND ( ( (gift_certificates.name ILIKE concat('%', context, '%')) OR (gift_certificates.description ILIKE concat('%', context, '%')) ) AND (tags.name ILIKE concat('%', tag_name, '%')) )&quot; [42000-200]
-	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:622)
-	at org.springframework.jdbc.datasource.init.ResourceDatabasePopulator.populate(ResourceDatabasePopulator.java:254)
-	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:49)
-	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory.initDatabase(EmbeddedDatabaseFactory.java:201)
-	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory.getDatabase(EmbeddedDatabaseFactory.java:158)
-	at org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder.build(EmbeddedDatabaseBuilder.java:283)
-	at com.epam.esm.config.TestConfig.h2DataSource(TestConfig.java:24)
-	at com.epam.esm.config.TestConfig$$EnhancerBySpringCGLIB$$5f1c70c3.CGLIB$h2DataSource$2(&lt;generated&gt;)
-	at com.epam.esm.config.TestConfig$$EnhancerBySpringCGLIB$$5f1c70c3$$FastClassBySpringCGLIB$$11d23f3e.invoke(&lt;generated&gt;)
-	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244)
-	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:331)
-	at com.epam.esm.config.TestConfig$$EnhancerBySpringCGLIB$$5f1c70c3.h2DataSource(&lt;generated&gt;)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
-	... 100 more
-Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL &quot;create ALIAS fn_getCertificatesWithTags AS [*]$$ @CODE ResultSet getCertificatesWithTags(String tag_name, String context) throws SQLException{ } begin return query select distinct gift_certificates.id, gift_certificates.name, gift_certificates.description, gift_certificates.price, gift_certificates.duration, gift_certificates.create_date, gift_certificates.last_update_date, gift_certificates.isdeleted, tags.name from gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id WHERE gift_certificates.isdeleted = 0 AND ( ( (gift_certificates.name ILIKE concat('%', context, '%')) OR (gift_certificates.description ILIKE concat('%', context, '%')) ) AND (tags.name ILIKE concat('%', tag_name, '%')) )&quot;
-Syntax error in SQL statement &quot;create ALIAS fn_getCertificatesWithTags AS [*]$$ @CODE ResultSet getCertificatesWithTags(String tag_name, String context) throws SQLException{ } begin return query select distinct gift_certificates.id, gift_certificates.name, gift_certificates.description, gift_certificates.price, gift_certificates.duration, gift_certificates.create_date, gift_certificates.last_update_date, gift_certificates.isdeleted, tags.name from gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id WHERE gift_certificates.isdeleted = 0 AND ( ( (gift_certificates.name ILIKE concat('%', context, '%')) OR (gift_certificates.description ILIKE concat('%', context, '%')) ) AND (tags.name ILIKE concat('%', tag_name, '%')) )&quot; [42000-200]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:453)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
-	at org.h2.message.DbException.get(DbException.java:205)
-	at org.h2.message.DbException.get(DbException.java:181)
-	at org.h2.message.DbException.getSyntaxError(DbException.java:229)
-	at org.h2.jdbc.JdbcConnection.translateGetEnd(JdbcConnection.java:1251)
-	at org.h2.jdbc.JdbcConnection.translateSQL(JdbcConnection.java:1428)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:211)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:201)
-	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:601)
-	... 116 more
-</pre>
-</span>
-</div>
-</div>
-<div id="tab1" class="tab">
 <h2>Tests</h2>
 <table>
 <thead>
@@ -237,13 +78,13 @@ Syntax error in SQL statement &quot;create ALIAS fn_getCertificatesWithTags AS [
 </tr>
 </thead>
 <tr>
-<td class="failures">testSaveShouldAddCertificateToDataSourceIfCertificateNotCreated()</td>
-<td class="failures">0.005s</td>
-<td class="failures">failed</td>
+<td class="success">testGetByNameShouldReturnOptionalCertificateWhenFound()</td>
+<td class="success">0.083s</td>
+<td class="success">passed</td>
 </tr>
 </table>
 </div>
-<div id="tab2" class="tab">
+<div id="tab1" class="tab">
 <h2>Standard error</h2>
 <span class="code">
 <pre>SLF4J: Failed to load class &quot;org.slf4j.impl.StaticLoggerBinder&quot;.
@@ -260,7 +101,7 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 6.8.3</a> at 19.04.2021 23:19:39</p>
+<a href="http://www.gradle.org">Gradle 6.8.3</a> at 20.04.2021 16:42:45</p>
 </div>
 </div>
 </body>

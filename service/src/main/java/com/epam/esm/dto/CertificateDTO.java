@@ -42,6 +42,14 @@ public class CertificateDTO {
     public CertificateDTO() {
     }
 
+    public CertificateDTO(long id, String name, String description, BigDecimal price, int duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+    }
+
     public Long getId() {
         return id;
     }

@@ -20,6 +20,9 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
     private static final String INSERT_TAG_QUERY = "INSERT INTO tags (name) VALUES (:name)";
     private static final String ADD_TAGS_QUERY = "INSERT INTO gift_certificates_tags(gift_certificate_id, tag_id) " +
             "VALUES (:gift_certificate_id, :tag_id)";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM tags WHERE id = :id";
+    private static final String GET_BY_NAME_QUERY = "SELECT * FROM tags WHERE name = :name";
+    private static final String DELETE_BY_ID_QUERY = "DELETE FROM tags WHERE id = :id";
 
     @Autowired
     public TagRepositoryImpl(DataSource dataSource) {
@@ -27,13 +30,23 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
     }
 
     @Override
-    protected String getTableName() {
-        return Tag.TAGS_TABLE_NAME;
+    protected RowMapper<Tag> getRowMapper() {
+        return new TagMapper();
     }
 
     @Override
-    protected RowMapper<Tag> getRowMapper() {
-        return new TagMapper();
+    protected String getGetByIdQuery() {
+        return GET_BY_ID_QUERY;
+    }
+
+    @Override
+    protected String getGetByNameQuery() {
+        return GET_BY_NAME_QUERY;
+    }
+
+    @Override
+    protected String getDeleteByIdQuery() {
+        return DELETE_BY_ID_QUERY;
     }
 
     @Override

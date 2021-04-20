@@ -1,12 +1,12 @@
 com/epam/esm/config/WebAppConfiguration.java
  com.epam.esm.config.WebAppConfiguration
-com/epam/esm/controller/CertificateController.java
- com.epam.esm.controller.CertificateController
-com/epam/esm/config/WebAppInitializer.java
- com.epam.esm.config.WebAppInitializer
-com/epam/esm/controller/TagController.java
- com.epam.esm.controller.TagController
-com/epam/esm/exception/ControllerExceptionHandler.java
- com.epam.esm.exception.ControllerExceptionHandler
 com/epam/esm/exception/ExceptionResponse.java
  com.epam.esm.exception.ExceptionResponse
+com/epam/esm/config/WebAppInitializer.java
+ com.epam.esm.config.WebAppInitializer
+com/epam/esm/exception/ControllerExceptionHandler.java
+ com.epam.esm.exception.ControllerExceptionHandler
+com/epam/esm/controller/CertificateController.java
+ com.epam.esm.controller.CertificateController
+com/epam/esm/controller/TagController.java
+ com.epam.esm.controller.TagController
