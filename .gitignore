@@ -24,8 +24,9 @@ logs
 
 ### Gradle ###
 .gradle
+
+# Output files
 build/
-build
-/build/
-
-
+target/
+out/
+**/build/*
