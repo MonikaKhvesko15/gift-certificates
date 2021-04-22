@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
-
+/**
+ * The controller to provide CRD operations on {@link TagDTO}.
+ */
 @RestController
 @RequestMapping(value = "/tags")
 public class TagController {
@@ -30,18 +33,35 @@ public class TagController {
         this.tagService = tagService;
     }
 
+    /**
+     * Fids all tags.
+     *
+     * @return the list of all tags
+     */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<TagDTO> findAll() {
         return tagService.getAll();
     }
 
+    /**
+     * Find tag by id.
+     *
+     * @param id the id of tag
+     * @return the tag with queried id {@link TagDTO}
+     */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TagDTO findById(@PathVariable Long id) {
         return tagService.getById(id);
     }
 
+    /**
+     * Create tag.
+     *
+     * @param tagDto the tag to add
+     * @return the added tag {@link TagDTO} and link to it
+     */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public TagDTO create(@RequestBody @Valid TagDTO tagDto, HttpServletRequest request, HttpServletResponse response) {
@@ -52,6 +72,12 @@ public class TagController {
         return createdTagDTO;
     }
 
+    /**
+     * Delete tag.
+     *
+     * @param id the id of tag to remove
+     * @return no content
+     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {

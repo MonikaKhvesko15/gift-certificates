@@ -21,28 +21,28 @@ public abstract class AbstractRepository<T extends Entity> implements Repository
 
     protected abstract RowMapper<T> getRowMapper();
 
-    protected abstract String  getGetByIdQuery();
+    protected String getByIdQuery;
 
-    protected abstract String getGetByNameQuery();
+    protected String getByNameQuery;
 
-    protected abstract String getDeleteByIdQuery();
+    protected String deleteByIdQuery;
 
     @Override
     public boolean deleteById(Long id) {
         SqlParameterSource param = new MapSqlParameterSource().addValue(Columns.ID.getColumn(), id);
-        return template.update(getDeleteByIdQuery(), param) == NUMBER_UPDATED_ROWS;
+        return template.update(deleteByIdQuery, param) == NUMBER_UPDATED_ROWS;
     }
 
     @Override
     public Optional<T> getById(Long id) {
         SqlParameterSource param = new MapSqlParameterSource().addValue(Columns.ID.getColumn(), id);
-        return template.query(getGetByIdQuery(), param, getRowMapper()).stream().findAny();
+        return template.query(getByIdQuery, param, getRowMapper()).stream().findAny();
     }
 
     @Override
     public Optional<T> getByName(String name) {
         SqlParameterSource param = new MapSqlParameterSource().addValue(Columns.NAME.getColumn(), name);
-        return template.query(getGetByNameQuery(), param, getRowMapper()).stream().findAny();
+        return template.query(getByNameQuery, param, getRowMapper()).stream().findAny();
     }
 
     @Override

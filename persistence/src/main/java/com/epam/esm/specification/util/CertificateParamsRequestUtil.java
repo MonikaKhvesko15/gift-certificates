@@ -6,7 +6,6 @@ public class CertificateParamsRequestUtil {
     private String sortBy;
     private final String order;
 
-
     public CertificateParamsRequestUtil(String sortBy, String order) {
         this.sortBy = sortBy;
         this.order = order;

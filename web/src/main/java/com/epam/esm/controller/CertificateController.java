@@ -23,6 +23,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+/**
+ * The controller to provide CRUD operations on {@link CertificateDTO}.
+ */
 @RestController
 @RequestMapping(value = "/certificates")
 @Validated
@@ -34,40 +37,73 @@ public class CertificateController {
         this.certificateService = certificateService;
     }
 
-    @GetMapping()
-    @ResponseStatus(HttpStatus.OK)
-    public List<CertificateDTO> find(@Size(max = 50) @RequestParam(required = false) String tagName,
-                                     @Size(max = 255) @RequestParam(required = false) String context,
-                                     @RequestParam(required = false, defaultValue = "") String sortBy,
-                                     @RequestParam(required = false, defaultValue = "") String order) {
-        CertificatePageQueryDTO queryDTO = new CertificatePageQueryDTO(tagName, context, sortBy, order);
+    /**
+     * Search for certificates by passed params.
+     *
+     * @param queryDTO Object containing all params
+     * @return the list of queried certificates or all certificates if no params passed
+     */
+        @GetMapping()
+        @ResponseStatus(HttpStatus.OK)
+        public List<CertificateDTO> find(@RequestParam(required = false)
+                                                 @Valid CertificatePageQueryDTO queryDTO) {
+        if(queryDTO==null){
+            queryDTO = new CertificatePageQueryDTO();
+        }
         return certificateService.executeQuery(queryDTO);
     }
 
+    /**
+     * Find by id.
+     *
+     * @param id the id of certificate
+     * @return the {@link CertificateDTO} of queried certificate
+     */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CertificateDTO findById(@PathVariable Long id) {
         return certificateService.getById(id);
     }
 
+    /**
+     * Create certificate.
+     *
+     * @param certificateDTO The certificate to add
+     * @return the {@link CertificateDTO} of added certificate and link to it
+     */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public CertificateDTO create(@RequestBody @Valid CertificateDTO certificateDto,
+    public CertificateDTO create(@RequestBody @Valid CertificateDTO certificateDTO,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
-        CertificateDTO createdCertificateDTO = certificateService.create(certificateDto);
+        CertificateDTO createdCertificateDTO = certificateService.create(certificateDTO);
         Long id = createdCertificateDTO.getId();
         String url = request.getRequestURL().toString();
         response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
         return createdCertificateDTO;
     }
 
+
+    /**
+     * Delete certificate.
+     *
+     * @param id the id of certificate
+     * @return no content
+     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         certificateService.remove(id);
     }
 
+
+    /**
+     * Update certificate.
+     *
+     * @param id  the id of certificate to update
+     * @param certificateDTO the updated fields of certificate
+     * @return the updated certificate {@link CertificateDTO}
+     */
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CertificateDTO update(@RequestBody @Valid CertificateDTO certificateDTO,

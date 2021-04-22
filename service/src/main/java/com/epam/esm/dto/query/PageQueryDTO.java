@@ -1,11 +1,14 @@
 package com.epam.esm.dto.query;
 
+import javax.validation.constraints.Size;
+
 public class PageQueryDTO {
 
-    private String sortBy;
+    private String sortBy="";
 
-    private String order;
+    private String order="";
 
+    @Size(max = 255)
     private String context;
 
     public PageQueryDTO() {

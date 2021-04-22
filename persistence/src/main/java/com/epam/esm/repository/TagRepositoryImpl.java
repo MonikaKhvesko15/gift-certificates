@@ -27,26 +27,14 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
     @Autowired
     public TagRepositoryImpl(DataSource dataSource) {
         super(dataSource);
+        getByIdQuery = GET_BY_ID_QUERY;
+        getByNameQuery = GET_BY_NAME_QUERY;
+        deleteByIdQuery = DELETE_BY_ID_QUERY;
     }
 
     @Override
     protected RowMapper<Tag> getRowMapper() {
         return new TagMapper();
-    }
-
-    @Override
-    protected String getGetByIdQuery() {
-        return GET_BY_ID_QUERY;
-    }
-
-    @Override
-    protected String getGetByNameQuery() {
-        return GET_BY_NAME_QUERY;
-    }
-
-    @Override
-    protected String getDeleteByIdQuery() {
-        return DELETE_BY_ID_QUERY;
     }
 
     @Override

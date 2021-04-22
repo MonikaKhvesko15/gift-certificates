@@ -27,32 +27,19 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     private static final String DELETE_CERTIFICATE_QUERY = "UPDATE  gift_certificates SET isDeleted = 1 WHERE id=:id";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM gift_certificates WHERE isDeleted = 0 AND id = :id";
     private static final String GET_BY_NAME_QUERY = "SELECT * FROM gift_certificates WHERE isDeleted = 0 AND name = :name";
-    private static final int NUMBER_UPDATED_ROWS = 1;
 
     @Autowired
     public CertificateRepositoryImpl(DataSource dataSource) {
         super(dataSource);
+        getByIdQuery = GET_BY_ID_QUERY;
+        getByNameQuery = GET_BY_NAME_QUERY;
+        deleteByIdQuery = DELETE_CERTIFICATE_QUERY;
     }
 
 
     @Override
     protected RowMapper<Certificate> getRowMapper() {
         return new CertificateMapper();
-    }
-
-    @Override
-    protected String getGetByIdQuery() {
-        return GET_BY_ID_QUERY;
-    }
-
-    @Override
-    protected String getGetByNameQuery() {
-        return GET_BY_NAME_QUERY;
-    }
-
-    @Override
-    protected String getDeleteByIdQuery() {
-        return DELETE_CERTIFICATE_QUERY;
     }
 
     @Override

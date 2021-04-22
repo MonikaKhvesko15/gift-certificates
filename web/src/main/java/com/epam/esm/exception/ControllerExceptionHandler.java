@@ -41,12 +41,12 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse entityExistsHandler(EntityAlreadyExistsException e, WebRequest request) {
         String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
         Locale locale = Locale.forLanguageTag(Objects.requireNonNull(localeString));
         String message = messageSource.getMessage(ENTITY_ALREADY_EXISTS, new Object[]{}, locale) + e.getMessage();
-        return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
+        return new ExceptionResponse(HttpStatus.CONFLICT.value(), Collections.singletonList(message));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

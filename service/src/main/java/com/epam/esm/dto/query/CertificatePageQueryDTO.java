@@ -1,6 +1,9 @@
 package com.epam.esm.dto.query;
 
+import javax.validation.constraints.Size;
+
 public class CertificatePageQueryDTO extends PageQueryDTO {
+    @Size(max = 50)
     private String tagName;
 
     public CertificatePageQueryDTO() {
