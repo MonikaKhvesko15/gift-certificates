@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
  * The controller to provide CRUD operations on {@link CertificateDTO}.
  */
 @RestController
-@RequestMapping(value = "/certificates")
+@RequestMapping(value = "/v1/certificates")
 @Validated
 public class CertificateController {
     private final CertificateService certificateService;

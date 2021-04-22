@@ -9,8 +9,6 @@ import java.util.Set;
 
 public class Certificate extends Entity {
 
-    public static final transient String GIFT_CERTIFICATES_TABLE_NAME = "gift_certificates";
-
     private String name;
     private String description;
     private BigDecimal price;

@@ -1,6 +1,5 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ import java.util.List;
  * The controller to provide CRD operations on {@link TagDTO}.
  */
 @RestController
-@RequestMapping(value = "/tags")
+@RequestMapping(value = "/v1/tags")
 public class TagController {
     private final TagService tagService;
 

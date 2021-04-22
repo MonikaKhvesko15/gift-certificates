@@ -3,6 +3,8 @@ package com.epam.esm.specification.util;
 import org.apache.commons.lang3.StringUtils;
 
 public class CertificateParamsRequestUtil {
+    private static final String DATE_SORT_TYPE = "DATE";
+    private static final String NAME_SORT_TYPE = "NAME";
     private String sortBy;
     private final String order;
 
@@ -13,10 +15,10 @@ public class CertificateParamsRequestUtil {
 
     public String getSortQueryWithParams() {
         String orderBySQL = " ORDER BY ";
-        if (sortBy.equalsIgnoreCase("DATE")) {
+        if (sortBy.equalsIgnoreCase(DATE_SORT_TYPE)) {
             sortBy = "create_date";
         }
-        if (sortBy.equalsIgnoreCase("NAME")) {
+        if (sortBy.equalsIgnoreCase(NAME_SORT_TYPE)) {
             sortBy = "name";
         }
         if (StringUtils.isNoneEmpty(sortBy)) {

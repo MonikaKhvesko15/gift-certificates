@@ -6,9 +6,7 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.TagRepositoryImpl;
 import com.epam.esm.service.impl.TagServiceImpl;
-import com.epam.esm.specification.TagAllSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,8 +33,14 @@ class TagServiceImplTest {
     @Mock
     TagConverterDTO converterDTO;
 
-    Tag tag = new Tag(1L, "test");
-    TagDTO tagDTO = new TagDTO(1L, "test");
+    private Tag tag;
+    private TagDTO tagDTO;
+
+    @BeforeEach
+    private void initTestParameters() {
+        tag = new Tag(1L, "test");
+        tagDTO = new TagDTO(1L, "test");
+    }
 
     @Test
     void testGetByIdShouldReturnTagDTOWhenEntityExists() {

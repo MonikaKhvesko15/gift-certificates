@@ -9,6 +9,7 @@ import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import com.epam.esm.specification.CertificateAllSpecification;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,33 +40,41 @@ class CertificateServiceImplTest {
     @Mock
     CertificateConverterDTO converterDTO;
 
-    Certificate certificate = new Certificate.Builder(
-            "test",
-            "test description",
-            BigDecimal.valueOf(10),
-            10)
-            .id(1L).build();
+    private Certificate certificate;
+    private Certificate certificate1;
+    private Certificate certificate2;
+    private CertificateDTO certificateDTO;
 
-    Certificate certificate1 = new Certificate.Builder(
-            "test1",
-            "test description1",
-            BigDecimal.valueOf(10),
-            10).id(2L).build();
+    @BeforeEach
+    private void initTestParameters() {
+        certificate = new Certificate.Builder(
+                "test",
+                "test description",
+                BigDecimal.valueOf(10),
+                10)
+                .id(1L).build();
 
-    Certificate certificate2 = new Certificate.Builder(
-            "test2",
-            "test description",
-            BigDecimal.valueOf(10),
-            10)
-            .id(3L).build();
+        certificate1 = new Certificate.Builder(
+                "test1",
+                "test description1",
+                BigDecimal.valueOf(10),
+                10).id(2L).build();
 
-    CertificateDTO certificateDTO = new CertificateDTO(
-            1L,
-            "test",
-            "test description",
-            BigDecimal.valueOf(10),
-            10
-    );
+        certificate2 = new Certificate.Builder(
+                "test2",
+                "test description",
+                BigDecimal.valueOf(10),
+                10)
+                .id(3L).build();
+
+        certificateDTO = new CertificateDTO(
+                1L,
+                "test",
+                "test description",
+                BigDecimal.valueOf(10),
+                10
+        );
+    }
 
     @Test
     void testGetByIdShouldReturnCertificateDTOWhenEntityExists() {
