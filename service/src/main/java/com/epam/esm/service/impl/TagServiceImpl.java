@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.converter.TagConverterDTO;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.DeleteEntityException;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.TagRepository;
@@ -45,13 +46,21 @@ public class TagServiceImpl implements TagService {
             throw new EntityAlreadyExistsException(" (name = " + tagName + ")");
         }
         Tag tag = converter.convertToEntity(tagDto);
-        tag = tagRepository.save(tag);
+        tag = tagRepository.save(tag)
+                .orElseThrow(EntityNotFoundException::new);
         return converter.convertToDto(tag);
     }
 
 
     @Override
     public boolean remove(Long id) {
-        return tagRepository.deleteById(id);
+        if(!tagRepository.getById(id).isPresent()){
+            throw new EntityNotFoundException(" (id = " + id + ")");
+        }
+        boolean result = tagRepository.deleteById(id);
+        if (!result) {
+            throw new DeleteEntityException(" (id = " + id + ")");
+        }
+        return result;
     }
 }

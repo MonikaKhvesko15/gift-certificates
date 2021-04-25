@@ -3,6 +3,7 @@ package com.epam.esm;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.converter.TagConverterDTO;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.DeleteEntityException;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.TagRepository;
@@ -58,7 +59,7 @@ class TagServiceImplTest {
 
     @Test
     void testCreateShouldReturnTagDTOIfNameUnique() {
-        Mockito.when(repository.save(Mockito.isA(Tag.class))).thenReturn(tag);
+        Mockito.when(repository.save(Mockito.isA(Tag.class))).thenReturn(Optional.ofNullable(tag));
         Mockito.when(converterDTO.convertToDto(tag)).thenReturn(tagDTO);
         Mockito.when(converterDTO.convertToEntity(tagDTO)).thenReturn(tag);
         TagDTO actual = tagService.create(tagDTO);
@@ -74,13 +75,21 @@ class TagServiceImplTest {
 
     @Test
     void testRemoveShouldReturnTrueWhenEntityDeleted() {
+        Mockito.when(repository.getById(Mockito.anyLong())).thenReturn(Optional.of(tag));
         Mockito.when(repository.deleteById(Mockito.anyLong())).thenReturn(true);
         assertTrue(tagService.remove(1L));
     }
 
     @Test
-    void testRemoveShouldReturnFalseWhenEntityNotDeleted() {
+    void testRemoveShouldThrowExceptionWhenEntityNotDeleted() {
+        Mockito.when(repository.getById(Mockito.anyLong())).thenReturn(Optional.of(tag));
         Mockito.when(repository.deleteById(Mockito.anyLong())).thenReturn(false);
-        assertFalse(tagService.remove(1L));
+        assertThrows(DeleteEntityException.class, () -> tagService.remove(1L));
+    }
+
+    @Test
+    void testRemoveShouldThrowExceptionWhenEntityNotFound() {
+        Mockito.when(repository.getById(Mockito.anyLong())).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> tagService.remove(1L));
     }
 }

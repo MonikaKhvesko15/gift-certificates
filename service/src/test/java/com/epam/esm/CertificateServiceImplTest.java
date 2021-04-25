@@ -4,6 +4,7 @@ import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.converter.CertificateConverterDTO;
 import com.epam.esm.dto.query.CertificatePageQueryDTO;
 import com.epam.esm.entity.Certificate;
+import com.epam.esm.exception.DeleteEntityException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.TagRepository;
@@ -95,7 +96,7 @@ class CertificateServiceImplTest {
         Mockito.when(certificateRepository.getByName(Mockito.anyString())).thenReturn(Optional.empty());
         Mockito.when(converterDTO.convertToDto(certificate)).thenReturn(certificateDTO);
         Mockito.when(converterDTO.convertToEntity(certificateDTO)).thenReturn(certificate);
-        Mockito.when(certificateRepository.save(certificate)).thenReturn(certificate);
+        Mockito.when(certificateRepository.save(certificate)).thenReturn(Optional.ofNullable(certificate));
         CertificateDTO actual = certificateService.create(certificateDTO);
         assertEquals(certificateDTO, actual);
     }
@@ -104,7 +105,7 @@ class CertificateServiceImplTest {
     @Test
     void testUpdateShouldReturnCertificateDTOIfNameUnique() {
         Mockito.when(certificateRepository.getByName(Mockito.anyString())).thenReturn(Optional.empty());
-        Mockito.when(certificateRepository.update(1L, certificate)).thenReturn(certificate);
+        Mockito.when(certificateRepository.update(1L, certificate)).thenReturn(Optional.ofNullable(certificate));
         Mockito.when(certificateRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(certificate));
         Mockito.when(converterDTO.convertToDto(certificate)).thenReturn(certificateDTO);
         Mockito.when(converterDTO.convertToEntity(certificateDTO)).thenReturn(certificate);
@@ -114,14 +115,22 @@ class CertificateServiceImplTest {
 
     @Test
     void testRemoveShouldReturnTrueWhenEntityDeleted() {
+        Mockito.when(certificateRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(certificate));
         Mockito.when(certificateRepository.deleteById(Mockito.anyLong())).thenReturn(true);
         assertTrue(certificateService.remove(1L));
     }
 
     @Test
-    void testRemoveShouldReturnFalseWhenEntityNotDeleted() {
+    void testRemoveShouldThrowExceptionWhenEntityNotDeleted() {
+        Mockito.when(certificateRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(certificate));
         Mockito.when(certificateRepository.deleteById(Mockito.anyLong())).thenReturn(false);
-        assertFalse(certificateService.remove(1L));
+        assertThrows(DeleteEntityException.class, () -> certificateService.remove(1L));
+    }
+
+    @Test
+    void testRemoveShouldThrowExceptionWhenEntityNotFound() {
+        Mockito.when(certificateRepository.getById(Mockito.anyLong())).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> certificateService.remove(1L));
     }
 
     @Test

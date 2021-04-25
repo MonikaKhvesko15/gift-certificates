@@ -9,8 +9,7 @@ CREATE TABLE gift_certificates
     duration         int NOT NULL,
     create_date      timestamptz           NOT NULL,
     last_update_date timestamptz          NOT NULL,
-    isDeleted        int DEFAULT 0,
-    UNIQUE (name)
+    isDeleted        int DEFAULT 0
 );
 
 DROP TABLE IF EXISTS tags CASCADE;

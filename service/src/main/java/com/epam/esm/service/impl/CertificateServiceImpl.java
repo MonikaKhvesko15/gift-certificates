@@ -5,6 +5,7 @@ import com.epam.esm.dto.converter.CertificateConverterDTO;
 import com.epam.esm.dto.query.CertificatePageQueryDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.DeleteEntityException;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.CertificateRepository;
@@ -57,7 +58,8 @@ public class CertificateServiceImpl implements CertificateService {
         Set<Tag> tags = certificate.getTags();
         createNotExistingTag(tags);
 
-        Certificate createdCertificate = certificateRepository.save(certificate);
+        Certificate createdCertificate = certificateRepository.save(certificate)
+                .orElseThrow(EntityNotFoundException::new);
         tagRepository.createCertificateTags(createdCertificate.getId(), tags);
 
         addTagsToCertificate(createdCertificate);
@@ -82,7 +84,8 @@ public class CertificateServiceImpl implements CertificateService {
         createNotExistingTag(updatedTags);
         tagRepository.createCertificateTags(id, updatedTags);
 
-        Certificate updatedCertificate = certificateRepository.update(id, certificateWithChanges);
+        Certificate updatedCertificate = certificateRepository.update(id, certificateWithChanges)
+                .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
         addTagsToCertificate(updatedCertificate);
         return converter.convertToDto(updatedCertificate);
     }
@@ -101,7 +104,14 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public boolean remove(Long id) {
-        return certificateRepository.deleteById(id);
+        if (!certificateRepository.getById(id).isPresent()) {
+            throw new EntityNotFoundException(" (id = " + id + ")");
+        }
+        boolean result = certificateRepository.deleteById(id);
+        if (!result) {
+            throw new DeleteEntityException(" (id = " + id + ")");
+        }
+        return result;
     }
 
     @Override

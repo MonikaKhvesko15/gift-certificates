@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,16 +39,11 @@ public class CertificateController {
     /**
      * Search for certificates by passed params.
      *
-     * @param queryDTO Object containing all params
      * @return the list of queried certificates or all certificates if no params passed
      */
-        @GetMapping()
-        @ResponseStatus(HttpStatus.OK)
-        public List<CertificateDTO> find(@RequestParam(required = false)
-                                                 @Valid CertificatePageQueryDTO queryDTO) {
-        if(queryDTO==null){
-            queryDTO = new CertificatePageQueryDTO();
-        }
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public List<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO) {
         return certificateService.executeQuery(queryDTO);
     }
 
@@ -100,7 +94,7 @@ public class CertificateController {
     /**
      * Update certificate.
      *
-     * @param id  the id of certificate to update
+     * @param id             the id of certificate to update
      * @param certificateDTO the updated fields of certificate
      * @return the updated certificate {@link CertificateDTO}
      */

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -38,16 +40,14 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
     }
 
     @Override
-    public Tag save(Tag tag) {
+    public Optional<Tag> save(Tag tag) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Columns.NAME.getColumn(), tag.getName());
         template.update(INSERT_TAG_QUERY, params, keyHolder);
-        Map<String, Object> mapKey = keyHolder.getKeys();
-        assert mapKey != null;
+        Map<String, Object> mapKey = Objects.requireNonNull(keyHolder.getKeys());
         Long id = (Long) mapKey.getOrDefault(Certificate.Columns.ID.getColumn(), null);
-        tag.setId(id);
-        return tag;
+        return getById(id);
     }
 
     @Override

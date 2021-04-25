@@ -65,15 +65,15 @@ class CertificateRepositoryTest {
     @Test
     void testSaveShouldReturnCertificateWhenSaved() {
         Certificate expected = TEST_CERTIFICATE;
-        Certificate actual = certificateRepository.save(expected);
-        assertEquals(actual, expected);
+        Optional<Certificate> actual = certificateRepository.save(expected);
+        assertTrue(actual.isPresent());
     }
 
     @Test
     void testUpdateShouldReturnCertificateWhenUpdated() {
-        Certificate expected = TEST_CERTIFICATE;
-        Certificate actual = certificateRepository.update(TEST_CERTIFICATE_ID, expected);
-        assertEquals(actual, expected);
+        Certificate expected = EXISTING_CERTIFICATE;
+        Optional<Certificate> actual = certificateRepository.update(EXISTING_CERTIFICATE_ID, expected);
+        assertTrue(actual.isPresent());
     }
 
     @Test

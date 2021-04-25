@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class CertificateRepositoryImpl extends AbstractRepository<Certificate> implements CertificateRepository {
@@ -43,7 +44,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     }
 
     @Override
-    public Certificate save(Certificate certificate) {
+    public Optional<Certificate> save(Certificate certificate) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Columns.NAME.getColumn(), certificate.getName())
@@ -53,12 +54,11 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
         template.update(INSERT_GIFT_CERTIFICATE_QUERY, params, keyHolder);
         Map<String, Object> mapKey = Objects.requireNonNull(keyHolder.getKeys());
         Long id = (Long) mapKey.get(Columns.ID.getColumn());
-        certificate.setId(id);
-        return certificate;
+        return getById(id);
     }
 
     @Override
-    public Certificate update(Long id, Certificate certificate) {
+    public Optional<Certificate> update(Long id, Certificate certificate) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(
                 Columns.ID.getColumn(), id)
@@ -68,8 +68,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
                 .addValue(Columns.DURATION.getColumn(), certificate.getDuration());
 
         template.update(UPDATE_GIFT_CERTIFICATE_QUERY, params);
-        certificate.setId(id);
-        return certificate;
+        return getById(id);
     }
 
     @Override

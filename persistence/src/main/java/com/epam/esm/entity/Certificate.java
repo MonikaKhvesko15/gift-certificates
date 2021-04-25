@@ -29,7 +29,7 @@ public class Certificate extends Entity {
         IS_DELETED("isDeleted"),
         GIFT_CERTIFICATE_ID("gift_certificate_id");
 
-        private String column;
+        private final String column;
 
         Columns(String columnName) {
             this.column = columnName;
@@ -45,10 +45,10 @@ public class Certificate extends Entity {
 
     public static class Builder {
         //Necessary parameters
-        private String name;
-        private String description;
-        private BigDecimal price;
-        private Integer duration;
+        private final String name;
+        private final String description;
+        private final BigDecimal price;
+        private final Integer duration;
 
 
         //optional parameters

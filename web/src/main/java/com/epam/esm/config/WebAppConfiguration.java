@@ -25,6 +25,7 @@ import java.util.Locale;
 @ComponentScan(basePackages = "com.epam.esm")
 public class WebAppConfiguration implements WebMvcConfigurer {
     private static final String EXCEPTION_MESSAGE_BUNDLE = "exception.message";
+    private static final String VALIDATOR_MESSAGE_BUNDLE = "validator.message";
     private static final String DEFAULT_ENCODING = "UTF-8";
 
     @Bean
@@ -55,7 +56,7 @@ public class WebAppConfiguration implements WebMvcConfigurer {
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename(EXCEPTION_MESSAGE_BUNDLE);
+        messageSource.setBasenames(EXCEPTION_MESSAGE_BUNDLE, VALIDATOR_MESSAGE_BUNDLE);
         messageSource.setUseCodeAsDefaultMessage(true);
         messageSource.setDefaultEncoding(DEFAULT_ENCODING);
         messageSource.setDefaultLocale(Locale.ENGLISH);
