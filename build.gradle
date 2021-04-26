@@ -1,36 +1,41 @@
-plugins {
-    // Support convention plugins written in Groovy. Convention plugins are build scripts in 'src/main' that automatically become available as plugins in the main build.
-    id 'groovy-gradle-plugin'
-}
-
-repositories {
-    // Use the plugin portal to apply community plugins in convention plugins.
-    gradlePluginPortal()
-}
-
-
 subprojects {
     apply plugin: 'java'
+
+
+    compileJava {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 
     repositories {
         mavenCentral()
     }
 
-    dependencies {
-        // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
-
-// https://mvnrepository.com/artifact/org.springframework/spring-core
-        implementation group: 'org.springframework', name: 'spring-core', version: '5.3.5'
-
-// https://mvnrepository.com/artifact/org.springframework/spring-beans
-        implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.5'
-
-// https://mvnrepository.com/artifact/org.springframework/spring-context
-        implementation group: 'org.springframework', name: 'spring-context', version: '5.3.5'
+    ext {
+        springVersion = '5.3.5'
     }
-}
 
-project(':web') {
-    apply plugin: 'war'
+    dependencies {
+        //spring
+        implementation "org.springframework:spring-core:$springVersion"
+        implementation "org.springframework:spring-beans:$springVersion"
+        implementation "org.springframework:spring-context:$springVersion"
+        implementation "org.springframework:spring-jdbc:$springVersion"
+
+        //test
+        testImplementation "org.springframework:spring-test:$springVersion"
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
+        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.9.0'
+        testImplementation 'org.mockito:mockito-core:2.1.0'
+        testImplementation 'org.glassfish:javax.servlet:3.1'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.0'
+
+        //utils
+        implementation 'org.apache.commons:commons-lang3:3.10'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
 }
