@@ -35,7 +35,6 @@ public class CertificateDTO {
 
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-    private boolean isDeleted;
     @Valid
     private Set<TagDTO> tags = new HashSet<>();
 
@@ -82,13 +81,6 @@ public class CertificateDTO {
         return tags;
     }
 
-    public boolean getDeletedStatus() {
-        return isDeleted;
-    }
-
-    public void setDeletedStatus(boolean deleted) {
-        isDeleted = deleted;
-    }
 
     public void setTags(Set<TagDTO> tags) {
         this.tags = tags;
@@ -99,20 +91,19 @@ public class CertificateDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CertificateDTO that = (CertificateDTO) o;
-        return Objects.equals(id, that.id) &&
+        return duration == that.duration &&
+                Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(price, that.price) &&
-                Objects.equals(duration, that.duration) &&
                 Objects.equals(createDate, that.createDate) &&
                 Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
-                Objects.equals(isDeleted, that.isDeleted) &&
                 Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, isDeleted, tags);
+        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, tags);
     }
 
     @Override
@@ -125,7 +116,6 @@ public class CertificateDTO {
                 ", duration=" + duration +
                 ", createDate=" + createDate +
                 ", lastUpdateDate=" + lastUpdateDate +
-                ", isDeleted=" + isDeleted +
                 ", tags=" + tags +
                 '}';
     }

@@ -14,8 +14,7 @@ create function fn_getCertificatesWithTags(
                 price            double precision,
                 duration         int,
                 create_date      timestamptz,
-                last_update_date timestamptz,
-                isDeleted        int
+                last_update_date timestamptz
             )
 as
 $$
@@ -31,8 +30,7 @@ begin
                                 gift_certificates.price,
                                 gift_certificates.duration,
                                 gift_certificates.create_date,
-                                gift_certificates.last_update_date,
-                                gift_certificates.isdeleted
+                                gift_certificates.last_update_date
                 from gift_certificates
                          LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id
                          LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id
@@ -51,8 +49,7 @@ begin
                                 gift_certificates.price,
                                 gift_certificates.duration,
                                 gift_certificates.create_date,
-                                gift_certificates.last_update_date,
-                                gift_certificates.isdeleted
+                                gift_certificates.last_update_date
                 from gift_certificates
                          LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id
                          LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id
@@ -72,8 +69,7 @@ begin
                                 gift_certificates.price,
                                 gift_certificates.duration,
                                 gift_certificates.create_date,
-                                gift_certificates.last_update_date,
-                                gift_certificates.isdeleted
+                                gift_certificates.last_update_date
                 from gift_certificates
                          LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id
                          LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id
@@ -90,8 +86,7 @@ begin
                                 gift_certificates.price,
                                 gift_certificates.duration,
                                 gift_certificates.create_date,
-                                gift_certificates.last_update_date,
-                                gift_certificates.isdeleted
+                                gift_certificates.last_update_date
                 from gift_certificates
                          LEFT JOIN gift_certificates_tags ON gift_certificates.id = gift_certificates_tags.gift_certificate_id
                          LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.id

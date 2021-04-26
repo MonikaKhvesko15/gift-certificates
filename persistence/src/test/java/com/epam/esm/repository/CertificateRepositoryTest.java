@@ -31,8 +31,8 @@ class CertificateRepositoryTest {
     private static final String TEST_CERTIFICATE_NAME = "test";
     public static final String EXISTING_CERTIFICATE_NAME = "The fourth";
 
-    private Certificate TEST_CERTIFICATE;
-    private Certificate EXISTING_CERTIFICATE;
+    private Certificate testCertificate;
+    private Certificate existingCertificate;
 
 
     private final CertificateRepositoryImpl certificateRepository;
@@ -45,13 +45,13 @@ class CertificateRepositoryTest {
     @BeforeEach
     private void initTestParameters() {
 
-        TEST_CERTIFICATE = new Certificate.
+        testCertificate = new Certificate.
                 Builder("test", "certificate for test",
                 BigDecimal.valueOf(10.0), 10)
                 .id(5L)
                 .build();
 
-        EXISTING_CERTIFICATE = new Certificate.
+        existingCertificate = new Certificate.
                 Builder("The fourth", "The fourth certificate",
                 BigDecimal.valueOf(14.0), 12)
                 .id(4L)
@@ -64,14 +64,14 @@ class CertificateRepositoryTest {
 
     @Test
     void testSaveShouldReturnCertificateWhenSaved() {
-        Certificate expected = TEST_CERTIFICATE;
+        Certificate expected = testCertificate;
         Optional<Certificate> actual = certificateRepository.save(expected);
         assertTrue(actual.isPresent());
     }
 
     @Test
     void testUpdateShouldReturnCertificateWhenUpdated() {
-        Certificate expected = EXISTING_CERTIFICATE;
+        Certificate expected = existingCertificate;
         Optional<Certificate> actual = certificateRepository.update(EXISTING_CERTIFICATE_ID, expected);
         assertTrue(actual.isPresent());
     }
@@ -91,7 +91,7 @@ class CertificateRepositoryTest {
     @Test
     void testGetByIdShouldReturnOptionalCertificateWhenFound() {
         Optional<Certificate> certificateOptional = certificateRepository.getById(EXISTING_CERTIFICATE_ID);
-        assertEquals(certificateOptional, Optional.of(EXISTING_CERTIFICATE));
+        assertEquals(certificateOptional, Optional.of(existingCertificate));
     }
 
     @Test
@@ -103,7 +103,7 @@ class CertificateRepositoryTest {
     @Test
     void testGetByNameShouldReturnOptionalCertificateWhenFound() {
         Optional<Certificate> certificateOptional = certificateRepository.getByName(EXISTING_CERTIFICATE_NAME);
-        assertEquals(certificateOptional, Optional.of(EXISTING_CERTIFICATE));
+        assertEquals(certificateOptional, Optional.of(existingCertificate));
     }
 
     @Test

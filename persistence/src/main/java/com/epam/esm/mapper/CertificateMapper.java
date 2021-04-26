@@ -20,14 +20,12 @@ public class CertificateMapper implements RowMapper<Certificate> {
         String name = rs.getString(Columns.NAME.getColumn());
         LocalDateTime createDate = rs.getTimestamp(Columns.CREATE_DATE.getColumn()).toLocalDateTime();
         LocalDateTime lastUpdateDate = rs.getTimestamp(Columns.LAST_UPDATE_DATE.getColumn()).toLocalDateTime();
-        boolean isDeleted = rs.getBoolean(Columns.IS_DELETED.getColumn());
 
 
         return new Certificate.Builder(name, description, price, duration)
                 .id(id)
                 .createDate(createDate)
                 .lastUpdateDate(lastUpdateDate)
-                .isDeleted(isDeleted)
                 .build();
     }
 }

@@ -62,16 +62,4 @@ public class WebAppConfiguration implements WebMvcConfigurer {
         messageSource.setDefaultLocale(Locale.ENGLISH);
         return messageSource;
     }
-
-    @Bean(name = "validator")
-    public LocalValidatorFactoryBean validator() {
-        LocalValidatorFactoryBean lvfb = new LocalValidatorFactoryBean();
-        lvfb.setValidationMessageSource(messageSource());
-        return lvfb;
-    }
-
-    @Bean
-    public MethodValidationPostProcessor methodValidationPostProcessor() {
-        return new MethodValidationPostProcessor();
-    }
 }
