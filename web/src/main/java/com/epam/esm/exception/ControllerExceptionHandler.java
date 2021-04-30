@@ -5,7 +5,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,8 +34,7 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionResponse entityNotFoundHandler(EntityNotFoundException e, WebRequest request) {
         String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        //todo: locale can be null
-        Locale locale = Locale.forLanguageTag(Objects.requireNonNull(localeString));
+        Locale locale = localeString != null ? Locale.forLanguageTag(localeString) : Locale.getDefault();
         String message = messageSource.getMessage(ENTITY_NOT_FOUND, new Object[]{}, locale) + e.getMessage();
         return new ExceptionResponse(HttpStatus.NOT_FOUND.value(), Collections.singletonList(message));
     }
@@ -45,28 +43,16 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse entityExistsHandler(EntityAlreadyExistsException e, WebRequest request) {
         String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        Locale locale = Locale.forLanguageTag(Objects.requireNonNull(localeString));
+        Locale locale = localeString != null ? Locale.forLanguageTag(localeString) : Locale.getDefault();
         String message = messageSource.getMessage(ENTITY_ALREADY_EXISTS, new Object[]{}, locale) + e.getMessage();
         return new ExceptionResponse(HttpStatus.CONFLICT.value(), Collections.singletonList(message));
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse validatorExceptionHandler(MethodArgumentNotValidException e, WebRequest request) {
-        String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        Locale locale = Locale.forLanguageTag(Objects.requireNonNull(localeString));
-        BindingResult bindingResult = e.getBindingResult();
-        String errorMessage = Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage();
-        String errorField = Objects.requireNonNull(bindingResult.getFieldError()).getField();
-        String message = messageSource.getMessage(VALIDATOR_EXCEPTION, new Object[]{}, locale) + errorField + DELIMITER + errorMessage;
-        return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
     }
 
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse validatorExceptionHandler(BindException e, WebRequest request) {
         String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        Locale locale = Locale.forLanguageTag(Objects.requireNonNull(localeString));
+        Locale locale = localeString != null ? Locale.forLanguageTag(localeString) : Locale.getDefault();
         BindingResult bindingResult = e.getBindingResult();
         String errorMessage = Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage();
         String errorField = Objects.requireNonNull(bindingResult.getFieldError()).getField();
@@ -79,7 +65,7 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionResponse serverExceptionHandler(RuntimeException e, WebRequest request) {
         String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        Locale locale = Locale.forLanguageTag(Objects.requireNonNull(localeString));
+        Locale locale = localeString != null ? Locale.forLanguageTag(localeString) : Locale.getDefault();
         String message = messageSource.getMessage(INTERNAL_SERVER_ERROR, new Object[]{}, locale);
         return new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), Collections.singletonList(message));
     }
