@@ -1,61 +1,31 @@
 package com.epam.esm.entity;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class Tag extends Entity {
+@Entity
+@Table(name = "tags")
+@Setter
+@Getter
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+public class Tag extends BaseEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String name;
-
-    public enum Columns {
-        ID("id"),
-        NAME("name"),
-        TAG_ID("tag_id");
-
-        private String column;
-
-        Columns(String columnName) {
-            this.column = columnName;
-        }
-
-        public String getColumn() {
-            return column;
-        }
-    }
-
-    public Tag() {
-    }
-
-    public Tag(Long id, String name) {
-        super(id);
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Tag tag = (Tag) o;
-        return Objects.equals(name, tag.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-
-    @Override
-    public String toString() {
-        return "Tag{" +
-                "name='" + name + '\'' +
-                '}';
-    }
 }

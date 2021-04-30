@@ -1,5 +1,4 @@
-package com.epam.esm.dto.converter;
-
+package com.epam.esm.converter;
 
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.TagDTO;
@@ -16,14 +15,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class CertificateConverterDTO {
+public class CertificateDTOConverter {
     private final ModelMapper modelMapper;
-    private final TagConverterDTO tagConverter;
+    private final TagDTOConverter tagConverter;
 
     @Autowired
-    public CertificateConverterDTO(ModelMapper modelMapper) {
+    public CertificateDTOConverter(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
-        this.tagConverter = new TagConverterDTO(modelMapper);
+        this.tagConverter = new TagDTOConverter(modelMapper);
     }
 
     public Certificate convertToEntity(CertificateDTO certificateDto) {

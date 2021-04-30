@@ -12,16 +12,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 import java.util.Locale;
 
 @Configuration
-@EnableWebMvc
 @ComponentScan(basePackages = "com.epam.esm")
 public class WebAppConfiguration implements WebMvcConfigurer {
     private static final String EXCEPTION_MESSAGE_BUNDLE = "exception.message";
@@ -39,18 +35,6 @@ public class WebAppConfiguration implements WebMvcConfigurer {
         objectMapper.registerModule(javaTimeModule);
         objectMapper.setDateFormat(new StdDateFormat());
         return objectMapper;
-    }
-
-    @Bean
-    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-        mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper());
-        return mappingJackson2HttpMessageConverter;
-    }
-
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(mappingJackson2HttpMessageConverter());
     }
 
     @Bean

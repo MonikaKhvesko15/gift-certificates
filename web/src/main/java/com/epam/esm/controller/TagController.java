@@ -2,7 +2,6 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.service.TagService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +26,6 @@ import java.util.List;
 public class TagController {
     private final TagService tagService;
 
-    @Autowired
     public TagController(TagService tagService) {
         this.tagService = tagService;
     }
@@ -40,7 +38,7 @@ public class TagController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<TagDTO> findAll() {
-        return tagService.getAll();
+        return tagService.findAll();
     }
 
     /**
@@ -56,22 +54,6 @@ public class TagController {
     }
 
     /**
-     * Create tag.
-     *
-     * @param tagDto the tag to add
-     * @return the added tag {@link TagDTO} and link to it
-     */
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public TagDTO create(@RequestBody @Valid TagDTO tagDto, HttpServletRequest request, HttpServletResponse response) {
-        TagDTO createdTagDTO = tagService.create(tagDto);
-        Long id = createdTagDTO.getId();
-        String url = request.getRequestURL().toString();
-        response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
-        return createdTagDTO;
-    }
-
-    /**
      * Delete tag.
      *
      * @param id the id of tag to remove
@@ -82,4 +64,23 @@ public class TagController {
     public void delete(@PathVariable Long id) {
         tagService.remove(id);
     }
+
+    /**
+     * Create tag.
+     *
+     * @param tagDTO the tag to add
+     * @return the added tag {@link TagDTO} and link to it
+     */
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    public TagDTO create(@RequestBody @Valid TagDTO tagDTO
+            , HttpServletRequest request, HttpServletResponse response) {
+        TagDTO createdTag = tagService.create(tagDTO);
+        Long id = createdTag.getId();
+        String url = request.getRequestURL().toString();
+        response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
+        return createdTag;
+    }
+
+
 }

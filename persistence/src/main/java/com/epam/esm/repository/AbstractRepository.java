@@ -1,53 +1,34 @@
 package com.epam.esm.repository;
 
-import com.epam.esm.entity.Certificate.Columns;
-import com.epam.esm.entity.Entity;
-import com.epam.esm.specification.SqlSpecification;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import com.epam.esm.entity.BaseEntity;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import java.util.List;
-import java.util.Optional;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-public abstract class AbstractRepository<T extends Entity> implements Repository<T> {
-    private static final int NUMBER_UPDATED_ROWS = 1;
-    protected final NamedParameterJdbcTemplate template;
+public abstract class AbstractRepository<T extends BaseEntity> implements Repository<T> {
 
-    protected AbstractRepository(DataSource dataSource) {
-        this.template = new NamedParameterJdbcTemplate(dataSource);
-    }
+    @PersistenceContext
+    protected final EntityManager entityManager;
 
-    protected abstract RowMapper<T> getRowMapper();
+    private final Class<T> entityClass;
 
-    protected String getByIdQuery;
-
-    protected String getByNameQuery;
-
-    protected String deleteByIdQuery;
-
-    @Override
-    public boolean deleteById(Long id) {
-        SqlParameterSource param = new MapSqlParameterSource().addValue(Columns.ID.getColumn(), id);
-        return template.update(deleteByIdQuery, param) == NUMBER_UPDATED_ROWS;
+    protected AbstractRepository(EntityManager entityManager, Class<T> entityClass) {
+        this.entityManager = entityManager;
+        this.entityClass = entityClass;
     }
 
     @Override
-    public Optional<T> getById(Long id) {
-        SqlParameterSource param = new MapSqlParameterSource().addValue(Columns.ID.getColumn(), id);
-        return template.query(getByIdQuery, param, getRowMapper()).stream().findAny();
+    @Transactional
+    public T save(T model) {
+        entityManager.persist(model);
+        return model;
     }
 
     @Override
-    public Optional<T> getByName(String name) {
-        SqlParameterSource param = new MapSqlParameterSource().addValue(Columns.NAME.getColumn(), name);
-        return template.query(getByNameQuery, param, getRowMapper()).stream().findAny();
+    @Transactional
+    public T update(T model) {
+        return entityManager.merge(model);
     }
 
-    @Override
-    public List<T> query(SqlSpecification specification) {
-        return template.query(specification.getSqlQuery(), getRowMapper());
-    }
 }

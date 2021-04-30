@@ -24,7 +24,6 @@ public class ControllerExceptionHandler {
     public static final String ENTITY_ALREADY_EXISTS = "entity_already_exists";
     public static final String ENTITY_NOT_FOUND = "entity_not_found";
     public static final String VALIDATOR_EXCEPTION = "entity_not_valid";
-    public static final String DELETE_EXCEPTION = "entity_delete_error";
     public static final String INTERNAL_SERVER_ERROR = "server_error";
 
 
@@ -36,6 +35,7 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionResponse entityNotFoundHandler(EntityNotFoundException e, WebRequest request) {
         String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
+        //todo: locale can be null
         Locale locale = Locale.forLanguageTag(Objects.requireNonNull(localeString));
         String message = messageSource.getMessage(ENTITY_NOT_FOUND, new Object[]{}, locale) + e.getMessage();
         return new ExceptionResponse(HttpStatus.NOT_FOUND.value(), Collections.singletonList(message));
@@ -48,15 +48,6 @@ public class ControllerExceptionHandler {
         Locale locale = Locale.forLanguageTag(Objects.requireNonNull(localeString));
         String message = messageSource.getMessage(ENTITY_ALREADY_EXISTS, new Object[]{}, locale) + e.getMessage();
         return new ExceptionResponse(HttpStatus.CONFLICT.value(), Collections.singletonList(message));
-    }
-
-    @ExceptionHandler(DeleteEntityException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse entityDeleteHandler(DeleteEntityException e, WebRequest request) {
-        String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        Locale locale = Locale.forLanguageTag(Objects.requireNonNull(localeString));
-        String message = messageSource.getMessage(DELETE_EXCEPTION, new Object[]{}, locale) + e.getMessage();
-        return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

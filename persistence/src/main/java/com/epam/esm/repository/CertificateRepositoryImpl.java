@@ -1,80 +1,67 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.Certificate.Columns;
-import com.epam.esm.mapper.CertificateMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import com.epam.esm.metamodel.Certificate_;
+import com.epam.esm.specification.CriteriaSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import java.util.Map;
-import java.util.Objects;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaBuilder.In;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CertificateRepositoryImpl extends AbstractRepository<Certificate> implements CertificateRepository {
-    private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificates (name, " +
-            "description, price, duration, create_date, last_update_date) VALUES\n" +
-            "(:name, :description, :price, :duration, now(),now());";
-    private static final String DELETE_TAGS_QUERY = "DELETE FROM gift_certificates_tags " +
-            "WHERE gift_certificate_id= :gift_certificate_id";
-    private static final String UPDATE_GIFT_CERTIFICATE_QUERY = "UPDATE  gift_certificates " +
-            "SET (name, description, price, duration, last_update_date) = " +
-            "(:name, :description, :price, :duration ,now()) WHERE id=:id";
-    private static final String DELETE_CERTIFICATE_QUERY = "UPDATE  gift_certificates SET isDeleted = 1 WHERE id=:id";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM gift_certificates WHERE isDeleted = 0 AND id = :id";
-    private static final String GET_BY_NAME_QUERY = "SELECT * FROM gift_certificates WHERE isDeleted = 0 AND name = :name";
-
-    @Autowired
-    public CertificateRepositoryImpl(DataSource dataSource) {
-        super(dataSource);
-        getByIdQuery = GET_BY_ID_QUERY;
-        getByNameQuery = GET_BY_NAME_QUERY;
-        deleteByIdQuery = DELETE_CERTIFICATE_QUERY;
-    }
+public class CertificateRepositoryImpl extends AbstractRepository<Certificate> {
+    private static final String GET_BY_ID_QUERY = "FROM Certificate c WHERE c.isDeleted = false AND id = :id";
+    private static final String GET_BY_NAME_QUERY = "FROM Certificate c WHERE c.isDeleted = false AND c.name = :name";
+    private static final String GET_ALL_QUERY = "SELECT c from Certificate c WHERE c.isDeleted = false";
+    private static final Class<Certificate> certificateClass = Certificate.class;
 
 
-    @Override
-    protected RowMapper<Certificate> getRowMapper() {
-        return new CertificateMapper();
+    public CertificateRepositoryImpl(EntityManager entityManager) {
+        super(entityManager, certificateClass);
     }
 
     @Override
-    public Optional<Certificate> save(Certificate certificate) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Columns.NAME.getColumn(), certificate.getName())
-                .addValue(Columns.DESCRIPTION.getColumn(), certificate.getDescription())
-                .addValue(Columns.PRICE.getColumn(), certificate.getPrice())
-                .addValue(Columns.DURATION.getColumn(), certificate.getDuration());
-        template.update(INSERT_GIFT_CERTIFICATE_QUERY, params, keyHolder);
-        Map<String, Object> mapKey = Objects.requireNonNull(keyHolder.getKeys());
-        Long id = (Long) mapKey.get(Columns.ID.getColumn());
-        return getById(id);
+    @Transactional
+    public void deleteById(Long id) {
+        Certificate certificate = entityManager.find(certificateClass, id);
+        certificate.setDeleted(true);
+        entityManager.merge(certificate);
     }
 
     @Override
-    public Optional<Certificate> update(Long id, Certificate certificate) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(
-                Columns.ID.getColumn(), id)
-                .addValue(Columns.NAME.getColumn(), certificate.getName())
-                .addValue(Columns.DESCRIPTION.getColumn(), certificate.getDescription())
-                .addValue(Columns.PRICE.getColumn(), certificate.getPrice())
-                .addValue(Columns.DURATION.getColumn(), certificate.getDuration());
-
-        template.update(UPDATE_GIFT_CERTIFICATE_QUERY, params);
-        return getById(id);
+    public List<Certificate> findAll() {
+        return entityManager.createQuery(GET_ALL_QUERY, certificateClass)
+                .getResultList();
     }
 
     @Override
-    public void deleteCertificateTags(Long certificateId) {
-        MapSqlParameterSource tagParams = new MapSqlParameterSource();
-        tagParams.addValue(Columns.GIFT_CERTIFICATE_ID.getColumn(), certificateId);
-        template.update(DELETE_TAGS_QUERY, tagParams);
+    public Optional<Certificate> getByName(String name) {
+        return entityManager.createQuery(GET_BY_NAME_QUERY)
+                .setParameter("name", name)
+                .getResultList().stream().findAny();
+    }
+
+    @Override
+    public Optional<Certificate> getById(Long id) {
+        return entityManager.createQuery(GET_BY_ID_QUERY)
+                .setParameter("id", id)
+                .getResultList().stream().findAny();
+    }
+
+    public List<Certificate> getEntityListBySpecification(CriteriaSpecification<Certificate> specification) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Certificate> criteriaQuery = specification.getCriteriaQuery(builder);
+        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 }

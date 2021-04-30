@@ -1,12 +1,11 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.CertificateDTO;
-import com.epam.esm.dto.query.CertificatePageQueryDTO;
+import com.epam.esm.dto.CertificatePageQueryDTO;
 import com.epam.esm.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +26,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/certificates")
-@Validated
 public class CertificateController {
     private final CertificateService certificateService;
 
@@ -44,8 +42,14 @@ public class CertificateController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO) {
-        return certificateService.executeQuery(queryDTO);
+        return certificateService.findByParams(queryDTO);
     }
+
+//    @GetMapping()
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<CertificateDTO> findAll() {
+//        return certificateService.findAll();
+//    }
 
     /**
      * Find by id.
@@ -60,21 +64,21 @@ public class CertificateController {
     }
 
     /**
-     * Create certificate.
+     * Create certificateDTO.
      *
-     * @param certificateDTO The certificate to add
-     * @return the {@link CertificateDTO} of added certificate and link to it
+     * @param certificateDTO The certificateDTO to add
+     * @return the {@link CertificateDTO} of added certificateDTO and link to it
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public CertificateDTO create(@RequestBody @Valid CertificateDTO certificateDTO,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
-        CertificateDTO createdCertificateDTO = certificateService.create(certificateDTO);
-        Long id = createdCertificateDTO.getId();
+        CertificateDTO createdCertificate = certificateService.create(certificateDTO);
+        Long id = createdCertificate.getId();
         String url = request.getRequestURL().toString();
         response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
-        return createdCertificateDTO;
+        return createdCertificate;
     }
 
 

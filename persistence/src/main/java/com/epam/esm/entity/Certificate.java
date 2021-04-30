@@ -1,208 +1,59 @@
 package com.epam.esm.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@Entity
+@Table(name = "gift_certificates")
+@AllArgsConstructor
+@Setter
+@Getter
+@EqualsAndHashCode(exclude = "tags", callSuper = false)
+@NoArgsConstructor
+public class Certificate extends BaseEntity {
 
-public class Certificate extends Entity {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String description;
     private BigDecimal price;
     private int duration;
+
+    @Column(name = "create_date", updatable = false, columnDefinition = "TIMESTAMP")
+    @CreationTimestamp
     private LocalDateTime createDate;
+
+    @Column(name = "last_update_date", columnDefinition = "TIMESTAMP")
+    @UpdateTimestamp
     private LocalDateTime lastUpdateDate;
+
+    @Column(name = "is_deleted", columnDefinition = "boolean default true")
     private boolean isDeleted;
+
+    @ManyToMany
+    @JoinTable(name = "gift_certificates_tags",
+            joinColumns = @JoinColumn(name = "gift_certificate_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private Set<Tag> tags;
 
-    public enum Columns {
-        ID("id"),
-        NAME("name"),
-        DESCRIPTION("description"),
-        PRICE("price"),
-        DURATION("duration"),
-        CREATE_DATE("create_date"),
-        LAST_UPDATE_DATE("last_update_date"),
-        IS_DELETED("isDeleted"),
-        GIFT_CERTIFICATE_ID("gift_certificate_id");
-
-        private final String column;
-
-        Columns(String columnName) {
-            this.column = columnName;
-        }
-
-        public String getColumn() {
-            return column;
-        }
-    }
-
-    public Certificate() {
-    }
-
-    public static class Builder {
-        //Necessary parameters
-        private final String name;
-        private final String description;
-        private final BigDecimal price;
-        private final Integer duration;
-
-
-        //optional parameters
-        private Long id;
-        private LocalDateTime createDate;
-        private LocalDateTime lastUpdateDate;
-        private Boolean isDeleted = false;
-        private Set<Tag> tags = new HashSet<>();
-
-
-        public Builder(String name, String description, BigDecimal price, int duration) {
-            this.name = name;
-            this.description = description;
-            this.price = price;
-            this.duration = duration;
-        }
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder createDate(LocalDateTime createDate) {
-            this.createDate = createDate;
-            return this;
-        }
-
-        public Builder lastUpdateDate(LocalDateTime lastUpdateDate) {
-            this.lastUpdateDate = lastUpdateDate;
-            return this;
-        }
-
-        public Builder isDeleted(boolean isDeleted) {
-            this.isDeleted = isDeleted;
-            return this;
-        }
-
-        public Builder tags(Set<Tag> tags) {
-            this.tags = tags;
-            return this;
-        }
-
-        public Certificate build() {
-            return new Certificate(this);
-        }
-    }
-
-    private Certificate(Builder builder) {
-        super(builder.id);
-        name = builder.name;
-        description = builder.description;
-        price = builder.price;
-        duration = builder.duration;
-        createDate = builder.createDate;
-        lastUpdateDate = builder.lastUpdateDate;
-        isDeleted = builder.isDeleted;
-        tags = builder.tags;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    public LocalDateTime getLastUpdateDate() {
-        return lastUpdateDate;
-    }
-
-    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public boolean getDeletedStatus() {
-        return isDeleted;
-    }
-
-    public void setDeletedStatus(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Set<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Certificate that = (Certificate) o;
-        return Objects.equals(name, that.name) &&
-                Objects.equals(description, that.description) &&
-                Objects.equals(price, that.price) &&
-                Objects.equals(duration, that.duration) &&
-                Objects.equals(createDate, that.createDate) &&
-                Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
-                Objects.equals(isDeleted, that.isDeleted) &&
-                Objects.equals(tags, that.tags);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description, price, duration, createDate, lastUpdateDate, isDeleted, tags);
-    }
-
-    @Override
-    public String toString() {
-        return "Certificate{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", duration=" + duration +
-                ", createDate=" + createDate +
-                ", lastUpdateDate=" + lastUpdateDate +
-                ", isDeleted=" + isDeleted +
-                ", tags=" + tags +
-                '}';
-    }
 }

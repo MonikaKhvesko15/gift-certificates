@@ -1,4 +1,4 @@
-package com.epam.esm.dto.config;
+package com.epam.esm.config;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration.AccessLevel;
@@ -15,5 +15,4 @@ public class ServiceConfig {
                 .setFieldAccessLevel(AccessLevel.PRIVATE);
         return modelMapper;
     }
-
 }

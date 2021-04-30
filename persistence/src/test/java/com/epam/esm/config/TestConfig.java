@@ -1,8 +1,5 @@
 package com.epam.esm.config;
 
-import com.epam.esm.repository.CertificateRepositoryImpl;
-import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.TagRepositoryImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -27,17 +24,6 @@ public class TestConfig {
                 .addScript("classpath:sql/script.sql")
                 .addScript("classpath:sql/test-data.sql")
                 .build();
-    }
-
-
-    @Bean
-    public TagRepository tagRepository() {
-        return new TagRepositoryImpl(h2DataSource());
-    }
-
-    @Bean
-    public CertificateRepositoryImpl certificateRepositoryImpl() {
-        return new CertificateRepositoryImpl(h2DataSource());
     }
 
     @Bean
