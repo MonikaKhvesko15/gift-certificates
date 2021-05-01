@@ -5,9 +5,10 @@ import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
-import com.epam.esm.repository.Repository;
 import com.epam.esm.repository.TagRepositoryImpl;
 import com.epam.esm.service.TagService;
+import com.epam.esm.specification.CriteriaSpecification;
+import com.epam.esm.specification.tag.TagAllSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Service
 public class TagServiceImpl implements TagService {
-    private final Repository<Tag> tagRepository;
+    private final TagRepositoryImpl tagRepository;
     private final TagDTOConverter converter;
 
     @Autowired
@@ -42,7 +43,8 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDTO> findAll() {
-        List<Tag> tags = tagRepository.findAll();
+        CriteriaSpecification<Tag> specification = new TagAllSpecification();
+        List<Tag> tags = tagRepository.getEntityListBySpecification(specification);
         return converter.convertToListDTO(tags);
     }
 

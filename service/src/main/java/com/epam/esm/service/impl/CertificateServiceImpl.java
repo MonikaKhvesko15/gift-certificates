@@ -37,7 +37,6 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public CertificateDTO getById(Long id) {
-        //SqlSpecification specification = new CertificateByIdSpecification();
         Certificate certificate = certificateRepository.getById(id)
                 .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
         return converter.convertToDto(certificate);
@@ -52,18 +51,11 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public List<CertificateDTO> findAll() {
-        List<Certificate> certificates = certificateRepository.findAll();
-        return converter.convertToListDTO(certificates);
-    }
-
-    @Override
     public CertificateDTO create(CertificateDTO certificateDTO) {
         String name = certificateDTO.getName();
         if (certificateRepository.getByName(name).isPresent()) {
             throw new EntityAlreadyExistsException(" (name = " + name + ")");
         }
-
         Certificate certificate = converter.convertToEntity(certificateDTO);
         Set<Tag> tags = certificate.getTags();
         if (tags != null) {
@@ -90,7 +82,6 @@ public class CertificateServiceImpl implements CertificateService {
     public CertificateDTO update(Long id, CertificateDTO certificateDTO) {
         Certificate formerCertificate = certificateRepository.getById(id)
                 .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
-
         String newName = certificateDTO.getName();
         if (certificateRepository.getByName(newName).isPresent()
                 && !newName.equals(formerCertificate.getName())) {

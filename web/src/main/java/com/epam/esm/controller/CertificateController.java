@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -44,12 +43,6 @@ public class CertificateController {
     public List<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO) {
         return certificateService.findByParams(queryDTO);
     }
-
-//    @GetMapping()
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<CertificateDTO> findAll() {
-//        return certificateService.findAll();
-//    }
 
     /**
      * Find by id.

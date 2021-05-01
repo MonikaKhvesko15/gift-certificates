@@ -15,4 +15,6 @@ public abstract class BaseEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public abstract void setDeleted(boolean flag);
 }

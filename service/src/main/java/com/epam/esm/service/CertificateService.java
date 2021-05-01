@@ -12,8 +12,6 @@ public interface CertificateService {
 
     void remove(Long id);
 
-    List<CertificateDTO> findAll();
-
     CertificateDTO update(Long id, CertificateDTO certificate);
 
     List<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO);

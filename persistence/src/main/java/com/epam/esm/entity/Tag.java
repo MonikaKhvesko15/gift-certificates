@@ -28,4 +28,9 @@ public class Tag extends BaseEntity {
 
     @Column(unique = true)
     private String name;
+
+    @Override
+    public void setDeleted(boolean flag) {
+        throw new UnsupportedOperationException();
+    }
 }

@@ -4,10 +4,10 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.specification.CriteriaSpecification;
 import lombok.AllArgsConstructor;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -27,7 +27,11 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
     public CriteriaQuery<Certificate> getCriteriaQuery(CriteriaBuilder builder) {
         CriteriaQuery<Certificate> criteria = builder.createQuery(Certificate.class);
         Root<Certificate> certificateRoot = criteria.from(Certificate.class);
+        certificateRoot.fetch("tags", JoinType.LEFT);
+        criteria.select(certificateRoot).distinct(true);
+
         List<Predicate> predicates = new ArrayList<>();
+        predicates.add(builder.isFalse(certificateRoot.get("isDeleted")));
 
         addTagNamePredicate(builder, criteria, certificateRoot, predicates);
         addPartNamePredicate(builder, certificateRoot, predicates);
@@ -36,10 +40,8 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
         Predicate[] arrayPredicates = new Predicate[predicates.size()];
         predicates.toArray(arrayPredicates);
         criteria.where(builder.and(arrayPredicates));
-        if (sortBy == null) {
-            return criteria.orderBy(builder.asc(certificateRoot.get("id")));
-        }
-        //todo: sortBy and order
+
+        sort(criteria, builder, certificateRoot);
         return criteria;
     }
 
@@ -81,5 +83,24 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
         }
     }
 
+    public void sort(
+            CriteriaQuery<Certificate> criteria,
+            CriteriaBuilder builder,
+            Root<Certificate> root) {
 
+        if (sortBy.equalsIgnoreCase("name")) {
+            if (order.equalsIgnoreCase("ASC")) {
+                criteria.orderBy(builder.asc(root.get("name")));
+            } else if (order.equalsIgnoreCase("DESC")) {
+                criteria.orderBy(builder.desc(root.get("name")));
+            }
+        }
+        if (sortBy.equalsIgnoreCase("date")) {
+            if (order.equalsIgnoreCase("ASC")) {
+                criteria.orderBy(builder.asc(root.get("createDate")));
+            } else if (order.equalsIgnoreCase("DESC")) {
+                criteria.orderBy(builder.desc(root.get("createDate")));
+            }
+        }
+    }
 }
