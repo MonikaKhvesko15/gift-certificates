@@ -9,14 +9,15 @@ import lombok.Setter;
 
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 @Setter
 @Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode
 public class CertificatePageQueryDTO implements Serializable {
-    @Size(max = 50)
-    private String tagName;
+
+    private List<@Size(max = 50) String> tags;
 
     @Size(max = 50)
     private String name;

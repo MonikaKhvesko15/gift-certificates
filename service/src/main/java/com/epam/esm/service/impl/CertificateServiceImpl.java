@@ -100,12 +100,11 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO) {
-        CriteriaSpecification<Certificate> specification = new CertificateByParamsSpecification(queryDTO.getTagName(),
+        CriteriaSpecification<Certificate> specification = new CertificateByParamsSpecification(queryDTO.getTags(),
                 queryDTO.getName(), queryDTO.getDescription(), queryDTO.getSortBy(), queryDTO.getOrder());
         List<Certificate> certificates = certificateRepository.getEntityListBySpecification(specification);
         return converter.convertToListDTO(certificates);
     }
-
 }
 
 
