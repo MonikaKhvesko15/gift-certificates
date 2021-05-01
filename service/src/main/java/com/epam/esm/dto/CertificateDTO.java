@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -21,8 +22,8 @@ import java.util.Set;
 @Setter
 @Getter
 @RequiredArgsConstructor
-@EqualsAndHashCode
-public class CertificateDTO implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class CertificateDTO extends RepresentationModel<CertificateDTO> implements Serializable{
     private Long id;
 
     @NotBlank

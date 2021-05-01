@@ -1,8 +1,8 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.TagDTO;
+import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.service.TagService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -25,9 +23,12 @@ import java.util.List;
 @RequestMapping(value = "/v1/tags")
 public class TagController {
     private final TagService tagService;
+    private final LinkBuilder<TagDTO> tagDTOLinkBuilder;
 
-    public TagController(TagService tagService) {
+    public TagController(TagService tagService,
+                         LinkBuilder<TagDTO> tagDTOLinkBuilder) {
         this.tagService = tagService;
+        this.tagDTOLinkBuilder = tagDTOLinkBuilder;
     }
 
     /**
@@ -38,7 +39,9 @@ public class TagController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<TagDTO> findAll() {
-        return tagService.findAll();
+        List<TagDTO> tagDTOList = tagService.findAll();
+        tagDTOList.forEach(tagDTOLinkBuilder::buildEntityLink);
+        return tagDTOList;
     }
 
     /**
@@ -50,7 +53,9 @@ public class TagController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TagDTO findById(@PathVariable Long id) {
-        return tagService.getById(id);
+        TagDTO tagDTO = tagService.getById(id);
+        tagDTOLinkBuilder.buildEntityLink(tagDTO);
+        return tagDTO;
     }
 
     /**
@@ -73,14 +78,9 @@ public class TagController {
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public TagDTO create(@RequestBody @Valid TagDTO tagDTO
-            , HttpServletRequest request, HttpServletResponse response) {
+    public TagDTO create(@RequestBody @Valid TagDTO tagDTO) {
         TagDTO createdTag = tagService.create(tagDTO);
-        Long id = createdTag.getId();
-        String url = request.getRequestURL().toString();
-        response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
+        tagDTOLinkBuilder.buildEntityLink(createdTag);
         return createdTag;
     }
-
-
 }

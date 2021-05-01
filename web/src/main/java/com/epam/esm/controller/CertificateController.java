@@ -2,9 +2,8 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.CertificatePageQueryDTO;
+import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.service.CertificateService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 import javax.validation.Valid;
 import java.util.List;
 
@@ -27,10 +25,12 @@ import java.util.List;
 @RequestMapping(value = "/v1/certificates")
 public class CertificateController {
     private final CertificateService certificateService;
+    private final LinkBuilder<CertificateDTO> certificateDTOLinkBuilder;
 
-    @Autowired
-    public CertificateController(CertificateService certificateService) {
+    public CertificateController(CertificateService certificateService,
+                                 LinkBuilder<CertificateDTO> certificateDTOLinkBuilder) {
         this.certificateService = certificateService;
+        this.certificateDTOLinkBuilder = certificateDTOLinkBuilder;
     }
 
     /**
@@ -41,7 +41,9 @@ public class CertificateController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO) {
-        return certificateService.findByParams(queryDTO);
+        List<CertificateDTO> certificateDTOList = certificateService.findByParams(queryDTO);
+        certificateDTOList.forEach(certificateDTOLinkBuilder::buildEntityLink);
+        return certificateDTOList;
     }
 
     /**
@@ -53,7 +55,9 @@ public class CertificateController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CertificateDTO findById(@PathVariable Long id) {
-        return certificateService.getById(id);
+        CertificateDTO certificateDTO = certificateService.getById(id);
+        certificateDTOLinkBuilder.buildEntityLink(certificateDTO);
+        return certificateDTO;
     }
 
     /**
@@ -64,13 +68,9 @@ public class CertificateController {
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public CertificateDTO create(@RequestBody @Valid CertificateDTO certificateDTO,
-                                 HttpServletRequest request,
-                                 HttpServletResponse response) {
+    public CertificateDTO create(@RequestBody @Valid CertificateDTO certificateDTO) {
         CertificateDTO createdCertificate = certificateService.create(certificateDTO);
-        Long id = createdCertificate.getId();
-        String url = request.getRequestURL().toString();
-        response.setHeader(HttpHeaders.LOCATION, url + "/" + id);
+        certificateDTOLinkBuilder.buildEntityLink(createdCertificate);
         return createdCertificate;
     }
 
@@ -99,6 +99,8 @@ public class CertificateController {
     @ResponseStatus(HttpStatus.OK)
     public CertificateDTO update(@RequestBody @Valid CertificateDTO certificateDTO,
                                  @PathVariable Long id) {
-        return certificateService.update(id, certificateDTO);
+        CertificateDTO updatedCertificate = certificateService.update(id, certificateDTO);
+        certificateDTOLinkBuilder.buildEntityLink(updatedCertificate);
+        return updatedCertificate;
     }
 }

@@ -31,9 +31,6 @@ subprojects {
         //utils
         implementation 'org.apache.commons:commons-lang3:3.10'
 
-        // https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen
-        compileOnly group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.4.30.Final'
-
     }
 
     test {
