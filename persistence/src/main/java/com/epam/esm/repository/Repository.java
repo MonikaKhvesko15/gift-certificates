@@ -1,6 +1,8 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.specification.CriteriaSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +18,7 @@ public interface Repository<T> {
 
     Optional<T> getByName(String name);
 
-    List<T> getEntityListBySpecification(CriteriaSpecification<T> specification);
+    Page<T> getEntityListBySpecification(CriteriaSpecification<T> specification, Pageable pageable);
 
     Optional<T> getEntityBySpecification(CriteriaSpecification<T> specification);
 }

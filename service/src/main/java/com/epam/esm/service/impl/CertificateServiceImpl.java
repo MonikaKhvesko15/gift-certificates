@@ -14,6 +14,9 @@ import com.epam.esm.service.CertificateService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.certificate.CertificateByParamsSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -99,11 +102,13 @@ public class CertificateServiceImpl implements CertificateService {
 
 
     @Override
-    public List<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO) {
+    public Page<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, Pageable pageable) {
         CriteriaSpecification<Certificate> specification = new CertificateByParamsSpecification(queryDTO.getTags(),
                 queryDTO.getName(), queryDTO.getDescription(), queryDTO.getSortBy(), queryDTO.getOrder());
-        List<Certificate> certificates = certificateRepository.getEntityListBySpecification(specification);
-        return converter.convertToListDTO(certificates);
+        Page<Certificate> certificatePage = certificateRepository.getEntityListBySpecification(specification, pageable);
+        //todo: refactor?
+        List<CertificateDTO> certificateDTOList = converter.convertToListDTO(certificatePage.getContent());
+        return new PageImpl<>(certificateDTOList, pageable, certificatePage.getTotalElements());
     }
 }
 

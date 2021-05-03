@@ -10,6 +10,9 @@ import com.epam.esm.service.TagService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.tag.TagAllSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,10 +45,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> findAll() {
+    public Page<TagDTO> findAll(Pageable pageable) {
         CriteriaSpecification<Tag> specification = new TagAllSpecification();
-        List<Tag> tags = tagRepository.getEntityListBySpecification(specification);
-        return converter.convertToListDTO(tags);
+        Page<Tag> tagPage = tagRepository.getEntityListBySpecification(specification, pageable);
+        //todo: refactor?
+        List<TagDTO> tagDTOList = converter.convertToListDTO(tagPage.getContent());
+        return new PageImpl<>(tagDTOList, pageable, tagPage.getTotalElements());
     }
 
     @Override
