@@ -1,18 +1,18 @@
 package com.epam.esm.repository;
 
+import com.epam.esm.entity.BaseEntity;
 import com.epam.esm.specification.CriteriaSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface Repository<T> {
+public interface Repository<T extends BaseEntity> {
     T save(T model);
 
     T update(T model);
 
-    void deleteById(Long id);
+    void delete(T entity);
 
     Optional<T> getById(Long id);
 

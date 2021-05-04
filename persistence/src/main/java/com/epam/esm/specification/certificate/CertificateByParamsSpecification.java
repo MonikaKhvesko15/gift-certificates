@@ -103,9 +103,9 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
         }
         if (sortBy.equalsIgnoreCase("date")) {
             if (order.equalsIgnoreCase("ASC")) {
-                criteria.orderBy(builder.asc(root.get("createDate")));
+                criteria.orderBy(builder.asc(root.get("create_date")));
             } else if (order.equalsIgnoreCase("DESC")) {
-                criteria.orderBy(builder.desc(root.get("createDate")));
+                criteria.orderBy(builder.desc(root.get("create_date")));
             }
         }
     }

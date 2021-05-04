@@ -2,6 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.link.LinkBuilder;
+import com.epam.esm.link.TagDTOLinkBuilder;
 import com.epam.esm.service.TagService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,7 @@ public class TagController {
     private final LinkBuilder<TagDTO> tagDTOLinkBuilder;
 
     public TagController(TagService tagService,
-                         LinkBuilder<TagDTO> tagDTOLinkBuilder) {
+                         TagDTOLinkBuilder tagDTOLinkBuilder) {
         this.tagService = tagService;
         this.tagDTOLinkBuilder = tagDTOLinkBuilder;
     }
@@ -42,7 +43,7 @@ public class TagController {
     @ResponseStatus(HttpStatus.OK)
     public Page<TagDTO> findAll(@PageableDefault(page = 0, size = 10) Pageable pageable) {
         Page<TagDTO> tagDTOPage = tagService.findAll(pageable);
-        tagDTOPage.getContent().forEach(tagDTOLinkBuilder::buildEntityLink);
+        tagDTOPage.getContent().forEach(tagDTOLinkBuilder::toModel);
         return tagDTOPage;
     }
 
@@ -56,7 +57,7 @@ public class TagController {
     @ResponseStatus(HttpStatus.OK)
     public TagDTO findById(@PathVariable Long id) {
         TagDTO tagDTO = tagService.getById(id);
-        tagDTOLinkBuilder.buildEntityLink(tagDTO);
+        tagDTOLinkBuilder.toModel(tagDTO);
         return tagDTO;
     }
 
@@ -82,7 +83,7 @@ public class TagController {
     @ResponseStatus(HttpStatus.CREATED)
     public TagDTO create(@RequestBody @Valid TagDTO tagDTO) {
         TagDTO createdTag = tagService.create(tagDTO);
-        tagDTOLinkBuilder.buildEntityLink(createdTag);
+        tagDTOLinkBuilder.toModel(createdTag);
         return createdTag;
     }
 }

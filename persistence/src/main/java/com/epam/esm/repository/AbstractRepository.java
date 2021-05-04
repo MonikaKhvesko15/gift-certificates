@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -27,7 +28,7 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
     @PersistenceContext
     protected final EntityManager entityManager;
     protected final CriteriaBuilder builder;
-    private final Class<T> entityClass;
+    protected final Class<T> entityClass;
 
     protected AbstractRepository(EntityManager entityManager, Class<T> entityClass) {
         this.entityManager = entityManager;
@@ -50,8 +51,7 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
-        T entity = entityManager.find(entityClass, id);
+    public void delete(T entity) {
         entity.setDeleted(true);
         entityManager.merge(entity);
     }
@@ -94,6 +94,10 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
     public Page<T> getEntityListBySpecification(CriteriaSpecification<T> specification, Pageable pageable) {
         CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
         //todo: pagination logic
+//        TypedQuery<T> typedQuery = entityManager.createQuery(criteriaQuery);
+//        typedQuery.setFirstResult((int) pageable.getOffset());
+//        typedQuery.setMaxResults(pageable.getPageSize());
+        //
         List<T> entityList = entityManager.createQuery(criteriaQuery).getResultList();
         return new PageImpl<>(entityList, pageable, entityList.size());
     }

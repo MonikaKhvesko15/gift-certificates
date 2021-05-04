@@ -2,6 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.CertificatePageQueryDTO;
+import com.epam.esm.link.CertificateDTOLinkBuilder;
 import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.service.CertificateService;
 import org.springframework.data.domain.Page;
@@ -30,7 +31,7 @@ public class CertificateController {
     private final LinkBuilder<CertificateDTO> certificateDTOLinkBuilder;
 
     public CertificateController(CertificateService certificateService,
-                                 LinkBuilder<CertificateDTO> certificateDTOLinkBuilder) {
+                                 CertificateDTOLinkBuilder certificateDTOLinkBuilder) {
         this.certificateService = certificateService;
         this.certificateDTOLinkBuilder = certificateDTOLinkBuilder;
     }
@@ -45,7 +46,7 @@ public class CertificateController {
     public Page<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO,
                                      @PageableDefault(page = 0, size = 10) Pageable pageable) {
         Page<CertificateDTO> certificateDTOPage = certificateService.findByParams(queryDTO, pageable);
-        certificateDTOPage.getContent().forEach(certificateDTOLinkBuilder::buildEntityLink);
+        certificateDTOPage.getContent().forEach(certificateDTOLinkBuilder::toModel);
         return certificateDTOPage;
     }
 
@@ -59,7 +60,7 @@ public class CertificateController {
     @ResponseStatus(HttpStatus.OK)
     public CertificateDTO findById(@PathVariable Long id) {
         CertificateDTO certificateDTO = certificateService.getById(id);
-        certificateDTOLinkBuilder.buildEntityLink(certificateDTO);
+        certificateDTOLinkBuilder.toModel(certificateDTO);
         return certificateDTO;
     }
 
@@ -73,7 +74,7 @@ public class CertificateController {
     @ResponseStatus(HttpStatus.CREATED)
     public CertificateDTO create(@RequestBody @Valid CertificateDTO certificateDTO) {
         CertificateDTO createdCertificate = certificateService.create(certificateDTO);
-        certificateDTOLinkBuilder.buildEntityLink(createdCertificate);
+        certificateDTOLinkBuilder.toModel(createdCertificate);
         return createdCertificate;
     }
 
@@ -103,7 +104,7 @@ public class CertificateController {
     public CertificateDTO update(@RequestBody @Valid CertificateDTO certificateDTO,
                                  @PathVariable Long id) {
         CertificateDTO updatedCertificate = certificateService.update(id, certificateDTO);
-        certificateDTOLinkBuilder.buildEntityLink(updatedCertificate);
+        certificateDTOLinkBuilder.toModel(updatedCertificate);
         return updatedCertificate;
     }
 }

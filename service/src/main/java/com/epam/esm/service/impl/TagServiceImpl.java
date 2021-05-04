@@ -38,10 +38,9 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void remove(Long id) {
-        if (!tagRepository.getById(id).isPresent()) {
-            throw new EntityNotFoundException(" (id = " + id + ")");
-        }
-        tagRepository.deleteById(id);
+        Tag tag = tagRepository.getById(id)
+                .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
+        tagRepository.delete(tag);
     }
 
     @Override

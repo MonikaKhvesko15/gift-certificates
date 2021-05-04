@@ -33,3 +33,14 @@ INSERT INTO gift_certificates_tags(gift_certificate_id, tag_id)
 VALUES (4, 2);
 INSERT INTO gift_certificates_tags(gift_certificate_id, tag_id)
 VALUES (4, 4);
+
+
+insert into users(username, password) values ('user1', 'user1')
+insert into users(username, password) values ('user2', 'user2');
+insert into users(username, password) values ('user3', 'user3');
+insert into users(username, password) values ('user4', 'user4');
+insert into users(username, password) values ('user5', 'user5');
+
+insert into users(username, password, role) values ('admin', 'admin','ADMIN')
+
+

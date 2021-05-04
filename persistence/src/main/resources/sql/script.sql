@@ -41,25 +41,35 @@ CREATE TYPE order_status AS ENUM (
 CREATE TABLE orders
 (
     id                  bigserial      NOT NULL PRIMARY KEY,
-    create_date         timestamptz           NOT NULL,
     total_price         double precision NOT NULL,
+    create_date         timestamptz           NOT NULL,
     is_deleted          boolean DEFAULT false,
     status              order_status DEFAULT 'PENDING',
-    user_id             BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-    gift_certificate_id BIGINT NOT NULL REFERENCES gift_certificates (id) ON DELETE CASCADE
+	user_id              BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS gift_certificates_orders;
+
+CREATE TABLE gift_certificates_orders
+(
+    gift_certificate_id BIGINT NOT NULL REFERENCES gift_certificates (id) ON DELETE CASCADE ,
+    order_id              BIGINT NOT NULL REFERENCES orders (id) ON DELETE CASCADE,
+    PRIMARY KEY (gift_certificate_id, order_id)
 );
 
 CREATE TYPE user_role AS ENUM (
+    'GUEST',
     'USER',
     'ADMIN'
 )
 
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users
 (
     id               bigserial      NOT NULL PRIMARY KEY,
-    username         VARCHAR(50)  NOT NULL,
+    username         VARCHAR(20)  NOT NULL,
     password         VARCHAR(255) NOT NULL,
     is_deleted       boolean DEFAULT false,
-    status           user_role NOT NULL,
-    order_id         BIGINT NOT NULL REFERENCES orders (id) ON DELETE CASCADE,
+    role             user_role DEFAULT 'GUEST'
 );

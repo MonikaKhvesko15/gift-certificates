@@ -11,23 +11,21 @@ import java.util.Optional;
 
 @Repository
 public class TagRepositoryImpl extends AbstractRepository<Tag> {
-    private static final Class<Tag> tagClass = Tag.class;
 
     public TagRepositoryImpl(EntityManager entityManager) {
-        super(entityManager, tagClass);
+        super(entityManager, Tag.class);
     }
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
-        Tag model = entityManager.find(tagClass, id);
-        entityManager.remove(model);
+    public void delete(Tag tag) {
+        entityManager.remove(tag);
     }
 
     @Override
     public Optional<Tag> getByName(String name) {
-        CriteriaQuery<Tag> criteria = builder.createQuery(tagClass);
-        Root<Tag> entityRoot = criteria.from(tagClass);
+        CriteriaQuery<Tag> criteria = builder.createQuery(entityClass);
+        Root<Tag> entityRoot = criteria.from(entityClass);
         criteria.select(entityRoot)
                 .where(builder.equal(entityRoot.get("name"), name));
         return findOrEmpty(() ->
@@ -38,7 +36,7 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> {
 
     @Override
     public Optional<Tag> getById(Long id) {
-        return Optional.ofNullable(entityManager.find(tagClass, id));
+        return Optional.ofNullable(entityManager.find(entityClass, id));
     }
 }
 

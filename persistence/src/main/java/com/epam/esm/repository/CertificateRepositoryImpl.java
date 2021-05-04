@@ -7,9 +7,8 @@ import javax.persistence.EntityManager;
 
 @Repository
 public class CertificateRepositoryImpl extends AbstractRepository<Certificate> {
-    private static final Class<Certificate> certificateClass = Certificate.class;
 
     public CertificateRepositoryImpl(EntityManager entityManager) {
-        super(entityManager, certificateClass);
+        super(entityManager, Certificate.class);
     }
 }

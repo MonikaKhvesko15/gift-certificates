@@ -47,10 +47,9 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public void remove(Long id) {
-        if (!certificateRepository.getById(id).isPresent()) {
-            throw new EntityNotFoundException(" (id = " + id + ")");
-        }
-        certificateRepository.deleteById(id);
+        Certificate certificate = certificateRepository.getById(id)
+                .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
+        certificateRepository.delete(certificate);
     }
 
     @Override
@@ -106,7 +105,6 @@ public class CertificateServiceImpl implements CertificateService {
         CriteriaSpecification<Certificate> specification = new CertificateByParamsSpecification(queryDTO.getTags(),
                 queryDTO.getName(), queryDTO.getDescription(), queryDTO.getSortBy(), queryDTO.getOrder());
         Page<Certificate> certificatePage = certificateRepository.getEntityListBySpecification(specification, pageable);
-        //todo: refactor?
         List<CertificateDTO> certificateDTOList = converter.convertToListDTO(certificatePage.getContent());
         return new PageImpl<>(certificateDTOList, pageable, certificatePage.getTotalElements());
     }

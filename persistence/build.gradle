@@ -4,6 +4,8 @@ plugins{
 }
 
 dependencies {
+// https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen
+    compileOnly group: 'org.hibernate', name: 'hibernate-jpamodelgen'
 
     runtimeOnly('com.h2database:h2:1.4.200')
     implementation 'org.postgresql:postgresql:42.2.19'

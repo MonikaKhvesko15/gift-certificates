@@ -10,7 +10,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 public class TagDTOLinkBuilder implements LinkBuilder<TagDTO> {
     @Override
-    public void buildEntityLink(TagDTO tagDTO) {
+    public void toModel(TagDTO tagDTO) {
         tagDTO.add(linkTo(TagController.class).withRel("tags"));
         tagDTO.add(linkTo(methodOn(TagController.class).findById(tagDTO.getId())).withSelfRel());
     }
