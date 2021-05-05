@@ -2,9 +2,8 @@ package com.epam.esm.repository;
 
 import com.epam.esm.entity.BaseEntity;
 import com.epam.esm.specification.CriteriaSpecification;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface Repository<T extends BaseEntity> {
@@ -18,7 +17,7 @@ public interface Repository<T extends BaseEntity> {
 
     Optional<T> getByName(String name);
 
-    Page<T> getEntityListBySpecification(CriteriaSpecification<T> specification, Pageable pageable);
+    List<T> getEntityListBySpecification(CriteriaSpecification<T> specification, Integer pageNumber, Integer pageSize);
 
     Optional<T> getEntityBySpecification(CriteriaSpecification<T> specification);
 }

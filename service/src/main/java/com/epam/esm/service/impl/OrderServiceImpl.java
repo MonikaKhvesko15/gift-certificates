@@ -2,6 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.converter.OrderDTOConverter;
 import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.OrderStatus;
 import com.epam.esm.entity.User;
@@ -13,9 +14,6 @@ import com.epam.esm.service.OrderService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.order.OrderAllSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -45,11 +43,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderDTO> findAll(Pageable pageable) {
+    public List<OrderDTO> findAll(PageRequestDTO pageRequestDTO) {
         CriteriaSpecification<Order> specification = new OrderAllSpecification();
-        Page<Order> orderPage = orderRepository.getEntityListBySpecification(specification, pageable);
-        List<OrderDTO> orderDTOList = orderDTOConverter.convertToListDTO(orderPage.getContent());
-        return new PageImpl<>(orderDTOList, pageable, orderPage.getTotalElements());
+        List<Order> orderList = orderRepository.getEntityListBySpecification(specification,
+                pageRequestDTO.getPage(), pageRequestDTO.getSize());
+        return orderDTOConverter.convertToListDTO(orderList);
     }
 
     @Override

@@ -5,9 +5,6 @@ import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.util.EntityRetriever;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -91,15 +88,14 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
     }
 
     @Override
-    public Page<T> getEntityListBySpecification(CriteriaSpecification<T> specification, Pageable pageable) {
+    public List<T> getEntityListBySpecification(CriteriaSpecification<T> specification,
+                                                Integer pageNumber, Integer pageSize) {
         CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
         //todo: pagination logic
-//        TypedQuery<T> typedQuery = entityManager.createQuery(criteriaQuery);
-//        typedQuery.setFirstResult((int) pageable.getOffset());
-//        typedQuery.setMaxResults(pageable.getPageSize());
-        //
-        List<T> entityList = entityManager.createQuery(criteriaQuery).getResultList();
-        return new PageImpl<>(entityList, pageable, entityList.size());
+        TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
+        query.setFirstResult((pageNumber - 1) * pageSize);
+        query.setMaxResults(pageSize);
+        return query.getResultList();
     }
 
     @Override

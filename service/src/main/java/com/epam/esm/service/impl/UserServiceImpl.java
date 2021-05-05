@@ -1,6 +1,7 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.converter.UserDTOConverter;
+import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityNotFoundException;
@@ -10,9 +11,6 @@ import com.epam.esm.service.UserService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.user.UserAllSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,10 +35,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDTO> findAll(Pageable pageable) {
+    public List<UserDTO> findAll(PageRequestDTO pageRequestDTO) {
         CriteriaSpecification<User> specification = new UserAllSpecification();
-        Page<User> userPage = userRepository.getEntityListBySpecification(specification, pageable);
-        List<UserDTO> userDTOList = userDTOConverter.convertToListDTO(userPage.getContent());
-        return new PageImpl<>(userDTOList, pageable, userPage.getTotalElements());
+        List<User> userList = userRepository.getEntityListBySpecification(specification,
+                pageRequestDTO.getPage(), pageRequestDTO.getPage());
+        return userDTOConverter.convertToListDTO(userList);
     }
 }

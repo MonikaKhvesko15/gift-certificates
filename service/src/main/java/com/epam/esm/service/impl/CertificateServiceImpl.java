@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.converter.CertificateDTOConverter;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.CertificatePageQueryDTO;
+import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityAlreadyExistsException;
@@ -14,9 +15,6 @@ import com.epam.esm.service.CertificateService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.certificate.CertificateByParamsSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -101,12 +99,12 @@ public class CertificateServiceImpl implements CertificateService {
 
 
     @Override
-    public Page<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, Pageable pageable) {
+    public List<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, PageRequestDTO pageRequestDTO) {
         CriteriaSpecification<Certificate> specification = new CertificateByParamsSpecification(queryDTO.getTags(),
                 queryDTO.getName(), queryDTO.getDescription(), queryDTO.getSortBy(), queryDTO.getOrder());
-        Page<Certificate> certificatePage = certificateRepository.getEntityListBySpecification(specification, pageable);
-        List<CertificateDTO> certificateDTOList = converter.convertToListDTO(certificatePage.getContent());
-        return new PageImpl<>(certificateDTOList, pageable, certificatePage.getTotalElements());
+        List<Certificate> certificates = certificateRepository.getEntityListBySpecification(specification,
+                pageRequestDTO.getPage(), pageRequestDTO.getSize());
+        return converter.convertToListDTO(certificates);
     }
 }
 

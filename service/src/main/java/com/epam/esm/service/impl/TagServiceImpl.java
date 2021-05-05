@@ -1,6 +1,7 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.converter.TagDTOConverter;
+import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityAlreadyExistsException;
@@ -10,9 +11,6 @@ import com.epam.esm.service.TagService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.tag.TagAllSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,12 +42,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Page<TagDTO> findAll(Pageable pageable) {
+    public List<TagDTO> findAll(PageRequestDTO pageRequestDTO) {
         CriteriaSpecification<Tag> specification = new TagAllSpecification();
-        Page<Tag> tagPage = tagRepository.getEntityListBySpecification(specification, pageable);
-        //todo: refactor?
-        List<TagDTO> tagDTOList = converter.convertToListDTO(tagPage.getContent());
-        return new PageImpl<>(tagDTOList, pageable, tagPage.getTotalElements());
+        List<Tag> tagList = tagRepository.getEntityListBySpecification(specification,
+                pageRequestDTO.getPage(), pageRequestDTO.getSize());
+        List<TagDTO> tagDTOList = converter.convertToListDTO(tagList);
+        return tagDTOList;
     }
 
     @Override

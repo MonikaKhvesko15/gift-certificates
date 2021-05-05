@@ -2,8 +2,9 @@ package com.epam.esm.service;
 
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.CertificatePageQueryDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.epam.esm.dto.PageRequestDTO;
+
+import java.util.List;
 
 public interface CertificateService {
     CertificateDTO getById(Long id);
@@ -14,5 +15,5 @@ public interface CertificateService {
 
     CertificateDTO update(Long id, CertificateDTO certificate);
 
-    Page<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, Pageable pageable);
+    List<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, PageRequestDTO pageRequestDTO);
 }

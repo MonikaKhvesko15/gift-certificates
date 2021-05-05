@@ -2,12 +2,10 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.CertificatePageQueryDTO;
+import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.link.CertificateDTOLinkBuilder;
 import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.service.CertificateService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * The controller to provide CRUD operations on {@link CertificateDTO}.
@@ -43,11 +42,11 @@ public class CertificateController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public Page<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO,
-                                     @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        Page<CertificateDTO> certificateDTOPage = certificateService.findByParams(queryDTO, pageable);
-        certificateDTOPage.getContent().forEach(certificateDTOLinkBuilder::toModel);
-        return certificateDTOPage;
+    public List<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO,
+                                     @Valid PageRequestDTO pageRequestDTO) {
+        List<CertificateDTO> certificateDTOList = certificateService.findByParams(queryDTO, pageRequestDTO);
+        certificateDTOList.forEach(certificateDTOLinkBuilder::toModel);
+        return certificateDTOList;
     }
 
     /**
