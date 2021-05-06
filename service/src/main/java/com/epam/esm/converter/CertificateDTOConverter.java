@@ -5,7 +5,6 @@ import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ public class CertificateDTOConverter {
     private final ModelMapper modelMapper;
     private final TagDTOConverter tagConverter;
 
-    @Autowired
     public CertificateDTOConverter(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
         this.tagConverter = new TagDTOConverter(modelMapper);
@@ -28,7 +26,8 @@ public class CertificateDTOConverter {
     public Certificate convertToEntity(CertificateDTO certificateDto) {
         Set<Tag> tags = new HashSet<>();
         if (!certificateDto.getTags().isEmpty()) {
-            tags = certificateDto.getTags().stream().map(tagConverter::convertToEntity).collect(Collectors.toSet());
+            tags = certificateDto.getTags().stream()
+                    .map(tagConverter::convertToEntity).collect(Collectors.toSet());
         }
         Certificate certificate = modelMapper.map(certificateDto, Certificate.class);
         certificate.setTags(tags);
@@ -36,7 +35,8 @@ public class CertificateDTOConverter {
     }
 
     public CertificateDTO convertToDto(Certificate certificate) {
-        Set<TagDTO> tags = certificate.getTags().stream().map(tagConverter::convertToDto).collect(Collectors.toSet());
+        Set<TagDTO> tags = certificate.getTags().stream()
+                .map(tagConverter::convertToDto).collect(Collectors.toSet());
         CertificateDTO certificateDTO = modelMapper.map(certificate, CertificateDTO.class);
         certificateDTO.setTags(tags);
         return certificateDTO;

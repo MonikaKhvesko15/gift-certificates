@@ -3,14 +3,14 @@ package com.epam.esm.validator;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class OrderTypeValidator implements
-        ConstraintValidator<OrderType, String> {
+public class SortOrderTypeValidator implements
+        ConstraintValidator<SortOrderType, String> {
 
     private static final String ASC_ORDER_TYPE = "ASC";
     private static final String DESC_ORDER_TYPE = "DESC";
 
     @Override
-    public void initialize(OrderType orderType) {
+    public void initialize(SortOrderType sortOrderType) {
 
     }
 

@@ -14,9 +14,8 @@ public class UserAllSpecification implements CriteriaSpecification<User> {
         CriteriaQuery<User> criteria = builder.createQuery(User.class);
         Root<User> userRoot = criteria.from(User.class);
         criteria.select(userRoot).distinct(true);
-
-        Predicate predicate = builder.isFalse(userRoot.get("isDeleted"));
-        criteria.where(predicate);
+        Predicate isNotDeletedPredicate = builder.isFalse(userRoot.get("isDeleted"));
+        criteria.where(isNotDeletedPredicate);
         return criteria;
     }
 }

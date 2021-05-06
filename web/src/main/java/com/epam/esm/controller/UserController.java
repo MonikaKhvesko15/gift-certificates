@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.link.LinkBuilder;
@@ -38,9 +39,9 @@ public class UserController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
-        List<UserDTO> userDTOList = userService.findAll(pageRequestDTO);
-        userDTOList.forEach(linkBuilder::toModel);
-        return userDTOList;
+    public PageDTO<UserDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
+        return userService.findAll(pageRequestDTO);
+//        userDTOList.forEach(linkBuilder::toModel);
+//        return userDTOList;
     }
 }

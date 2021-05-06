@@ -1,6 +1,5 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.entity.Order;
 import com.epam.esm.entity.UserRole;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,7 +25,6 @@ public class UserDTO extends RepresentationModel<UserDTO> implements Serializabl
     @NotBlank
     @Size(min = 10, max = 15)
     private String password;
-
     private UserRole role;
     @Valid
     private Set<OrderDTO> orders;

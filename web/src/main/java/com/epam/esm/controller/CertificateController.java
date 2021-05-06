@@ -2,6 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.CertificatePageQueryDTO;
+import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.link.CertificateDTOLinkBuilder;
 import com.epam.esm.link.LinkBuilder;
@@ -42,11 +43,11 @@ public class CertificateController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO,
-                                     @Valid PageRequestDTO pageRequestDTO) {
-        List<CertificateDTO> certificateDTOList = certificateService.findByParams(queryDTO, pageRequestDTO);
-        certificateDTOList.forEach(certificateDTOLinkBuilder::toModel);
-        return certificateDTOList;
+    public PageDTO<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO,
+                                        @Valid PageRequestDTO pageRequestDTO) {
+        return certificateService.findByParams(queryDTO, pageRequestDTO);
+       // certificateDTOList.forEach(certificateDTOLinkBuilder::toModel);
+       // return certificateDTOList;
     }
 
     /**
@@ -98,6 +99,10 @@ public class CertificateController {
      * @param certificateDTO the updated fields of certificate
      * @return the updated certificate {@link CertificateDTO}
      */
+
+
+    //todo: patch add endpoint
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CertificateDTO update(@RequestBody @Valid CertificateDTO certificateDTO,

@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.link.LinkBuilder;
@@ -40,10 +41,10 @@ public class TagController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<TagDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
-        List<TagDTO> tagDTOList = tagService.findAll(pageRequestDTO);
-        tagDTOList.forEach(tagDTOLinkBuilder::toModel);
-        return tagDTOList;
+    public PageDTO<TagDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
+        return tagService.findAll(pageRequestDTO);
+//        tagDTOList.forEach(tagDTOLinkBuilder::toModel);
+//        return tagDTOList;
     }
 
     /**

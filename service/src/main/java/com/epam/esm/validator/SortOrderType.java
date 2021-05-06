@@ -11,11 +11,11 @@ import static java.lang.annotation.ElementType.PARAMETER;
 
 
 @Documented
-@Constraint(validatedBy = OrderTypeValidator.class)
+@Constraint(validatedBy = SortOrderTypeValidator.class)
 @Target({FIELD, PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface OrderType {
-    String message() default "validation.order.message";
+public @interface SortOrderType {
+    String message() default "validation.sort.order.message";
 
     Class[] groups() default {};
 

@@ -29,7 +29,7 @@ public class User extends BaseEntity {
 
     private String password;
 
-    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+    @Column(name = "is_deleted", columnDefinition = "boolean default false", insertable = false)
     private boolean isDeleted;
 
     @Enumerated(EnumType.STRING)

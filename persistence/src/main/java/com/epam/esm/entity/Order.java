@@ -42,7 +42,7 @@ public class Order extends BaseEntity {
     @CreationTimestamp
     private LocalDateTime createDate;
 
-    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+    @Column(name = "is_deleted", columnDefinition = "boolean default false", insertable = false)
     private boolean isDeleted;
 
     @Enumerated(EnumType.STRING)

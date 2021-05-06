@@ -1,13 +1,10 @@
 package com.epam.esm.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
@@ -24,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@DynamicUpdate
 @Table(name = "gift_certificates")
 @Setter
 @Getter
@@ -48,7 +44,7 @@ public class Certificate extends BaseEntity {
     @UpdateTimestamp
     private LocalDateTime lastUpdateDate;
 
-    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+    @Column(name = "is_deleted", columnDefinition = "boolean default false", insertable = false)
     private boolean isDeleted;
 
     @ManyToMany

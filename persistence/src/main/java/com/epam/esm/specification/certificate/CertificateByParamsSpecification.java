@@ -32,31 +32,38 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
         criteria.select(certificateRoot).distinct(true);
 
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(builder.isFalse(certificateRoot.get("isDeleted")));
-
-        addListTagsPredicate(builder, criteria, certificateRoot, predicates);
-        addPartNamePredicate(builder, certificateRoot, predicates);
-        addPartDescriptionPredicate(builder, certificateRoot, predicates);
-
+        Predicate isNotDeletedPredicate = builder.isFalse(certificateRoot.get("isDeleted"));
+        predicates.add(isNotDeletedPredicate);
+        if (tags != null) {
+            List<Predicate> listTagsPredicate = getListTagsPredicate(builder, criteria, certificateRoot);
+            predicates.addAll(listTagsPredicate);
+        }
+        if (name != null) {
+            Predicate partNamePredicate = getPartNamePredicate(builder, certificateRoot);
+            predicates.add(partNamePredicate);
+        }
+        if (description != null) {
+            Predicate partDescriptionPredicate = getPartDescriptionPredicate(builder, certificateRoot);
+            predicates.add(partDescriptionPredicate);
+        }
         Predicate[] arrayPredicates = new Predicate[predicates.size()];
         predicates.toArray(arrayPredicates);
-        criteria.where(builder.and(arrayPredicates));
+        criteria.where(arrayPredicates);
 
         sort(criteria, builder, certificateRoot);
         return criteria;
     }
 
-    private void addListTagsPredicate(CriteriaBuilder builder,
-                                      CriteriaQuery<Certificate> criteria,
-                                      Root<Certificate> certificateRoot,
-                                      List<Predicate> predicates) {
-        if (tags != null) {
-            for (String tagName : tags) {
-                Subquery<Certificate> subQuery = getTagNameSubQuery(builder, criteria, tagName);
-                Predicate predicate = builder.in(certificateRoot).value(subQuery);
-                predicates.add(predicate);
-            }
+    private List<Predicate> getListTagsPredicate(CriteriaBuilder builder,
+                                                 CriteriaQuery<Certificate> criteria,
+                                                 Root<Certificate> certificateRoot) {
+        List<Predicate> predicates = new ArrayList<>();
+        for (String tagName : tags) {
+            Subquery<Certificate> subQuery = getTagNameSubQuery(builder, criteria, tagName);
+            Predicate predicate = builder.in(certificateRoot).value(subQuery);
+            predicates.add(predicate);
         }
+        return predicates;
     }
 
     private Subquery<Certificate> getTagNameSubQuery(CriteriaBuilder builder,
@@ -71,23 +78,16 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
         return subQuery;
     }
 
-    private void addPartNamePredicate(CriteriaBuilder builder,
-                                      Root<Certificate> certificateRoot,
-                                      List<Predicate> predicates) {
-        if (name != null) {
-            predicates.add(builder.like(
-                    builder.upper(certificateRoot.get("name")), "%" + name.toUpperCase() + "%"));
-        }
+    private Predicate getPartNamePredicate(CriteriaBuilder builder,
+                                           Root<Certificate> certificateRoot) {
+        return builder.like(
+                builder.upper(certificateRoot.get("name")), "%" + name.toUpperCase() + "%");
     }
 
-    private void addPartDescriptionPredicate(CriteriaBuilder builder,
-                                             Root<Certificate> certificateRoot,
-                                             List<Predicate> predicates) {
-        if (description != null) {
-            predicates.add(
-                    builder.like(
-                            builder.upper(certificateRoot.get("description")), "%" + description.toUpperCase() + "%"));
-        }
+    private Predicate getPartDescriptionPredicate(CriteriaBuilder builder,
+                                                  Root<Certificate> certificateRoot) {
+        return builder.like(
+                        builder.upper(certificateRoot.get("description")), "%" + description.toUpperCase() + "%");
     }
 
     public void sort(CriteriaQuery<Certificate> criteria,

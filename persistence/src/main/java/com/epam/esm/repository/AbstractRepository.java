@@ -5,6 +5,7 @@ import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.util.EntityRetriever;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.jpa.QueryHints;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -15,7 +16,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,15 +35,15 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
 
     @Override
     @Transactional
-    public T save(T model) {
-        entityManager.persist(model);
-        return model;
+    public T save(T entity) {
+        entityManager.persist(entity);
+        return entity;
     }
 
     @Override
     @Transactional
-    public T update(T model) {
-        return entityManager.merge(model);
+    public T update(T entity) {
+        return entityManager.merge(entity);
     }
 
     @Override
@@ -57,13 +57,9 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
     public Optional<T> getByName(String name) {
         CriteriaQuery<T> criteria = builder.createQuery(entityClass);
         Root<T> entityRoot = criteria.from(entityClass);
-
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(builder.isFalse(entityRoot.get("isDeleted")));
-        predicates.add(builder.equal(entityRoot.get("name"), name));
-        criteria.select(entityRoot)
-                .where(predicates.toArray(new Predicate[]{}));
-
+        Predicate isNotDeletedPredicate = builder.isFalse(entityRoot.get("isDeleted"));
+        Predicate namePredicate = builder.equal(entityRoot.get("name"), name);
+        criteria.select(entityRoot).where(isNotDeletedPredicate, namePredicate);
         return findOrEmpty(() ->
                 entityManager
                         .createQuery(criteria)
@@ -74,13 +70,9 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
     public Optional<T> getById(Long id) {
         CriteriaQuery<T> criteria = builder.createQuery(entityClass);
         Root<T> entityRoot = criteria.from(entityClass);
-
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(builder.isFalse(entityRoot.get("isDeleted")));
-        predicates.add(builder.equal(entityRoot.get("id"), id));
-        criteria.select(entityRoot)
-                .where(predicates.toArray(new Predicate[]{}));
-
+        Predicate isNotDeletedPredicate = builder.isFalse(entityRoot.get("isDeleted"));
+        Predicate idPredicate = builder.equal(entityRoot.get("id"), id);
+        criteria.select(entityRoot).where(isNotDeletedPredicate, idPredicate);
         return findOrEmpty(() ->
                 entityManager
                         .createQuery(criteria)
@@ -88,10 +80,17 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
     }
 
     @Override
+    public Integer countEntities(CriteriaSpecification<T> specification) {
+        CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
+        TypedQuery<T> query = entityManager.createQuery(criteriaQuery)
+                .setHint(QueryHints.HINT_READONLY, true);
+        return query.getResultList().size();
+    }
+
+    @Override
     public List<T> getEntityListBySpecification(CriteriaSpecification<T> specification,
                                                 Integer pageNumber, Integer pageSize) {
         CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
-        //todo: pagination logic
         TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
         query.setFirstResult((pageNumber - 1) * pageSize);
         query.setMaxResults(pageSize);
@@ -111,7 +110,7 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
         try {
             return Optional.of(retriever.retrieve());
         } catch (NoResultException ex) {
-            LOGGER.warn("Founded value is empty");
+            LOGGER.warn("Optional is not exists");
         }
         return Optional.empty();
     }

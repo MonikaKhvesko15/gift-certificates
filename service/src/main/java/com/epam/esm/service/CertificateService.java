@@ -2,9 +2,8 @@ package com.epam.esm.service;
 
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.CertificatePageQueryDTO;
+import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
-
-import java.util.List;
 
 public interface CertificateService {
     CertificateDTO getById(Long id);
@@ -15,5 +14,5 @@ public interface CertificateService {
 
     CertificateDTO update(Long id, CertificateDTO certificate);
 
-    List<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, PageRequestDTO pageRequestDTO);
+    PageDTO<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, PageRequestDTO pageRequestDTO);
 }

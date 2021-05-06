@@ -1,6 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.link.OrderDTOLinkBuilder;
@@ -39,15 +40,15 @@ public class OrderController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
-        List<OrderDTO> orderDTOList = orderService.findAll(pageRequestDTO);
-        orderDTOList.forEach(linkBuilder::toModel);
-        return orderDTOList;
+    public PageDTO<OrderDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
+        return orderService.findAll(pageRequestDTO);
+//        orderDTOList.forEach(linkBuilder::toModel);
+//        return orderDTOList;
     }
 
     @PostMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDTO create(@PathVariable Long userId, @RequestBody OrderDTO orderDTO) {
+    public OrderDTO create(@PathVariable Long userId, @Valid @RequestBody OrderDTO orderDTO) {
         OrderDTO createdOrder = orderService.create(userId, orderDTO);
         linkBuilder.toModel(createdOrder);
         return createdOrder;

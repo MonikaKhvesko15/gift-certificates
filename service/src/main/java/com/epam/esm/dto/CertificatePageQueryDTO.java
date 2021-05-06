@@ -1,6 +1,6 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.validator.OrderType;
+import com.epam.esm.validator.SortOrderType;
 import com.epam.esm.validator.SortType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,6 +28,6 @@ public class CertificatePageQueryDTO implements Serializable {
     @SortType
     private String sortBy = "name";
 
-    @OrderType
+    @SortOrderType
     private String order = "asc";
 }
