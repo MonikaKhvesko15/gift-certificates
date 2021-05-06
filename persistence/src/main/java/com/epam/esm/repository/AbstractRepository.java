@@ -1,6 +1,7 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.BaseEntity;
+import com.epam.esm.entity.Certificate;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.util.EntityRetriever;
 import org.apache.logging.log4j.LogManager;
@@ -114,4 +115,5 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
         }
         return Optional.empty();
     }
+
 }

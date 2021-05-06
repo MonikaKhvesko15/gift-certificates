@@ -17,13 +17,14 @@ import com.epam.esm.service.util.PageDTOUtil;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.certificate.CertificateByParamsSpecification;
 import org.springframework.stereotype.Service;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
 public class CertificateServiceImpl implements CertificateService {
-    private final Repository<Certificate> certificateRepository;
+    private final CertificateRepositoryImpl certificateRepository;
     private final Repository<Tag> tagRepository;
     private final CertificateDTOConverter converter;
     private final PageDTOUtil<Certificate, CertificateDTO> pageDTOUtil;
@@ -105,6 +106,15 @@ public class CertificateServiceImpl implements CertificateService {
         List<CertificateDTO> certificateDTOList = converter.convertToListDTO(certificates);
         return pageDTOUtil.fillPageDTO(certificateDTOList,
                 pageRequestDTO, specification, certificateRepository);
+    }
+
+    @Override
+    public CertificateDTO updateDuration(Long id, Integer duration) {
+        Certificate certificate = certificateRepository.getById(id)
+                .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
+        certificate.setDuration(duration);
+        Certificate updatedCertificate = certificateRepository.save(certificate);
+        return converter.convertToDto(updatedCertificate);
     }
 
 }

@@ -15,4 +15,6 @@ public interface CertificateService {
     CertificateDTO update(Long id, CertificateDTO certificate);
 
     PageDTO<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, PageRequestDTO pageRequestDTO);
+
+    CertificateDTO updateDuration(Long id, Integer duration);
 }
