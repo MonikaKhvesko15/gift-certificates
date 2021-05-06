@@ -9,8 +9,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class UserDTOLinkBuilder implements LinkBuilder<UserDTO> {
+    private final OrderDTOLinkBuilder orderDTOLinkBuilder;
+
+    public UserDTOLinkBuilder(OrderDTOLinkBuilder orderDTOLinkBuilder) {
+        this.orderDTOLinkBuilder = orderDTOLinkBuilder;
+    }
+
     @Override
     public void toModel(UserDTO userDTO) {
+        if (userDTO.getOrders() != null) {
+            userDTO.getOrders().forEach(orderDTOLinkBuilder::toModel);
+        }
         userDTO.add(linkTo(UserController.class).withRel("users"));
         userDTO.add(linkTo(methodOn(UserController.class).findById(userDTO.getId())).withSelfRel());
     }

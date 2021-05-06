@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * The controller to provide CRUD operations on {@link CertificateDTO}.
@@ -45,9 +44,9 @@ public class CertificateController {
     @ResponseStatus(HttpStatus.OK)
     public PageDTO<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO,
                                         @Valid PageRequestDTO pageRequestDTO) {
-        return certificateService.findByParams(queryDTO, pageRequestDTO);
-       // certificateDTOList.forEach(certificateDTOLinkBuilder::toModel);
-       // return certificateDTOList;
+        PageDTO<CertificateDTO> pageDTO = certificateService.findByParams(queryDTO, pageRequestDTO);
+        pageDTO.getContent().forEach(certificateDTOLinkBuilder::toModel);
+        return pageDTO;
     }
 
     /**

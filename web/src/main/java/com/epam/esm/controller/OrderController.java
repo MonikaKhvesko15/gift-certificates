@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/v2/orders")
@@ -41,16 +40,8 @@ public class OrderController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public PageDTO<OrderDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
-        return orderService.findAll(pageRequestDTO);
-//        orderDTOList.forEach(linkBuilder::toModel);
-//        return orderDTOList;
-    }
-
-    @PostMapping("/users/{userId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public OrderDTO create(@PathVariable Long userId, @Valid @RequestBody OrderDTO orderDTO) {
-        OrderDTO createdOrder = orderService.create(userId, orderDTO);
-        linkBuilder.toModel(createdOrder);
-        return createdOrder;
+        PageDTO<OrderDTO> pageDTO = orderService.findAll(pageRequestDTO);
+        pageDTO.getContent().forEach(linkBuilder::toModel);
+        return pageDTO;
     }
 }

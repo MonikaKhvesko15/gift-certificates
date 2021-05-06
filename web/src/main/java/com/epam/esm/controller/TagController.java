@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * The controller to provide CRD operations on {@link TagDTO}.
@@ -42,9 +41,9 @@ public class TagController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public PageDTO<TagDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
-        return tagService.findAll(pageRequestDTO);
-//        tagDTOList.forEach(tagDTOLinkBuilder::toModel);
-//        return tagDTOList;
+        PageDTO<TagDTO> pageDTO = tagService.findAll(pageRequestDTO);
+        pageDTO.getContent().forEach(tagDTOLinkBuilder::toModel);
+        return pageDTO;
     }
 
     /**

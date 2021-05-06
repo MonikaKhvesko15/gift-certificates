@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 
-import javax.validation.Valid;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,6 +21,5 @@ public class OrderDTO extends RepresentationModel<OrderDTO> implements Serializa
     private BigDecimal totalPrice;
     private LocalDateTime createDate;
     private OrderStatus status;
-    @Valid
     private List<CertificateDTO> certificates;
 }

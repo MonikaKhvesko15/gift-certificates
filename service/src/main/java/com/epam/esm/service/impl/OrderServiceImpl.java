@@ -4,10 +4,11 @@ import com.epam.esm.converter.OrderDTOConverter;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
+import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Order;
-import com.epam.esm.entity.OrderStatus;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityNotFoundException;
+import com.epam.esm.repository.CertificateRepositoryImpl;
 import com.epam.esm.repository.OrderRepositoryImpl;
 import com.epam.esm.repository.Repository;
 import com.epam.esm.repository.UserRepositoryImpl;
@@ -18,22 +19,26 @@ import com.epam.esm.specification.order.OrderAllSpecification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
     private final Repository<Order> orderRepository;
     private final Repository<User> userRepository;
+    private final Repository<Certificate> certificateRepository;
     private final OrderDTOConverter converter;
     private final PageDTOUtil<Order, OrderDTO> pageDTOUtil;
 
 
     public OrderServiceImpl(OrderRepositoryImpl orderRepository,
                             UserRepositoryImpl userRepository,
+                            CertificateRepositoryImpl certificateRepository,
                             OrderDTOConverter converter,
                             PageDTOUtil<Order, OrderDTO> pageDTOUtil) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.certificateRepository = certificateRepository;
         this.converter = converter;
         this.pageDTOUtil = pageDTOUtil;
     }
@@ -62,14 +67,28 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new EntityNotFoundException(" (id = " + userId + ")"));
         Order order = converter.convertToEntity(orderDTO);
         order.setUser(user);
-        //todo: count total price
-        order.setTotalPrice(BigDecimal.valueOf(12.3));
-        //todo: get certificates from db
-
-
-        order.setStatus(OrderStatus.PENDING);
+        List<Certificate> fullCertificates = getFullCertificates(order);
+        order.setCertificates(fullCertificates);
+        BigDecimal totalPrice = countTotalPrice(order);
+        order.setTotalPrice(totalPrice);
         return converter.convertToDto(
                 orderRepository.save(order)
         );
+    }
+
+    private List<Certificate> getFullCertificates(Order order) {
+        List<Certificate> fullCertificates = new ArrayList<>();
+        for (Certificate certificate : order.getCertificates()) {
+            Certificate fullCertificate = certificateRepository.getById(certificate.getId())
+                    .orElseThrow(() -> new EntityNotFoundException(" (id = " + certificate.getId() + ")"));
+            fullCertificates.add(fullCertificate);
+        }
+        return fullCertificates;
+    }
+
+    private BigDecimal countTotalPrice(Order order) {
+        return order.getCertificates().stream()
+                .map(Certificate::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add, BigDecimal::add);
     }
 }

@@ -46,6 +46,7 @@ public class Order extends BaseEntity {
     private boolean isDeleted;
 
     @Enumerated(EnumType.STRING)
+    @Column(insertable = false)
     private OrderStatus status;
 
     @ManyToMany
