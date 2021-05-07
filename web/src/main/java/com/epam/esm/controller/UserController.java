@@ -71,4 +71,14 @@ public class UserController {
         orderDTOPage.getContent().forEach(orderDTOLinkBuilder::toModel);
         return orderDTOPage;
     }
+
+    @GetMapping("/{id}/orders/{orderId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDTO getUserOrder(@PathVariable Long id,
+                                 @PathVariable Long orderId,
+                                 @Valid PageRequestDTO pageRequestDTO) {
+        OrderDTO orderDTO = orderService.getUserOrder(id, orderId, pageRequestDTO);
+        orderDTOLinkBuilder.toModel(orderDTO);
+        return orderDTO;
+    }
 }

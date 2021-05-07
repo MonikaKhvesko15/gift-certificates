@@ -11,17 +11,19 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 @RequiredArgsConstructor
-public class AllUserOrdersSpecification implements CriteriaSpecification<Order> {
+public class UserOrderSpecification implements CriteriaSpecification<Order> {
     private final User user;
+    private final Long orderId;
 
     @Override
     public CriteriaQuery<Order> getCriteriaQuery(CriteriaBuilder builder) {
         CriteriaQuery<Order> criteria = builder.createQuery(Order.class);
         Root<Order> orderRoot = criteria.from(Order.class);
-        Predicate ordersByUserIdPredicate = builder.equal(orderRoot.get("user"), user);
         Predicate isNotDeletedPredicate = builder.isFalse(orderRoot.get("isDeleted"));
-        criteria.select(orderRoot).distinct(true).where(ordersByUserIdPredicate,
-                isNotDeletedPredicate);
+        Predicate orderByUserIdPredicate = builder.equal(orderRoot.get("user"), user);
+        Predicate orderIdPredicate = builder.equal(orderRoot.get("id"), orderId);
+        criteria.select(orderRoot).distinct(true).where(isNotDeletedPredicate,
+                orderByUserIdPredicate, orderIdPredicate);
         return criteria;
     }
 }

@@ -17,6 +17,7 @@ import com.epam.esm.service.util.PageDTOUtil;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.order.AllUserOrdersSpecification;
 import com.epam.esm.specification.order.OrderAllSpecification;
+import com.epam.esm.specification.order.UserOrderSpecification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -85,6 +86,15 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDTO> userOrderDTOList = converter.convertToListDTO(userOrderList);
         return pageDTOUtil.fillPageDTO(userOrderDTOList,
                 pageRequestDTO, specification, orderRepository);
+    }
+
+    @Override
+    public OrderDTO getUserOrder(Long userId, Long orderId, PageRequestDTO pageRequestDTO) {
+        User user = getUserIfExists(userId);
+        CriteriaSpecification<Order> specification = new UserOrderSpecification(user, orderId);
+        Order order = orderRepository.getEntityBySpecification(specification)
+                .orElseThrow(() -> new EntityNotFoundException(" (orderId = " + orderId + ")"));
+        return converter.convertToDto(order);
     }
 
     private User getUserIfExists(Long userId) {

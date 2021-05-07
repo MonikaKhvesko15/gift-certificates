@@ -36,6 +36,7 @@ public class Order extends BaseEntity {
     private Long id;
 
     @Column(name = "total_price")
+    //todo: not modified
     private BigDecimal totalPrice;
 
     @Column(name = "create_date", updatable = false, columnDefinition = "TIMESTAMP")
