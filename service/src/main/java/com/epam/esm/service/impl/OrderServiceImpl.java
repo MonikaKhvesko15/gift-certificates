@@ -15,6 +15,7 @@ import com.epam.esm.repository.UserRepositoryImpl;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.util.PageDTOUtil;
 import com.epam.esm.specification.CriteriaSpecification;
+import com.epam.esm.specification.order.AllUserOrdersSpecification;
 import com.epam.esm.specification.order.OrderAllSpecification;
 import org.springframework.stereotype.Service;
 
@@ -63,8 +64,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO create(Long userId, OrderDTO orderDTO) {
-        User user = userRepository.getById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(" (id = " + userId + ")"));
+        User user = getUserIfExists(userId);
         Order order = converter.convertToEntity(orderDTO);
         order.setUser(user);
         List<Certificate> fullCertificates = getFullCertificates(order);
@@ -76,11 +76,27 @@ public class OrderServiceImpl implements OrderService {
         );
     }
 
+    @Override
+    public PageDTO<OrderDTO> getAllUserOrders(Long userId, PageRequestDTO pageRequestDTO) {
+        User user = getUserIfExists(userId);
+        CriteriaSpecification<Order> specification = new AllUserOrdersSpecification(user);
+        List<Order> userOrderList = orderRepository.getEntityListBySpecification(specification,
+                pageRequestDTO.getPage(), pageRequestDTO.getSize());
+        List<OrderDTO> userOrderDTOList = converter.convertToListDTO(userOrderList);
+        return pageDTOUtil.fillPageDTO(userOrderDTOList,
+                pageRequestDTO, specification, orderRepository);
+    }
+
+    private User getUserIfExists(Long userId) {
+        return userRepository.getById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(" (userId = " + userId + ")"));
+    }
+
     private List<Certificate> getFullCertificates(Order order) {
         List<Certificate> fullCertificates = new ArrayList<>();
         for (Certificate certificate : order.getCertificates()) {
             Certificate fullCertificate = certificateRepository.getById(certificate.getId())
-                    .orElseThrow(() -> new EntityNotFoundException(" (id = " + certificate.getId() + ")"));
+                    .orElseThrow(() -> new EntityNotFoundException(" (certificateId = " + certificate.getId() + ")"));
             fullCertificates.add(fullCertificate);
         }
         return fullCertificates;

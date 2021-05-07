@@ -57,9 +57,18 @@ public class UserController {
 
     @PostMapping("/{id}/orders")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDTO create(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
+    public OrderDTO createOrder(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
         OrderDTO createdOrder = orderService.create(id, orderDTO);
         orderDTOLinkBuilder.toModel(createdOrder);
         return createdOrder;
+    }
+
+    @GetMapping("/{id}/orders")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PageDTO<OrderDTO> getAllUserOrders(@PathVariable Long id,
+                                              @Valid PageRequestDTO pageRequestDTO) {
+        PageDTO<OrderDTO> orderDTOPage = orderService.getAllUserOrders(id, pageRequestDTO);
+        orderDTOPage.getContent().forEach(orderDTOLinkBuilder::toModel);
+        return orderDTOPage;
     }
 }
