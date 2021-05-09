@@ -8,42 +8,25 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityNotFoundException;
-import com.epam.esm.repository.CertificateRepositoryImpl;
-import com.epam.esm.repository.OrderRepositoryImpl;
 import com.epam.esm.repository.Repository;
-import com.epam.esm.repository.UserRepositoryImpl;
 import com.epam.esm.service.OrderService;
-import com.epam.esm.service.util.PageDTOUtil;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.order.AllUserOrdersSpecification;
 import com.epam.esm.specification.order.OrderAllSpecification;
 import com.epam.esm.specification.order.UserOrderSpecification;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final Repository<Order> orderRepository;
     private final Repository<User> userRepository;
     private final Repository<Certificate> certificateRepository;
     private final OrderDTOConverter converter;
-    private final PageDTOUtil<Order, OrderDTO> pageDTOUtil;
-
-
-    public OrderServiceImpl(OrderRepositoryImpl orderRepository,
-                            UserRepositoryImpl userRepository,
-                            CertificateRepositoryImpl certificateRepository,
-                            OrderDTOConverter converter,
-                            PageDTOUtil<Order, OrderDTO> pageDTOUtil) {
-        this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
-        this.certificateRepository = certificateRepository;
-        this.converter = converter;
-        this.pageDTOUtil = pageDTOUtil;
-    }
 
     @Override
     public OrderDTO getById(Long id) {
@@ -59,8 +42,13 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orderList = orderRepository.getEntityListBySpecification(specification,
                 pageRequestDTO.getPage(), pageRequestDTO.getSize());
         List<OrderDTO> orderDTOList = converter.convertToListDTO(orderList);
-        return pageDTOUtil.fillPageDTO(orderDTOList,
-                pageRequestDTO, specification, orderRepository);
+        int totalElements = orderRepository.countEntities(specification);
+        return new PageDTO<>(
+                pageRequestDTO.getPage(),
+                pageRequestDTO.getSize(),
+                totalElements,
+                orderDTOList
+        );
     }
 
     @Override
@@ -84,8 +72,13 @@ public class OrderServiceImpl implements OrderService {
         List<Order> userOrderList = orderRepository.getEntityListBySpecification(specification,
                 pageRequestDTO.getPage(), pageRequestDTO.getSize());
         List<OrderDTO> userOrderDTOList = converter.convertToListDTO(userOrderList);
-        return pageDTOUtil.fillPageDTO(userOrderDTOList,
-                pageRequestDTO, specification, orderRepository);
+        int totalElements = orderRepository.countEntities(specification);
+        return new PageDTO<>(
+                pageRequestDTO.getPage(),
+                pageRequestDTO.getSize(),
+                totalElements,
+                userOrderDTOList
+        );
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -14,14 +15,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class CertificateDTOConverter {
     private final ModelMapper modelMapper;
     private final TagDTOConverter tagConverter;
-
-    public CertificateDTOConverter(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-        this.tagConverter = new TagDTOConverter(modelMapper);
-    }
 
     public Certificate convertToEntity(CertificateDTO certificateDto) {
         Set<Tag> tags = new HashSet<>();

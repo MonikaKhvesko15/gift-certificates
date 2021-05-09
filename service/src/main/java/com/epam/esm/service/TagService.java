@@ -12,4 +12,6 @@ public interface TagService {
     PageDTO<TagDTO> findAll(PageRequestDTO pageRequestDTO);
 
     void remove(Long id);
+
+    TagDTO getMostPopularTag(Long userId);
 }

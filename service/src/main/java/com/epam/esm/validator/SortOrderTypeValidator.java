@@ -10,11 +10,6 @@ public class SortOrderTypeValidator implements
     private static final String DESC_ORDER_TYPE = "DESC";
 
     @Override
-    public void initialize(SortOrderType sortOrderType) {
-
-    }
-
-    @Override
     public boolean isValid(String orderType, ConstraintValidatorContext context) {
         return !orderType.isEmpty() && (orderType.equalsIgnoreCase(ASC_ORDER_TYPE) ||
                 orderType.equalsIgnoreCase(DESC_ORDER_TYPE));

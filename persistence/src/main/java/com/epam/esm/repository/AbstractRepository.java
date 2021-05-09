@@ -1,14 +1,11 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.BaseEntity;
-import com.epam.esm.entity.Certificate;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.util.EntityRetriever;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.jpa.QueryHints;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -81,10 +78,10 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Integer countEntities(CriteriaSpecification<T> specification) {
         CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
-        TypedQuery<T> query = entityManager.createQuery(criteriaQuery)
-                .setHint(QueryHints.HINT_READONLY, true);
+        TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList().size();
     }
 

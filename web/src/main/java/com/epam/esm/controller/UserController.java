@@ -3,13 +3,14 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
+import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.link.LinkBuilder;
-import com.epam.esm.link.OrderDTOLinkBuilder;
-import com.epam.esm.link.UserDTOLinkBuilder;
+import com.epam.esm.link.PageDTOLinkBuilder;
 import com.epam.esm.service.OrderService;
+import com.epam.esm.service.TagService;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.impl.UserServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,21 +24,16 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/v2/users")
+@AllArgsConstructor
 public class UserController {
     private final UserService userService;
     private final OrderService orderService;
+    private final TagService tagService;
     private final LinkBuilder<UserDTO> userDTOLinkBuilder;
     private final LinkBuilder<OrderDTO> orderDTOLinkBuilder;
-
-    public UserController(UserServiceImpl userService,
-                          OrderService orderService,
-                          UserDTOLinkBuilder userDTOLinkBuilder,
-                          OrderDTOLinkBuilder orderDTOLinkBuilder) {
-        this.userService = userService;
-        this.orderService = orderService;
-        this.userDTOLinkBuilder = userDTOLinkBuilder;
-        this.orderDTOLinkBuilder = orderDTOLinkBuilder;
-    }
+    private final LinkBuilder<TagDTO> tagDTOLinkBuilder;
+    private final PageDTOLinkBuilder<UserDTO> pageUserDTOLinkBuilder;
+    private final PageDTOLinkBuilder<OrderDTO> pageOrderDTOLinkBuilder;
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -52,6 +48,7 @@ public class UserController {
     public PageDTO<UserDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
         PageDTO<UserDTO> pageDTO = userService.findAll(pageRequestDTO);
         pageDTO.getContent().forEach(userDTOLinkBuilder::toModel);
+        pageUserDTOLinkBuilder.toModel(pageDTO);
         return pageDTO;
     }
 
@@ -64,21 +61,30 @@ public class UserController {
     }
 
     @GetMapping("/{id}/orders")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public PageDTO<OrderDTO> getAllUserOrders(@PathVariable Long id,
                                               @Valid PageRequestDTO pageRequestDTO) {
         PageDTO<OrderDTO> orderDTOPage = orderService.getAllUserOrders(id, pageRequestDTO);
         orderDTOPage.getContent().forEach(orderDTOLinkBuilder::toModel);
+        pageOrderDTOLinkBuilder.toModel(orderDTOPage);
         return orderDTOPage;
     }
 
     @GetMapping("/{id}/orders/{orderId}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public OrderDTO getUserOrder(@PathVariable Long id,
                                  @PathVariable Long orderId,
                                  @Valid PageRequestDTO pageRequestDTO) {
         OrderDTO orderDTO = orderService.getUserOrder(id, orderId, pageRequestDTO);
         orderDTOLinkBuilder.toModel(orderDTO);
         return orderDTO;
+    }
+
+    @GetMapping("/{id}/most-popular-tag")
+    @ResponseStatus(HttpStatus.OK)
+    public TagDTO getMostPopularTag(@PathVariable Long id){
+        TagDTO tagDTO = tagService.getMostPopularTag(id);
+        tagDTOLinkBuilder.toModel(tagDTO);
+        return tagDTO;
     }
 }

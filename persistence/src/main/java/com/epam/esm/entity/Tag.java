@@ -1,9 +1,7 @@
 package com.epam.esm.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -12,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 
 @Entity
@@ -20,6 +21,13 @@ import javax.persistence.Table;
 @Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@NamedStoredProcedureQuery(
+        name = "getMostWidelyUsedTag",
+        procedureName = "fn_getMostWidelyUsedTag",
+        resultClasses = {Tag.class},
+        parameters = {
+                @StoredProcedureParameter(name = "var_user_id", mode = ParameterMode.IN, type = Long.class)
+        })
 public class Tag extends BaseEntity {
 
     @Id

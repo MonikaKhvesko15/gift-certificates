@@ -2,11 +2,13 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.CertificatePageQueryDTO;
+import com.epam.esm.dto.CertificateRequestFieldDTO;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
-import com.epam.esm.link.CertificateDTOLinkBuilder;
 import com.epam.esm.link.LinkBuilder;
+import com.epam.esm.link.PageDTOLinkBuilder;
 import com.epam.esm.service.CertificateService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,29 +18,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 /**
  * The controller to provide CRUD operations on {@link CertificateDTO}.
  */
 @RestController
 @RequestMapping(value = "/v2/certificates")
+@AllArgsConstructor
 public class CertificateController {
     private final CertificateService certificateService;
     private final LinkBuilder<CertificateDTO> certificateDTOLinkBuilder;
-
-    public CertificateController(CertificateService certificateService,
-                                 CertificateDTOLinkBuilder certificateDTOLinkBuilder) {
-        this.certificateService = certificateService;
-        this.certificateDTOLinkBuilder = certificateDTOLinkBuilder;
-    }
+    private final PageDTOLinkBuilder<CertificateDTO> pageDTOLinkBuilder;
 
     /**
      * Search for certificates by passed params.
@@ -51,7 +45,15 @@ public class CertificateController {
                                         @Valid PageRequestDTO pageRequestDTO) {
         PageDTO<CertificateDTO> pageDTO = certificateService.findByParams(queryDTO, pageRequestDTO);
         pageDTO.getContent().forEach(certificateDTOLinkBuilder::toModel);
+        pageDTOLinkBuilder.toModel(pageDTO);
         return pageDTO;
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public CertificateDTO updateDuration(@PathVariable Long id,
+                                         @Valid CertificateRequestFieldDTO requestField) {
+        return certificateService.updateField(id, requestField);
     }
 
     /**
@@ -93,19 +95,6 @@ public class CertificateController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         certificateService.remove(id);
-    }
-
-
-    @PatchMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public CertificateDTO updateDuration(@PathVariable Long id,
-                                         //todo: validate duration
-                                         @Valid
-                                         @RequestParam
-                                         @NotNull
-                                         @Max(150)
-                                         @Min(1) int duration) {
-        return certificateService.updateDuration(id, duration);
     }
 
     /**

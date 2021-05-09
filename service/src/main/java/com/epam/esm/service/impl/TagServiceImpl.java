@@ -4,31 +4,27 @@ import com.epam.esm.converter.TagDTOConverter;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.dto.TagDTO;
+import com.epam.esm.dto.UserDTO;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
+import com.epam.esm.repository.Repository;
 import com.epam.esm.repository.TagRepositoryImpl;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.util.PageDTOUtil;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.tag.TagAllSpecification;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
     private final TagRepositoryImpl tagRepository;
+    private final Repository<User> userRepository;
     private final TagDTOConverter converter;
-    private final PageDTOUtil<Tag, TagDTO> pageDTOUtil;
-
-    public TagServiceImpl(TagRepositoryImpl tagRepository,
-                          TagDTOConverter converter,
-                          PageDTOUtil<Tag, TagDTO> pageDTOUtil) {
-        this.tagRepository = tagRepository;
-        this.converter = converter;
-        this.pageDTOUtil = pageDTOUtil;
-    }
 
     @Override
     public TagDTO getById(Long id) {
@@ -44,13 +40,27 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public TagDTO getMostPopularTag(Long userId) {
+        User user = userRepository.getById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(" (id = " + userId + ")"));
+        Tag tag = tagRepository.getMostPopularTag(user.getId())
+                .orElseThrow(EntityNotFoundException::new);
+        return converter.convertToDto(tag);
+    }
+
+    @Override
     public PageDTO<TagDTO> findAll(PageRequestDTO pageRequestDTO) {
         CriteriaSpecification<Tag> specification = new TagAllSpecification();
         List<Tag> tagList = tagRepository.getEntityListBySpecification(specification,
                 pageRequestDTO.getPage(), pageRequestDTO.getSize());
         List<TagDTO> tagDTOList = converter.convertToListDTO(tagList);
-        return pageDTOUtil.fillPageDTO(tagDTOList,
-                pageRequestDTO, specification, tagRepository);
+        int totalElements = tagRepository.countEntities(specification);
+        return new PageDTO<>(
+                pageRequestDTO.getPage(),
+                pageRequestDTO.getSize(),
+                totalElements,
+                tagDTOList
+        );
     }
 
     @Override

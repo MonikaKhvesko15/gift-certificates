@@ -4,8 +4,9 @@ import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.link.LinkBuilder;
-import com.epam.esm.link.TagDTOLinkBuilder;
+import com.epam.esm.link.PageDTOLinkBuilder;
 import com.epam.esm.service.TagService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,15 +24,11 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping(value = "/v2/tags")
+@AllArgsConstructor
 public class TagController {
     private final TagService tagService;
     private final LinkBuilder<TagDTO> tagDTOLinkBuilder;
-
-    public TagController(TagService tagService,
-                         TagDTOLinkBuilder tagDTOLinkBuilder) {
-        this.tagService = tagService;
-        this.tagDTOLinkBuilder = tagDTOLinkBuilder;
-    }
+    private final PageDTOLinkBuilder<TagDTO> pageDTOLinkBuilder;
 
     /**
      * Fids all tags.
@@ -43,6 +40,7 @@ public class TagController {
     public PageDTO<TagDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
         PageDTO<TagDTO> pageDTO = tagService.findAll(pageRequestDTO);
         pageDTO.getContent().forEach(tagDTOLinkBuilder::toModel);
+        pageDTOLinkBuilder.toModel(pageDTO);
         return pageDTO;
     }
 

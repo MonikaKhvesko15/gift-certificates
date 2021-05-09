@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.converter.CertificateDTOConverter;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.CertificatePageQueryDTO;
+import com.epam.esm.dto.CertificateRequestFieldDTO;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.entity.Certificate;
@@ -11,11 +12,10 @@ import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.CertificateRepositoryImpl;
 import com.epam.esm.repository.Repository;
-import com.epam.esm.repository.TagRepositoryImpl;
 import com.epam.esm.service.CertificateService;
-import com.epam.esm.service.util.PageDTOUtil;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.certificate.CertificateByParamsSpecification;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -23,21 +23,11 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@AllArgsConstructor
 public class CertificateServiceImpl implements CertificateService {
     private final CertificateRepositoryImpl certificateRepository;
     private final Repository<Tag> tagRepository;
     private final CertificateDTOConverter converter;
-    private final PageDTOUtil<Certificate, CertificateDTO> pageDTOUtil;
-
-    public CertificateServiceImpl(CertificateRepositoryImpl certificateRepository,
-                                  TagRepositoryImpl tagRepository,
-                                  CertificateDTOConverter converter,
-                                  PageDTOUtil<Certificate, CertificateDTO> pageDTOUtil) {
-        this.certificateRepository = certificateRepository;
-        this.tagRepository = tagRepository;
-        this.converter = converter;
-        this.pageDTOUtil = pageDTOUtil;
-    }
 
     @Override
     public CertificateDTO getById(Long id) {
@@ -104,19 +94,33 @@ public class CertificateServiceImpl implements CertificateService {
         List<Certificate> certificates = certificateRepository.getEntityListBySpecification(specification,
                 pageRequestDTO.getPage(), pageRequestDTO.getSize());
         List<CertificateDTO> certificateDTOList = converter.convertToListDTO(certificates);
-        return pageDTOUtil.fillPageDTO(certificateDTOList,
-                pageRequestDTO, specification, certificateRepository);
+        int totalElements = certificateRepository.countEntities(specification);
+        return new PageDTO<>(
+                pageRequestDTO.getPage(),
+                pageRequestDTO.getSize(),
+                totalElements,
+                certificateDTOList);
     }
 
     @Override
-    public CertificateDTO updateDuration(Long id, Integer duration) {
+    public CertificateDTO updateField(Long id, CertificateRequestFieldDTO field) {
         Certificate certificate = certificateRepository.getById(id)
                 .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
-        certificate.setDuration(duration);
+        if (field.getName() != null) {
+            certificate.setName(field.getName());
+        }
+        if (field.getDescription() != null) {
+            certificate.setDescription(field.getDescription());
+        }
+        if (field.getPrice() != null) {
+            certificate.setPrice(field.getPrice());
+        }
+        if (field.getDuration() != null) {
+            certificate.setDuration(field.getDuration());
+        }
         Certificate updatedCertificate = certificateRepository.save(certificate);
         return converter.convertToDto(updatedCertificate);
     }
-
 }
 
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.persistence.NoResultException;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;

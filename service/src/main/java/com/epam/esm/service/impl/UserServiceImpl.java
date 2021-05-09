@@ -7,28 +7,19 @@ import com.epam.esm.dto.UserDTO;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;
-import com.epam.esm.repository.UserRepositoryImpl;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.util.PageDTOUtil;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.user.UserAllSpecification;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final Repository<User> userRepository;
     private final UserDTOConverter converter;
-    private final PageDTOUtil<User, UserDTO> pageDTOUtil;
-
-    public UserServiceImpl(UserRepositoryImpl userRepository,
-                           UserDTOConverter userDTOConverter,
-                           PageDTOUtil<User, UserDTO> pageDTOUtil) {
-        this.userRepository = userRepository;
-        this.converter = userDTOConverter;
-        this.pageDTOUtil = pageDTOUtil;
-    }
 
     @Override
     public UserDTO getById(Long id) {
@@ -43,7 +34,12 @@ public class UserServiceImpl implements UserService {
         List<User> userList = userRepository.getEntityListBySpecification(specification,
                 pageRequestDTO.getPage(), pageRequestDTO.getSize());
         List<UserDTO> userDTOList = converter.convertToListDTO(userList);
-        return pageDTOUtil.fillPageDTO(userDTOList,
-                pageRequestDTO, specification, userRepository);
+        int totalElements = userRepository.countEntities(specification);
+        return new PageDTO<>(
+                pageRequestDTO.getPage(),
+                pageRequestDTO.getSize(),
+                totalElements,
+                userDTOList
+        );
     }
 }

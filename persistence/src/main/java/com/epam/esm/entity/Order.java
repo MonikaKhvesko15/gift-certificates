@@ -1,9 +1,7 @@
 package com.epam.esm.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,15 +26,15 @@ import java.util.List;
 @Table(name = "orders")
 @Setter
 @Getter
-@RequiredArgsConstructor
 @EqualsAndHashCode(exclude = "certificates", callSuper = false)
+@RequiredArgsConstructor
 public class Order extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final Long id;
 
-    @Column(name = "total_price")
-    //todo: not modified
+    @Column(name = "total_price", updatable = false)
     private BigDecimal totalPrice;
 
     @Column(name = "create_date", updatable = false, columnDefinition = "TIMESTAMP")
@@ -58,7 +56,7 @@ public class Order extends BaseEntity {
     private List<Certificate> certificates;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
 }

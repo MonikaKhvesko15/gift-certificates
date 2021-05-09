@@ -1,6 +1,7 @@
 package com.epam.esm.dto;
 
 import com.epam.esm.entity.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -28,4 +29,9 @@ public class UserDTO extends RepresentationModel<UserDTO> implements Serializabl
     private UserRole role;
     @Valid
     private Set<OrderDTO> orders;
+
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
 }

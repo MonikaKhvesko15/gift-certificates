@@ -4,22 +4,18 @@ import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Order;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class OrderDTOConverter {
     private final ModelMapper modelMapper;
     private final CertificateDTOConverter certificateDTOConverter;
-
-    public OrderDTOConverter(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-        this.certificateDTOConverter = new CertificateDTOConverter(modelMapper);
-    }
 
     public Order convertToEntity(OrderDTO orderDTO) {
         List<Certificate> certificates = new ArrayList<>();
