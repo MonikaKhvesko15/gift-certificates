@@ -1,5 +1,6 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.audit.AuditListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -28,6 +30,7 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode(exclude = "certificates", callSuper = false)
 @RequiredArgsConstructor
+@EntityListeners(AuditListener.class)
 public class Order extends BaseEntity {
 
     @Id

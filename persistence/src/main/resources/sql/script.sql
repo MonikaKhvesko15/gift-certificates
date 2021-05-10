@@ -73,3 +73,13 @@ CREATE TABLE users
     is_deleted       boolean DEFAULT false,
     role             user_role DEFAULT 'GUEST'
 );
+
+DROP TABLE IF EXISTS audit;
+
+create TABLE audit
+(
+    id      bigserial NOT NULL PRIMARY KEY,
+    date_time    timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    content VARCHAR(10000),
+	operation VARCHAR(255)
+)

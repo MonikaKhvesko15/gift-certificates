@@ -23,7 +23,7 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> {
     @Override
     @Transactional
     public void delete(Tag tag) {
-        entityManager.remove(tag);
+        entityManager.remove(entityManager.contains(tag) ? tag : entityManager.merge(tag));
     }
 
     @Override

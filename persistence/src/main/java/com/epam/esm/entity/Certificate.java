@@ -1,14 +1,15 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.audit.AuditListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,6 +27,7 @@ import java.util.Set;
 @Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode(exclude = "tags", callSuper = false)
+@EntityListeners(AuditListener.class)
 public class Certificate extends BaseEntity {
 
     @Id
