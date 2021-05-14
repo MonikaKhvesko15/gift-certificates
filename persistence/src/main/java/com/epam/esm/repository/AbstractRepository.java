@@ -3,9 +3,9 @@ package com.epam.esm.repository;
 import com.epam.esm.entity.BaseEntity;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.util.EntityRetriever;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -17,8 +17,8 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public abstract class AbstractRepository<T extends BaseEntity> implements Repository<T> {
-    private static final Logger LOGGER = LogManager.getLogger(AbstractRepository.class);
 
     @PersistenceContext
     protected final EntityManager entityManager;
@@ -79,7 +79,7 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
 
     @Override
     @Transactional(readOnly = true)
-    public Integer countEntities(CriteriaSpecification<T> specification) {
+    public int countEntities(CriteriaSpecification<T> specification) {
         CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
         TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList().size();
@@ -108,9 +108,9 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
         try {
             return Optional.of(retriever.retrieve());
         } catch (NoResultException ex) {
-            LOGGER.warn("Optional is not exists");
+            //todo: change message
+            log.warn("Optional is not exists");
         }
         return Optional.empty();
     }
-
 }

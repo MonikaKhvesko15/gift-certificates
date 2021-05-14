@@ -30,7 +30,7 @@ CREATE TABLE gift_certificates_tags
     PRIMARY KEY (tag_id,gift_certificate_id )
 );
 
-DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS orders CASCADE;
 
 CREATE TYPE order_status AS ENUM (
     'PENDING',
@@ -45,7 +45,7 @@ CREATE TABLE orders
     create_date         timestamptz           NOT NULL,
     is_deleted          boolean DEFAULT false,
     status              order_status DEFAULT 'PENDING',
-	user_id              BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE
+    user_id              BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS gift_certificates_orders;
@@ -57,8 +57,9 @@ CREATE TABLE gift_certificates_orders
     PRIMARY KEY (gift_certificate_id, order_id)
 );
 
+drop type user_role ;
+
 CREATE TYPE user_role AS ENUM (
-    'GUEST',
     'USER',
     'ADMIN'
 )
@@ -71,15 +72,16 @@ CREATE TABLE users
     username         VARCHAR(20)  NOT NULL,
     password         VARCHAR(255) NOT NULL,
     is_deleted       boolean DEFAULT false,
-    role             user_role DEFAULT 'GUEST'
+    role             user_role DEFAULT 'USER'
 );
 
-DROP TABLE IF EXISTS audit;
+DROP TABLE IF EXISTS events;
 
-create TABLE audit
+create TABLE events
 (
-    id      bigserial NOT NULL PRIMARY KEY,
-    date_time    timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    content VARCHAR(10000),
-	operation VARCHAR(255)
-)
+    id           bigserial NOT NULL PRIMARY KEY,
+    content_name VARCHAR(255),
+    content_id   BIGINT NOT NULL,
+    operation    VARCHAR(255),
+    date_time    timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

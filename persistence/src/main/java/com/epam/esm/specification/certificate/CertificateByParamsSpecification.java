@@ -4,6 +4,7 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.specification.CriteriaSpecification;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -34,15 +35,15 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
         List<Predicate> predicates = new ArrayList<>();
         Predicate isNotDeletedPredicate = builder.isFalse(certificateRoot.get("isDeleted"));
         predicates.add(isNotDeletedPredicate);
-        if (tags != null) {
+        if (!tags.isEmpty()) {
             List<Predicate> listTagsPredicate = getListTagsPredicate(builder, criteria, certificateRoot);
             predicates.addAll(listTagsPredicate);
         }
-        if (name != null) {
+        if (StringUtils.isNotEmpty(name)) {
             Predicate partNamePredicate = getPartNamePredicate(builder, certificateRoot);
             predicates.add(partNamePredicate);
         }
-        if (description != null) {
+        if (StringUtils.isNotEmpty(description)) {
             Predicate partDescriptionPredicate = getPartDescriptionPredicate(builder, certificateRoot);
             predicates.add(partDescriptionPredicate);
         }

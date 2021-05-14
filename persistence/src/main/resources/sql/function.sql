@@ -1,4 +1,4 @@
- DROP FUNCTION IF EXISTS fn_getMostWidelyUsedTag(var_user_id bigint);
+DROP FUNCTION IF EXISTS fn_getMostWidelyUsedTag(var_user_id bigint);
 ---------------------------------------------------
 create function fn_getMostWidelyUsedTag(
   var_user_id bigint
@@ -13,7 +13,7 @@ as
 $$
 begin
             return query
-                 select distinct
+                 select
                      tags.id,
                      tags.name,
                      sum(orders.total_price) OVER (partition by tags.id)

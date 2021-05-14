@@ -1,4 +1,4 @@
-package com.epam.esm.audit;
+package com.epam.esm.event;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

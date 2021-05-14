@@ -1,10 +1,4 @@
-plugins{
-    id 'org.springframework.boot' version '2.4.0'
-    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-}
-
 dependencies {
-// https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen
     compileOnly group: 'org.hibernate', name: 'hibernate-jpamodelgen'
 
     runtimeOnly('com.h2database:h2:1.4.200')

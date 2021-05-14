@@ -1,20 +1,13 @@
 package com.epam.esm.entity;
 
-import com.epam.esm.audit.AuditListener;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -25,17 +18,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Data
+@EqualsAndHashCode(exclude = "certificates", callSuper = true)
 @Table(name = "orders")
-@Setter
-@Getter
-@EqualsAndHashCode(exclude = "certificates", callSuper = false)
-@RequiredArgsConstructor
-@EntityListeners(AuditListener.class)
 public class Order extends BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
 
     @Column(name = "total_price", updatable = false)
     private BigDecimal totalPrice;

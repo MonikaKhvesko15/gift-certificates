@@ -1,18 +1,13 @@
 package com.epam.esm.entity;
 
-import com.epam.esm.audit.AuditListener;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+//todo: rm hibernate dependencies
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -22,17 +17,10 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "gift_certificates")
-@Setter
-@Getter
-@RequiredArgsConstructor
-@EqualsAndHashCode(exclude = "tags", callSuper = false)
-@EntityListeners(AuditListener.class)
 public class Certificate extends BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     private String name;
     private String description;

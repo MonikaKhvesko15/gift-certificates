@@ -22,4 +22,5 @@ public class OrderDTO extends RepresentationModel<OrderDTO> implements Serializa
     private LocalDateTime createDate;
     private OrderStatus status;
     private List<CertificateDTO> certificates;
+    private UserDTO user;
 }

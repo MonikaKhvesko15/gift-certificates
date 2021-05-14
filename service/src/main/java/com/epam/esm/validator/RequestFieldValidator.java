@@ -1,6 +1,7 @@
 package com.epam.esm.validator;
 
 import com.epam.esm.dto.CertificateRequestFieldDTO;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -13,10 +14,10 @@ public class RequestFieldValidator implements
     @Override
     public boolean isValid(CertificateRequestFieldDTO value, ConstraintValidatorContext context) {
         int flag = 0;
-        if (value.getName() != null) {
+        if (StringUtils.isNotEmpty(value.getName())) {
             ++flag;
         }
-        if (value.getDescription() != null) {
+        if (StringUtils.isNotEmpty(value.getDescription())) {
             ++flag;
         }
         if (value.getPrice() != null) {
