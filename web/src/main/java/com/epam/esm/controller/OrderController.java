@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/v2/orders")
+@RequestMapping(value = "/v1/orders")
 @AllArgsConstructor
 public class OrderController {
     private final OrderService orderService;

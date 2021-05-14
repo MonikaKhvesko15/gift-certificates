@@ -19,7 +19,6 @@ import java.util.Optional;
 
 @Slf4j
 public abstract class AbstractRepository<T extends BaseEntity> implements Repository<T> {
-
     @PersistenceContext
     protected final EntityManager entityManager;
     protected final CriteriaBuilder builder;
@@ -108,8 +107,7 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
         try {
             return Optional.of(retriever.retrieve());
         } catch (NoResultException ex) {
-            //todo: change message
-            log.warn("Optional is not exists");
+            log.warn("No matches found matching search criteria");
         }
         return Optional.empty();
     }

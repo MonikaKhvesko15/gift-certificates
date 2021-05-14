@@ -23,7 +23,7 @@ import javax.validation.Valid;
  * The controller to provide CRD operations on {@link TagDTO}.
  */
 @RestController
-@RequestMapping(value = "/v2/tags")
+@RequestMapping(value = "/v1/tags")
 @AllArgsConstructor
 public class TagController {
     private final TagService tagService;

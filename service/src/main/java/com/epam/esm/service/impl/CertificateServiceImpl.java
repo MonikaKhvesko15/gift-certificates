@@ -16,6 +16,7 @@ import com.epam.esm.service.CertificateService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.certificate.CertificateByParamsSpecification;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -25,7 +26,7 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 public class CertificateServiceImpl implements CertificateService {
-    private final CertificateRepositoryImpl certificateRepository;
+    private final Repository<Certificate> certificateRepository;
     private final Repository<Tag> tagRepository;
     private final CertificateDTOConverter converter;
 
@@ -106,10 +107,10 @@ public class CertificateServiceImpl implements CertificateService {
     public CertificateDTO updateField(Long id, CertificateRequestFieldDTO field) {
         Certificate certificate = certificateRepository.getById(id)
                 .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
-        if (field.getName() != null) {
+        if (StringUtils.isNotEmpty(field.getName())) {
             certificate.setName(field.getName());
         }
-        if (field.getDescription() != null) {
+        if (StringUtils.isNotEmpty(field.getDescription())) {
             certificate.setDescription(field.getDescription());
         }
         if (field.getPrice() != null) {

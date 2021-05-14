@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PageDTO<OrderDTO> getAllUserOrders(Long userId, PageRequestDTO pageRequestDTO) {
         User user = getUserIfExists(userId);
-        CriteriaSpecification<Order> specification = new AllUserOrdersSpecification(user);
+        CriteriaSpecification<Order> specification = new AllUserOrdersSpecification(userId);
         List<Order> userOrderList = orderRepository.getEntityListBySpecification(specification,
                 pageRequestDTO.getPage(), pageRequestDTO.getSize());
         List<OrderDTO> userOrderDTOList = converter.convertToListDTO(userOrderList);
@@ -84,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO getUserOrder(Long userId, Long orderId, PageRequestDTO pageRequestDTO) {
         User user = getUserIfExists(userId);
-        CriteriaSpecification<Order> specification = new UserOrderSpecification(user, orderId);
+        CriteriaSpecification<Order> specification = new UserOrderSpecification(userId, orderId);
         Order order = orderRepository.getEntityBySpecification(specification)
                 .orElseThrow(() -> new EntityNotFoundException(" (orderId = " + orderId + ")"));
         return converter.convertToDto(order);
@@ -96,18 +97,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private List<Certificate> getFullCertificates(Order order) {
-        List<Certificate> fullCertificates = new ArrayList<>();
-        for (Certificate certificate : order.getCertificates()) {
-            Certificate fullCertificate = certificateRepository.getById(certificate.getId())
-                    .orElseThrow(() -> new EntityNotFoundException(" (certificateId = " + certificate.getId() + ")"));
-            fullCertificates.add(fullCertificate);
-        }
-        return fullCertificates;
+        return order.getCertificates().stream()
+                .map(certificate -> certificateRepository.getById(certificate.getId())
+                        .orElseThrow(() -> new EntityNotFoundException(" (certificateId = " + certificate.getId() + ")")))
+                .collect(Collectors.toList());
     }
 
     private BigDecimal countTotalPrice(Order order) {
         return order.getCertificates().stream()
                 .map(Certificate::getPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

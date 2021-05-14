@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,11 +39,6 @@ public class CertificateDTOConverter {
     }
 
     public List<CertificateDTO> convertToListDTO(List<Certificate> certificates) {
-        List<CertificateDTO> certificateDTOList = new ArrayList<>();
-        certificates.forEach(certificate -> {
-            CertificateDTO certificateDTO = convertToDto(certificate);
-            certificateDTOList.add(certificateDTO);
-        });
-        return certificateDTOList;
+        return certificates.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 }

@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -23,11 +23,6 @@ public class TagDTOConverter {
     }
 
     public List<TagDTO> convertToListDTO(List<Tag> tags) {
-        List<TagDTO> tagDTOList = new ArrayList<>();
-        tags.forEach(tag -> {
-            TagDTO tagDTO = convertToDto(tag);
-            tagDTOList.add(tagDTO);
-        });
-        return tagDTOList;
+        return tags.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 }

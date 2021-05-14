@@ -27,7 +27,7 @@ import javax.validation.Valid;
  * The controller to provide CRUD operations on {@link CertificateDTO}.
  */
 @RestController
-@RequestMapping(value = "/v2/certificates")
+@RequestMapping(value = "/v1/certificates")
 @AllArgsConstructor
 public class CertificateController {
     private final CertificateService certificateService;
@@ -51,8 +51,8 @@ public class CertificateController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CertificateDTO updateDuration(@PathVariable Long id,
-                                         @Valid CertificateRequestFieldDTO requestField) {
+    public CertificateDTO updateSingleField(@PathVariable Long id,
+                                            @Valid CertificateRequestFieldDTO requestField) {
         return certificateService.updateField(id, requestField);
     }
 

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/v2/users")
+@RequestMapping(value = "/v1/users")
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;

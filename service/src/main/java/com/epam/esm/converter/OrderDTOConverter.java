@@ -51,11 +51,6 @@ public class OrderDTOConverter {
     }
 
     public List<OrderDTO> convertToListDTO(List<Order> orders) {
-        List<OrderDTO> orderDTOList = new ArrayList<>();
-        orders.forEach(order -> {
-            OrderDTO orderDTO = convertToDto(order);
-            orderDTOList.add(orderDTO);
-        });
-        return orderDTOList;
+        return orders.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 }
