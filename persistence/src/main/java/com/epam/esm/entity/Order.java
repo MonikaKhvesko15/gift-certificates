@@ -2,8 +2,6 @@ package com.epam.esm.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -27,7 +25,6 @@ public class Order extends BaseEntity {
     private BigDecimal totalPrice;
 
     @Column(name = "create_date", updatable = false, columnDefinition = "TIMESTAMP")
-    @CreationTimestamp
     private LocalDateTime createDate;
 
     @Column(name = "is_deleted", columnDefinition = "boolean default false", insertable = false)

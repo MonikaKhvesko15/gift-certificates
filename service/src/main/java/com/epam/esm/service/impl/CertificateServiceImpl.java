@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +55,8 @@ public class CertificateServiceImpl implements CertificateService {
         if (tags != null) {
             createNotExistingTag(tags);
         }
+        certificate.setCreateDate(LocalDateTime.now());
+        certificate.setLastUpdateDate(LocalDateTime.now());
         return converter.convertToDto(certificateRepository.save(certificate));
     }
 
@@ -84,6 +87,7 @@ public class CertificateServiceImpl implements CertificateService {
         }
         certificate.setId(id);
         certificate.setCreateDate(formerCertificate.getCreateDate());
+        certificate.setLastUpdateDate(LocalDateTime.now());
         return converter.convertToDto(certificateRepository.update(certificate));
     }
 
@@ -119,6 +123,7 @@ public class CertificateServiceImpl implements CertificateService {
         if (field.getDuration() != null) {
             certificate.setDuration(field.getDuration());
         }
+        certificate.setLastUpdateDate(LocalDateTime.now());
         Certificate updatedCertificate = certificateRepository.save(certificate);
         return converter.convertToDto(updatedCertificate);
     }

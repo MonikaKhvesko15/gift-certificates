@@ -3,11 +3,8 @@ package com.epam.esm.repository;
 import com.epam.esm.entity.Tag;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.StoredProcedureQuery;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.Optional;
 
 @Repository
@@ -28,10 +25,8 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> {
 
     @Override
     public Optional<Tag> getByName(String name) {
-        CriteriaQuery<Tag> criteria = builder.createQuery(entityClass);
-        Root<Tag> entityRoot = criteria.from(entityClass);
         criteria.select(entityRoot)
-                .where(builder.equal(entityRoot.get("name"), name));
+                .where(builder.equal(entityRoot.get(NAME_ATTRIBUTE), name));
         return findOrEmpty(() ->
                 entityManager
                         .createQuery(criteria)

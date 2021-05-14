@@ -3,13 +3,16 @@ package com.epam.esm.exception;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
+
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;
@@ -47,9 +50,9 @@ public class ControllerExceptionHandler {
         return new ExceptionResponse(HttpStatus.CONFLICT.value(), Collections.singletonList(message));
     }
 
-    @ExceptionHandler(BindException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse validatorExceptionHandler(BindException e, WebRequest request) {
+    public ExceptionResponse validatorExceptionHandler(MethodArgumentNotValidException e, WebRequest request) {
         String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
         Locale locale = localeString != null ? Locale.forLanguageTag(localeString) : Locale.getDefault();
         BindingResult bindingResult = e.getBindingResult();
@@ -58,6 +61,13 @@ public class ControllerExceptionHandler {
         String message = messageSource.getMessage(VALIDATOR_EXCEPTION, new Object[]{}, locale) + errorField + DELIMITER
                 + messageSource.getMessage(errorMessage, new Object[]{}, locale);
         return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    public ResponseEntity<ExceptionResponse> handleParseException(HttpMessageNotReadableException e, Locale locale) {
+        String message = messageSource.getMessage(VALIDATOR_EXCEPTION, new Object[]{}, locale);
+        ExceptionResponse response = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RuntimeException.class)

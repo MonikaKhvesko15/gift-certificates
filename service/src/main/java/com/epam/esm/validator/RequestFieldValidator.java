@@ -13,19 +13,19 @@ public class RequestFieldValidator implements
 
     @Override
     public boolean isValid(CertificateRequestFieldDTO value, ConstraintValidatorContext context) {
-        int flag = 0;
+        int notEmptyFields = 0;
         if (StringUtils.isNotEmpty(value.getName())) {
-            ++flag;
+            ++notEmptyFields;
         }
         if (StringUtils.isNotEmpty(value.getDescription())) {
-            ++flag;
+            ++notEmptyFields;
         }
         if (value.getPrice() != null) {
-            ++flag;
+            ++notEmptyFields;
         }
         if (value.getDuration() != null) {
-            ++flag;
+            ++notEmptyFields;
         }
-        return flag == ONE_FIELD;
+        return notEmptyFields == ONE_FIELD;
     }
 }

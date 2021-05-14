@@ -17,6 +17,7 @@ import com.epam.esm.specification.order.UserOrderSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,16 +41,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PageDTO<OrderDTO> findAll(PageRequestDTO pageRequestDTO) {
         CriteriaSpecification<Order> specification = new OrderAllSpecification();
-        List<Order> orderList = orderRepository.getEntityListBySpecification(specification,
-                pageRequestDTO.getPage(), pageRequestDTO.getSize());
-        List<OrderDTO> orderDTOList = converter.convertToListDTO(orderList);
-        int totalElements = orderRepository.countEntities(specification);
-        return new PageDTO<>(
-                pageRequestDTO.getPage(),
-                pageRequestDTO.getSize(),
-                totalElements,
-                orderDTOList
-        );
+        return getOrderDTOPageDTO(pageRequestDTO, specification);
     }
 
     @Override
@@ -59,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
         order.setUser(user);
         List<Certificate> fullCertificates = getFullCertificates(order);
         order.setCertificates(fullCertificates);
+        order.setCreateDate(LocalDateTime.now());
         BigDecimal totalPrice = countTotalPrice(order);
         order.setTotalPrice(totalPrice);
         return converter.convertToDto(
@@ -69,7 +62,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PageDTO<OrderDTO> getAllUserOrders(Long userId, PageRequestDTO pageRequestDTO) {
         User user = getUserIfExists(userId);
-        CriteriaSpecification<Order> specification = new AllUserOrdersSpecification(userId);
+        CriteriaSpecification<Order> specification = new AllUserOrdersSpecification(user.getId());
+        return getOrderDTOPageDTO(pageRequestDTO, specification);
+    }
+
+    private PageDTO<OrderDTO> getOrderDTOPageDTO(PageRequestDTO pageRequestDTO, CriteriaSpecification<Order> specification) {
         List<Order> userOrderList = orderRepository.getEntityListBySpecification(specification,
                 pageRequestDTO.getPage(), pageRequestDTO.getSize());
         List<OrderDTO> userOrderDTOList = converter.convertToListDTO(userOrderList);
@@ -85,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO getUserOrder(Long userId, Long orderId, PageRequestDTO pageRequestDTO) {
         User user = getUserIfExists(userId);
-        CriteriaSpecification<Order> specification = new UserOrderSpecification(userId, orderId);
+        CriteriaSpecification<Order> specification = new UserOrderSpecification(user.getId(), orderId);
         Order order = orderRepository.getEntityBySpecification(specification)
                 .orElseThrow(() -> new EntityNotFoundException(" (orderId = " + orderId + ")"));
         return converter.convertToDto(order);

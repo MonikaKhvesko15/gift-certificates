@@ -2,10 +2,6 @@ package com.epam.esm.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-//todo: rm hibernate dependencies
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -28,11 +24,9 @@ public class Certificate extends BaseEntity {
     private int duration;
 
     @Column(name = "create_date", updatable = false, columnDefinition = "TIMESTAMP")
-    @CreationTimestamp
     private LocalDateTime createDate;
 
     @Column(name = "last_update_date", columnDefinition = "TIMESTAMP")
-    @UpdateTimestamp
     private LocalDateTime lastUpdateDate;
 
     @Column(name = "is_deleted", columnDefinition = "boolean default false", insertable = false)
