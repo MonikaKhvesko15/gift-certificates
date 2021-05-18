@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 
 @Repository
-public class CertificateRepositoryImpl extends AbstractRepository<Certificate> {
+public class CertificateRepository extends AbstractRepository<Certificate> {
 
-    public CertificateRepositoryImpl(EntityManager entityManager) {
+    public CertificateRepository(EntityManager entityManager) {
         super(entityManager, Certificate.class);
     }
 }

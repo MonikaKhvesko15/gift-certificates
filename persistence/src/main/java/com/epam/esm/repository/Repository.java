@@ -17,9 +17,9 @@ public interface Repository<T extends BaseEntity> {
 
     Optional<T> getByName(String name);
 
-    int countEntities(CriteriaSpecification<T> specification);
+    long countEntities(CriteriaSpecification<T> specification);
 
-    List<T> getEntityListBySpecification(CriteriaSpecification<T> specification, Integer pageNumber, Integer pageSize);
+    List<T> getEntityListBySpecification(CriteriaSpecification<T> specification, int pageNumber, int pageSize);
 
     Optional<T> getEntityBySpecification(CriteriaSpecification<T> specification);
 }

@@ -19,15 +19,13 @@ import java.util.Optional;
 
 @Slf4j
 public abstract class AbstractRepository<T extends BaseEntity> implements Repository<T> {
-    public static final String IS_DELETED_ATTRIBUTE = "isDeleted";
-    public static final String ID_ATTRIBUTE = "id";
-    public static final String NAME_ATTRIBUTE = "name";
+    protected static final String NAME_ATTRIBUTE = "name";
     @PersistenceContext
     protected final EntityManager entityManager;
     protected final CriteriaBuilder builder;
     protected final Class<T> entityClass;
     protected final CriteriaQuery<T> criteria;
-    protected  final Root<T> entityRoot;
+    protected final Root<T> entityRoot;
 
     protected AbstractRepository(EntityManager entityManager, Class<T> entityClass) {
         this.entityManager = entityManager;
@@ -59,20 +57,19 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
 
     @Override
     public Optional<T> getByName(String name) {
-        Predicate isNotDeletedPredicate = builder.isFalse(entityRoot.get(IS_DELETED_ATTRIBUTE));
         Predicate namePredicate = builder.equal(entityRoot.get(NAME_ATTRIBUTE), name);
-        criteria.select(entityRoot).where(isNotDeletedPredicate, namePredicate);
-        return findOrEmpty(() ->
-                entityManager
-                        .createQuery(criteria)
-                        .getSingleResult());
+        return findSingleEntity(namePredicate);
     }
 
     @Override
     public Optional<T> getById(Long id) {
-        Predicate isNotDeletedPredicate = builder.isFalse(entityRoot.get(IS_DELETED_ATTRIBUTE));
-        Predicate idPredicate = builder.equal(entityRoot.get(ID_ATTRIBUTE), id);
-        criteria.select(entityRoot).where(isNotDeletedPredicate, idPredicate);
+        Predicate idPredicate = builder.equal(entityRoot.get(BaseEntity.ID_ATTRIBUTE), id);
+        return findSingleEntity(idPredicate);
+    }
+
+    private Optional<T> findSingleEntity(Predicate predicate) {
+        Predicate isNotDeletedPredicate = builder.isFalse(entityRoot.get(BaseEntity.IS_DELETED_ATTRIBUTE));
+        criteria.select(entityRoot).where(isNotDeletedPredicate, predicate);
         return findOrEmpty(() ->
                 entityManager
                         .createQuery(criteria)
@@ -81,7 +78,13 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
 
     @Override
     @Transactional(readOnly = true)
-    public int countEntities(CriteriaSpecification<T> specification) {
+    public long countEntities(CriteriaSpecification<T> specification) {
+//        CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
+//        Predicate predicate = criteriaQuery.getGroupRestriction();
+//        CriteriaQuery<Long> criteriaQueryCount = builder.createQuery(Long.class);
+//        criteriaQueryCount.select(builder.count(entityRoot))/*.where(predicate)*/;
+//        return entityManager.createQuery(criteriaQueryCount).getSingleResult();
+
         CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
         TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList().size();
@@ -89,14 +92,13 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
 
     @Override
     public List<T> getEntityListBySpecification(CriteriaSpecification<T> specification,
-                                                Integer pageNumber, Integer pageSize) {
+                                                int pageNumber, int pageSize) {
         CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
         TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
         query.setFirstResult((pageNumber - 1) * pageSize);
         query.setMaxResults(pageSize);
         return query.getResultList();
     }
-
 
 
     @Override

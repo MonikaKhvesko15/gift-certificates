@@ -2,6 +2,7 @@ package com.epam.esm.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,6 +21,8 @@ import java.util.List;
 @EqualsAndHashCode(exclude = "certificates", callSuper = true)
 @Table(name = "orders")
 public class Order extends BaseEntity {
+
+    public static final String USER_ID_ATTRIBUTE = "user_id";
 
     @Column(name = "total_price", updatable = false)
     private BigDecimal totalPrice;

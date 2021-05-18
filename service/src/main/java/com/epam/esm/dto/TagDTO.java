@@ -4,18 +4,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 @Setter
 @Getter
 @RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class TagDTO extends RepresentationModel<TagDTO> implements Serializable {
-    private Long id;
+@EqualsAndHashCode(callSuper = true)
+public class TagDTO extends EntityDTO {
 
     @NotBlank
     @Size(max = 50)

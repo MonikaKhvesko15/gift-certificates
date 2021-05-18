@@ -4,13 +4,12 @@ import com.epam.esm.converter.TagDTOConverter;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.dto.TagDTO;
-import com.epam.esm.dto.UserDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;
-import com.epam.esm.repository.TagRepositoryImpl;
+import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.tag.TagAllSpecification;
@@ -22,7 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
-    private final TagRepositoryImpl tagRepository;
+    private final TagRepository tagRepository;
     private final Repository<User> userRepository;
     private final TagDTOConverter converter;
 
@@ -54,7 +53,7 @@ public class TagServiceImpl implements TagService {
         List<Tag> tagList = tagRepository.getEntityListBySpecification(specification,
                 pageRequestDTO.getPage(), pageRequestDTO.getSize());
         List<TagDTO> tagDTOList = converter.convertToListDTO(tagList);
-        int totalElements = tagRepository.countEntities(specification);
+        long totalElements = tagRepository.countEntities(specification);
         return new PageDTO<>(
                 pageRequestDTO.getPage(),
                 pageRequestDTO.getSize(),

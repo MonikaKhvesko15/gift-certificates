@@ -16,13 +16,13 @@ public class PageDTO<T> extends RepresentationModel<PageDTO<T>>{
 
     private final int pageNumber;
     private final int pageSize;
-    private int totalPages;
-    private final int totalElements;
+    private long totalPages;
+    private final long totalElements;
     private boolean isFirst;
     private boolean isLast;
     private final List<T> content;
 
-    public PageDTO(int pageNumber, int pageSize, int totalElements, List<T> content) {
+    public PageDTO(int pageNumber, int pageSize, long totalElements, List<T> content) {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
         this.totalPages = (totalElements / pageSize) + 1;

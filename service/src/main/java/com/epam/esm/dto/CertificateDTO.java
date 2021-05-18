@@ -4,16 +4,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.hateoas.RepresentationModel;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -22,9 +19,8 @@ import java.util.Set;
 @Setter
 @Getter
 @RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class CertificateDTO extends RepresentationModel<CertificateDTO> implements Serializable{
-    private Long id;
+@EqualsAndHashCode(callSuper = true)
+public class CertificateDTO extends EntityDTO{
 
     @NotBlank
     @Size(max = 150)
@@ -45,6 +41,5 @@ public class CertificateDTO extends RepresentationModel<CertificateDTO> implemen
 
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-    @Valid
     private Set<TagDTO> tags = new HashSet<>();
 }

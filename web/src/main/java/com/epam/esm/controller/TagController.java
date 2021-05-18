@@ -7,6 +7,7 @@ import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.link.PageDTOLinkBuilder;
 import com.epam.esm.service.TagService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +40,10 @@ public class TagController {
     @ResponseStatus(HttpStatus.OK)
     public PageDTO<TagDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
         PageDTO<TagDTO> pageDTO = tagService.findAll(pageRequestDTO);
-        pageDTO.getContent().forEach(tagDTOLinkBuilder::toModel);
-        pageDTOLinkBuilder.toModel(pageDTO);
+        if(CollectionUtils.isNotEmpty(pageDTO.getContent())) {
+            pageDTO.getContent().forEach(tagDTOLinkBuilder::toModel);
+            pageDTOLinkBuilder.toModel(pageDTO);
+        }
         return pageDTO;
     }
 

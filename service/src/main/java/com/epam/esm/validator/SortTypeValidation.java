@@ -1,5 +1,7 @@
 package com.epam.esm.validator;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -9,7 +11,7 @@ public class SortTypeValidation implements ConstraintValidator<SortType, String>
 
     @Override
     public boolean isValid(String sortType, ConstraintValidatorContext context) {
-        return !sortType.isEmpty() && (sortType.equalsIgnoreCase(NAME_SORT_TYPE) ||
-                sortType.equalsIgnoreCase(DATE_SORT_TYPE));
+        return StringUtils.isNotEmpty(sortType) && (NAME_SORT_TYPE.equalsIgnoreCase(sortType) ||
+                DATE_SORT_TYPE.equalsIgnoreCase(sortType));
     }
 }

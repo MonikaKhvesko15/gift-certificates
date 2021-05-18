@@ -10,7 +10,9 @@ import com.epam.esm.link.PageDTOLinkBuilder;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.UserService;
+import com.epam.esm.service.impl.UserServiceImpl;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "/v1/users")
 @AllArgsConstructor
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final OrderService orderService;
     private final TagService tagService;
     private final LinkBuilder<UserDTO> userDTOLinkBuilder;
@@ -47,8 +49,10 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public PageDTO<UserDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
         PageDTO<UserDTO> pageDTO = userService.findAll(pageRequestDTO);
-        pageDTO.getContent().forEach(userDTOLinkBuilder::toModel);
-        pageUserDTOLinkBuilder.toModel(pageDTO);
+        if(CollectionUtils.isNotEmpty(pageDTO.getContent())) {
+            pageDTO.getContent().forEach(userDTOLinkBuilder::toModel);
+            pageUserDTOLinkBuilder.toModel(pageDTO);
+        }
         return pageDTO;
     }
 

@@ -11,17 +11,17 @@ public class EventListener {
 
     @PostUpdate
     public void handlePreUpdate(BaseEntity entity) {
-        commitAction(Event.updateFor(entity));
+        commitAction(new Event(OperationType.UPDATE, entity));
     }
 
     @PreRemove
     public void handlePreRemove(BaseEntity entity) {
-        commitAction(Event.removeFor(entity));
+        commitAction(new Event(OperationType.REMOVE, entity));
     }
 
     @PostPersist
     public void handlePrePersist(BaseEntity entity) {
-        commitAction(Event.persistFor(entity));
+        commitAction(new Event(OperationType.PERSIST, entity));
     }
 
     public void commitAction(Event event) {

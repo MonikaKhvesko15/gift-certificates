@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.ParameterMode;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 
@@ -22,6 +23,7 @@ import javax.persistence.Table;
         })
 @Table(name = "tags")
 public class Tag extends BaseEntity {
+    public static final String NAME_ATTRIBUTE = "name";
 
     @Column(unique = true)
     private String name;

@@ -16,6 +16,8 @@ import java.io.Serializable;
 @MappedSuperclass
 @EntityListeners(EventListener.class)
 public abstract class BaseEntity implements Serializable {
+    public static final String IS_DELETED_ATTRIBUTE = "isDeleted";
+    public static final String ID_ATTRIBUTE = "id";
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;

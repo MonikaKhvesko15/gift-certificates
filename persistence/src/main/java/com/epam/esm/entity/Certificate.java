@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,6 +18,10 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "gift_certificates")
 public class Certificate extends BaseEntity {
+    public static final String TAGS_ATTRIBUTE = "tags";
+    public static final String NAME_ATTRIBUTE = "name";
+    public static final String DESCRIPTION_ATTRIBUTE = "description";
+    public static final String CREATE_DATE_ATTRIBUTE = "createDate";
 
     private String name;
     private String description;

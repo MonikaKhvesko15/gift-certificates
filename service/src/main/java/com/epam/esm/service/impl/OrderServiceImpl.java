@@ -1,5 +1,6 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.converter.DTOConverter;
 import com.epam.esm.converter.OrderDTOConverter;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.PageDTO;
@@ -9,6 +10,7 @@ import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;
+import com.epam.esm.service.AbstractService;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.order.AllUserOrdersSpecification;
@@ -16,26 +18,24 @@ import com.epam.esm.specification.order.OrderAllSpecification;
 import com.epam.esm.specification.order.UserOrderSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
-public class OrderServiceImpl implements OrderService {
-    private final Repository<Order> orderRepository;
+public class OrderServiceImpl extends AbstractService<OrderDTO, Order> implements OrderService {
     private final Repository<User> userRepository;
     private final Repository<Certificate> certificateRepository;
-    private final OrderDTOConverter converter;
 
-    @Override
-    public OrderDTO getById(Long id) {
-        Order order = orderRepository.getById(id)
-                .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
-
-        return converter.convertToDto(order);
+    public OrderServiceImpl(DTOConverter<Order, OrderDTO> converter,
+                            Repository<Order> repository,
+                            Repository<User> userRepository,
+                            Repository<Certificate> certificateRepository) {
+        super(converter, repository);
+        this.userRepository = userRepository;
+        this.certificateRepository = certificateRepository;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal totalPrice = countTotalPrice(order);
         order.setTotalPrice(totalPrice);
         return converter.convertToDto(
-                orderRepository.save(order)
+                repository.save(order)
         );
     }
 
@@ -67,10 +67,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private PageDTO<OrderDTO> getOrderDTOPageDTO(PageRequestDTO pageRequestDTO, CriteriaSpecification<Order> specification) {
-        List<Order> userOrderList = orderRepository.getEntityListBySpecification(specification,
+        List<Order> userOrderList = repository.getEntityListBySpecification(specification,
                 pageRequestDTO.getPage(), pageRequestDTO.getSize());
         List<OrderDTO> userOrderDTOList = converter.convertToListDTO(userOrderList);
-        int totalElements = orderRepository.countEntities(specification);
+        long totalElements = repository.countEntities(specification);
         return new PageDTO<>(
                 pageRequestDTO.getPage(),
                 pageRequestDTO.getSize(),
@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO getUserOrder(Long userId, Long orderId, PageRequestDTO pageRequestDTO) {
         User user = getUserIfExists(userId);
         CriteriaSpecification<Order> specification = new UserOrderSpecification(user.getId(), orderId);
-        Order order = orderRepository.getEntityBySpecification(specification)
+        Order order = repository.getEntityBySpecification(specification)
                 .orElseThrow(() -> new EntityNotFoundException(" (orderId = " + orderId + ")"));
         return converter.convertToDto(order);
     }

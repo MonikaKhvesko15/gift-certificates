@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class UserDTOConverter {
+public class UserDTOConverter implements DTOConverter<User, UserDTO> {
     private final ModelMapper modelMapper;
 
     public User convertToEntity(UserDTO userDTO) {
@@ -23,6 +23,8 @@ public class UserDTOConverter {
     }
 
     public List<UserDTO> convertToListDTO(List<User> users) {
-        return users.stream().map(this::convertToDto).collect(Collectors.toList());
+        return users.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 }

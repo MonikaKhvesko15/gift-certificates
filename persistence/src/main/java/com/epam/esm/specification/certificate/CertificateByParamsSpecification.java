@@ -1,9 +1,11 @@
 package com.epam.esm.specification.certificate;
 
+import com.epam.esm.entity.BaseEntity;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.specification.CriteriaSpecification;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,6 +21,9 @@ import java.util.List;
 
 @AllArgsConstructor
 public class CertificateByParamsSpecification implements CriteriaSpecification<Certificate> {
+    private static final String ASC = "ASC";
+    private static final String DESC = "DESC";
+    private static final String DATE_ATTRIBUTE = "date";
     private final List<String> tags;
     private final String name;
     private final String description;
@@ -29,13 +34,13 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
     public CriteriaQuery<Certificate> getCriteriaQuery(CriteriaBuilder builder) {
         CriteriaQuery<Certificate> criteria = builder.createQuery(Certificate.class);
         Root<Certificate> certificateRoot = criteria.from(Certificate.class);
-        certificateRoot.fetch("tags", JoinType.LEFT);
+        certificateRoot.fetch(Certificate.TAGS_ATTRIBUTE, JoinType.LEFT);
         criteria.select(certificateRoot).distinct(true);
 
         List<Predicate> predicates = new ArrayList<>();
-        Predicate isNotDeletedPredicate = builder.isFalse(certificateRoot.get("isDeleted"));
+        Predicate isNotDeletedPredicate = builder.isFalse(certificateRoot.get(BaseEntity.IS_DELETED_ATTRIBUTE));
         predicates.add(isNotDeletedPredicate);
-        if (!tags.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(tags)) {
             List<Predicate> listTagsPredicate = getListTagsPredicate(builder, criteria, certificateRoot);
             predicates.addAll(listTagsPredicate);
         }
@@ -72,8 +77,8 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
                                                      String tagName) {
         Subquery<Certificate> subQuery = criteria.subquery(Certificate.class);
         Root<Certificate> subQueryCertificateRoot = subQuery.from(Certificate.class);
-        Join<Certificate, Tag> certificateTagJoin = subQueryCertificateRoot.join("tags");
-        Path<String> tagNamePath = certificateTagJoin.get("name");
+        Join<Certificate, Tag> certificateTagJoin = subQueryCertificateRoot.join(Certificate.TAGS_ATTRIBUTE);
+        Path<String> tagNamePath = certificateTagJoin.get(Tag.NAME_ATTRIBUTE);
         subQuery.select(subQueryCertificateRoot).distinct(true);
         subQuery.where(builder.equal(tagNamePath, tagName));
         return subQuery;
@@ -82,31 +87,31 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
     private Predicate getPartNamePredicate(CriteriaBuilder builder,
                                            Root<Certificate> certificateRoot) {
         return builder.like(
-                builder.upper(certificateRoot.get("name")), "%" + name.toUpperCase() + "%");
+                builder.upper(certificateRoot.get(Certificate.NAME_ATTRIBUTE)), "%" + name.toUpperCase() + "%");
     }
 
     private Predicate getPartDescriptionPredicate(CriteriaBuilder builder,
                                                   Root<Certificate> certificateRoot) {
         return builder.like(
-                        builder.upper(certificateRoot.get("description")), "%" + description.toUpperCase() + "%");
+                builder.upper(certificateRoot.get(Certificate.DESCRIPTION_ATTRIBUTE)), "%" + description.toUpperCase() + "%");
     }
 
     public void sort(CriteriaQuery<Certificate> criteria,
                      CriteriaBuilder builder,
                      Root<Certificate> root) {
 
-        if (sortBy.equalsIgnoreCase("name")) {
-            if (order.equalsIgnoreCase("ASC")) {
-                criteria.orderBy(builder.asc(root.get("name")));
-            } else if (order.equalsIgnoreCase("DESC")) {
-                criteria.orderBy(builder.desc(root.get("name")));
+        if (Certificate.NAME_ATTRIBUTE.equalsIgnoreCase(sortBy)) {
+            if (ASC.equalsIgnoreCase(order)) {
+                criteria.orderBy(builder.asc(root.get(Certificate.NAME_ATTRIBUTE)));
+            } else if (DESC.equalsIgnoreCase(order)) {
+                criteria.orderBy(builder.desc(root.get(Certificate.NAME_ATTRIBUTE)));
             }
         }
-        if (sortBy.equalsIgnoreCase("date")) {
-            if (order.equalsIgnoreCase("ASC")) {
-                criteria.orderBy(builder.asc(root.get("create_date")));
-            } else if (order.equalsIgnoreCase("DESC")) {
-                criteria.orderBy(builder.desc(root.get("create_date")));
+        if (DATE_ATTRIBUTE.equalsIgnoreCase(sortBy)) {
+            if (ASC.equalsIgnoreCase(order)) {
+                criteria.orderBy(builder.asc(root.get(Certificate.CREATE_DATE_ATTRIBUTE)));
+            } else if (DESC.equalsIgnoreCase(order)) {
+                criteria.orderBy(builder.desc(root.get(Certificate.CREATE_DATE_ATTRIBUTE)));
             }
         }
     }

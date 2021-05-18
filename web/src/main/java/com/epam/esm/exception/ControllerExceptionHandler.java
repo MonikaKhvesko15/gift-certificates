@@ -1,12 +1,11 @@
 package com.epam.esm.exception;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,7 +23,8 @@ public class ControllerExceptionHandler {
     private final MessageSource messageSource;
     public static final String ENTITY_ALREADY_EXISTS = "entity_already_exists";
     public static final String ENTITY_NOT_FOUND = "entity_not_found";
-    public static final String VALIDATOR_EXCEPTION = "entity_not_valid";
+    public static final String ENTITY_VALIDATOR_EXCEPTION = "entity_not_valid";
+    public static final String FIELDS_NUMBER_VALIDATOR_EXCEPTION = "fields_number_not_valid";
     public static final String INTERNAL_SERVER_ERROR = "server_error";
 
 
@@ -35,47 +35,55 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionResponse entityNotFoundHandler(EntityNotFoundException e, WebRequest request) {
-        String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        Locale locale = localeString != null ? Locale.forLanguageTag(localeString) : Locale.getDefault();
-        String message = messageSource.getMessage(ENTITY_NOT_FOUND, new Object[]{}, locale) + e.getMessage();
+        Locale locale = getLocale(request);
+        String message = buildMessage(ENTITY_NOT_FOUND, locale) + e.getMessage();
         return new ExceptionResponse(HttpStatus.NOT_FOUND.value(), Collections.singletonList(message));
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse entityExistsHandler(EntityAlreadyExistsException e, WebRequest request) {
-        String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        Locale locale = localeString != null ? Locale.forLanguageTag(localeString) : Locale.getDefault();
-        String message = messageSource.getMessage(ENTITY_ALREADY_EXISTS, new Object[]{}, locale) + e.getMessage();
+        Locale locale = getLocale(request);
+        String message = buildMessage(ENTITY_ALREADY_EXISTS, locale) + e.getMessage();
         return new ExceptionResponse(HttpStatus.CONFLICT.value(), Collections.singletonList(message));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse validatorExceptionHandler(MethodArgumentNotValidException e, WebRequest request) {
-        String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        Locale locale = localeString != null ? Locale.forLanguageTag(localeString) : Locale.getDefault();
+    public ExceptionResponse validatorExceptionHandler(BindException e, WebRequest request) {
+        Locale locale = getLocale(request);
         BindingResult bindingResult = e.getBindingResult();
-        String errorMessage = Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage();
-        String errorField = Objects.requireNonNull(bindingResult.getFieldError()).getField();
-        String message = messageSource.getMessage(VALIDATOR_EXCEPTION, new Object[]{}, locale) + errorField + DELIMITER
-                + messageSource.getMessage(errorMessage, new Object[]{}, locale);
+        String message = buildValidatorExceptionMessage(bindingResult, locale);
         return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
-    }
-
-    @ExceptionHandler({HttpMessageNotReadableException.class})
-    public ResponseEntity<ExceptionResponse> handleParseException(HttpMessageNotReadableException e, Locale locale) {
-        String message = messageSource.getMessage(VALIDATOR_EXCEPTION, new Object[]{}, locale);
-        ExceptionResponse response = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionResponse serverExceptionHandler(RuntimeException e, WebRequest request) {
-        String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        Locale locale = localeString != null ? Locale.forLanguageTag(localeString) : Locale.getDefault();
-        String message = messageSource.getMessage(INTERNAL_SERVER_ERROR, new Object[]{}, locale);
+        Locale locale = getLocale(request);
+        String message = buildMessage(INTERNAL_SERVER_ERROR, locale);
         return new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), Collections.singletonList(message));
+    }
+
+    private Locale getLocale(WebRequest request) {
+        String localeString = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
+        return StringUtils.isNotEmpty(localeString) ? Locale.forLanguageTag(localeString) : Locale.getDefault();
+    }
+
+    private String buildMessage(String mainMessage, Locale locale) {
+        return messageSource.getMessage(mainMessage, new Object[]{}, locale);
+    }
+
+    private String buildValidatorExceptionMessage(BindingResult bindingResult, Locale locale) {
+        String resultMessage;
+        if (bindingResult.getFieldError() != null) {
+            resultMessage = buildMessage(ENTITY_VALIDATOR_EXCEPTION, locale) +
+                    Objects.requireNonNull(bindingResult.getFieldError()).getField()+
+                    DELIMITER +
+                    buildMessage(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), locale);
+        } else {
+            resultMessage = buildMessage(FIELDS_NUMBER_VALIDATOR_EXCEPTION, locale);
+        }
+        return resultMessage;
     }
 }

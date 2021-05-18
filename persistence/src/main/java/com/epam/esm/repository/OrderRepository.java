@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 
 @Repository
-public class OrderRepositoryImpl extends AbstractRepository<Order> {
-    protected OrderRepositoryImpl(EntityManager entityManager) {
+public class OrderRepository extends AbstractRepository<Order> {
+    protected OrderRepository(EntityManager entityManager) {
         super(entityManager, Order.class);
     }
 }

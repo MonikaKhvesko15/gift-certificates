@@ -37,25 +37,10 @@ public class Event {
     @Column(name = "content_id", nullable = false)
     private Long contentId;
 
-    public Event(OperationType operation, LocalDateTime dateTime, String contentName, Long contentId) {
+    public Event(OperationType operation, BaseEntity entity) {
         this.operation = operation;
-        this.dateTime = dateTime;
-        this.contentName = contentName;
-        this.contentId = contentId;
-    }
-
-    public static Event persistFor(BaseEntity entity) {
-        return new Event(OperationType.PERSIST,
-                LocalDateTime.now(), entity.getClass().getSimpleName(), entity.getId());
-    }
-
-    public static Event updateFor(BaseEntity entity) {
-        return new Event(OperationType.UPDATE,
-                LocalDateTime.now(), entity.getClass().getSimpleName(), entity.getId());
-    }
-
-    public static Event removeFor(BaseEntity entity) {
-        return new Event(OperationType.REMOVE,
-                LocalDateTime.now(), entity.getClass().getSimpleName(), entity.getId());
+        this.dateTime = LocalDateTime.now();
+        this.contentName = entity.getClass().getSimpleName();
+        this.contentId = entity.getId();
     }
 }

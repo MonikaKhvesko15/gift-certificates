@@ -7,7 +7,6 @@ import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 
 public interface CertificateService {
-    CertificateDTO getById(Long id);
 
     CertificateDTO create(CertificateDTO certificateDTO);
 

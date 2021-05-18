@@ -6,20 +6,17 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.Set;
 
 @Setter
 @Getter
 @RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class UserDTO extends RepresentationModel<UserDTO> implements Serializable {
-    private Long id;
+@EqualsAndHashCode(callSuper = true)
+public class UserDTO extends EntityDTO {
     @NotBlank
     @Size(min = 5, max = 20)
     private String username;

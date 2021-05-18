@@ -1,5 +1,7 @@
 package com.epam.esm.validator;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -11,7 +13,7 @@ public class SortOrderTypeValidator implements
 
     @Override
     public boolean isValid(String orderType, ConstraintValidatorContext context) {
-        return !orderType.isEmpty() && (orderType.equalsIgnoreCase(ASC_ORDER_TYPE) ||
-                orderType.equalsIgnoreCase(DESC_ORDER_TYPE));
+        return StringUtils.isNotEmpty(orderType) && (ASC_ORDER_TYPE.equalsIgnoreCase(orderType) ||
+                DESC_ORDER_TYPE.equalsIgnoreCase(orderType));
     }
 }

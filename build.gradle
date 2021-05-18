@@ -43,6 +43,7 @@ subprojects {
 
         //utils
         implementation 'org.apache.commons:commons-lang3:3.10'
+        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
 
     }
 

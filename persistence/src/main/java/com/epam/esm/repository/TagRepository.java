@@ -1,19 +1,21 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Tag;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.StoredProcedureQuery;
 import java.util.Optional;
 
 @Repository
-public class TagRepositoryImpl extends AbstractRepository<Tag> {
+public class TagRepository extends AbstractRepository<Tag> {
 
     private static final String MOST_WIDELY_USED_TAG_PROCEDURE = "getMostWidelyUsedTag";
     private static final String VAR_USER_ID_PARAMETER = "var_user_id";
 
-    public TagRepositoryImpl(EntityManager entityManager) {
+    public TagRepository(EntityManager entityManager) {
         super(entityManager, Tag.class);
     }
 
@@ -44,7 +46,7 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> {
         StoredProcedureQuery storedProcedure =
                 getMostWidelyUsedTag.setParameter(VAR_USER_ID_PARAMETER, userId);
         Tag tag = null;
-        if (!storedProcedure.getResultList().isEmpty()) {
+        if (CollectionUtils.isNotEmpty(storedProcedure.getResultList())) {
             tag = (Tag) storedProcedure.getSingleResult();
         }
         return Optional.ofNullable(tag);

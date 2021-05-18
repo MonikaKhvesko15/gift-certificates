@@ -3,17 +3,12 @@ package com.epam.esm.repository;
 import com.epam.esm.config.TestConfig;
 import com.epam.esm.entity.Certificate;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -35,10 +30,10 @@ class CertificateRepositoryTest {
     private Certificate existingCertificate;
 
 
-    private final CertificateRepositoryImpl certificateRepository;
+    private final CertificateRepository certificateRepository;
 
     @Autowired
-    public CertificateRepositoryTest(CertificateRepositoryImpl certificateRepository) {
+    public CertificateRepositoryTest(CertificateRepository certificateRepository) {
         this.certificateRepository = certificateRepository;
     }
 

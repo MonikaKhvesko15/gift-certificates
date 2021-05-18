@@ -6,7 +6,9 @@ import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.link.PageDTOLinkBuilder;
 import com.epam.esm.service.OrderService;
+import com.epam.esm.service.impl.OrderServiceImpl;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +22,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "/v1/orders")
 @AllArgsConstructor
 public class OrderController {
-    private final OrderService orderService;
+    private final OrderServiceImpl orderService;
     private final LinkBuilder<OrderDTO> orderDTOLinkBuilder;
     private final PageDTOLinkBuilder<OrderDTO> pageDTOLinkBuilder;
 
@@ -36,8 +38,10 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public PageDTO<OrderDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
         PageDTO<OrderDTO> pageDTO = orderService.findAll(pageRequestDTO);
-        pageDTO.getContent().forEach(orderDTOLinkBuilder::toModel);
-        pageDTOLinkBuilder.toModel(pageDTO);
+        if(CollectionUtils.isNotEmpty(pageDTO.getContent())){
+            pageDTO.getContent().forEach(orderDTOLinkBuilder::toModel);
+            pageDTOLinkBuilder.toModel(pageDTO);
+        }
         return pageDTO;
     }
 }

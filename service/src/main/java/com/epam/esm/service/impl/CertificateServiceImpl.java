@@ -1,6 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.converter.CertificateDTOConverter;
+import com.epam.esm.converter.DTOConverter;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.CertificatePageQueryDTO;
 import com.epam.esm.dto.CertificateRequestFieldDTO;
@@ -10,12 +10,13 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
-import com.epam.esm.repository.CertificateRepositoryImpl;
 import com.epam.esm.repository.Repository;
+import com.epam.esm.repository.TagRepository;
+import com.epam.esm.service.AbstractService;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.certificate.CertificateByParamsSpecification;
-import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -23,45 +24,51 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
-public class CertificateServiceImpl implements CertificateService {
-    private final Repository<Certificate> certificateRepository;
+public class CertificateServiceImpl extends AbstractService<CertificateDTO, Certificate>
+        implements CertificateService {
     private final Repository<Tag> tagRepository;
-    private final CertificateDTOConverter converter;
 
-    @Override
-    public CertificateDTO getById(Long id) {
-        Certificate certificate = certificateRepository.getById(id)
-                .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
-        return converter.convertToDto(certificate);
+    public CertificateServiceImpl(DTOConverter<Certificate, CertificateDTO> converter,
+                                  Repository<Certificate> repository,
+                                  TagRepository tagRepository) {
+        super(converter, repository);
+        this.tagRepository = tagRepository;
     }
 
     @Override
     public void remove(Long id) {
         Certificate certificate = converter.convertToEntity(getById(id));
-        certificateRepository.delete(certificate);
+        repository.delete(certificate);
     }
 
     @Override
     public CertificateDTO create(CertificateDTO certificateDTO) {
         String name = certificateDTO.getName();
-        if (certificateRepository.getByName(name).isPresent()) {
+        if (repository.getByName(name).isPresent()) {
             throw new EntityAlreadyExistsException(" (name = " + name + ")");
         }
         Certificate certificate = converter.convertToEntity(certificateDTO);
-        Set<Tag> tags = certificate.getTags();
+        Set<Tag> tags = getFullTags(certificate);
         if (tags != null) {
             createNotExistingTag(tags);
         }
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(LocalDateTime.now());
-        return converter.convertToDto(certificateRepository.save(certificate));
+        return converter.convertToDto(repository.save(certificate));
+    }
+
+    private Set<Tag> getFullTags(Certificate certificate) {
+        return certificate.getTags().stream()
+                .map(tag -> tagRepository.getById(tag.getId())
+                        .orElseThrow(() -> new EntityNotFoundException(" (tagId = " + tag.getId() + ")")))
+                .collect(Collectors.toSet());
     }
 
     private void createNotExistingTag(Set<Tag> tags) {
-        if (!tags.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(tags)) {
             Set<Tag> newTags = new HashSet<>();
             for (Tag tag : tags) {
                 if (!tagRepository.getByName(tag.getName()).isPresent()) {
@@ -76,7 +83,7 @@ public class CertificateServiceImpl implements CertificateService {
     public CertificateDTO update(Long id, CertificateDTO certificateDTO) {
         CertificateDTO formerCertificate = getById(id);
         String newName = certificateDTO.getName();
-        if (certificateRepository.getByName(newName).isPresent()
+        if (repository.getByName(newName).isPresent()
                 && !newName.equals(formerCertificate.getName())) {
             throw new EntityAlreadyExistsException(" (name = " + newName + ")");
         }
@@ -88,7 +95,7 @@ public class CertificateServiceImpl implements CertificateService {
         certificate.setId(id);
         certificate.setCreateDate(formerCertificate.getCreateDate());
         certificate.setLastUpdateDate(LocalDateTime.now());
-        return converter.convertToDto(certificateRepository.update(certificate));
+        return converter.convertToDto(repository.update(certificate));
     }
 
 
@@ -96,10 +103,10 @@ public class CertificateServiceImpl implements CertificateService {
     public PageDTO<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, PageRequestDTO pageRequestDTO) {
         CriteriaSpecification<Certificate> specification = new CertificateByParamsSpecification(queryDTO.getTags(),
                 queryDTO.getName(), queryDTO.getDescription(), queryDTO.getSortBy(), queryDTO.getOrder());
-        List<Certificate> certificates = certificateRepository.getEntityListBySpecification(specification,
+        List<Certificate> certificates = repository.getEntityListBySpecification(specification,
                 pageRequestDTO.getPage(), pageRequestDTO.getSize());
         List<CertificateDTO> certificateDTOList = converter.convertToListDTO(certificates);
-        int totalElements = certificateRepository.countEntities(specification);
+        long totalElements = repository.countEntities(specification);
         return new PageDTO<>(
                 pageRequestDTO.getPage(),
                 pageRequestDTO.getSize(),
@@ -109,7 +116,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public CertificateDTO updateField(Long id, CertificateRequestFieldDTO field) {
-        Certificate certificate = certificateRepository.getById(id)
+        Certificate certificate = repository.getById(id)
                 .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
         if (StringUtils.isNotEmpty(field.getName())) {
             certificate.setName(field.getName());
@@ -124,7 +131,7 @@ public class CertificateServiceImpl implements CertificateService {
             certificate.setDuration(field.getDuration());
         }
         certificate.setLastUpdateDate(LocalDateTime.now());
-        Certificate updatedCertificate = certificateRepository.save(certificate);
+        Certificate updatedCertificate = repository.save(certificate);
         return converter.convertToDto(updatedCertificate);
     }
 }

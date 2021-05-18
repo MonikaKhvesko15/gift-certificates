@@ -1,5 +1,6 @@
 package com.epam.esm.specification.order;
 
+import com.epam.esm.entity.BaseEntity;
 import com.epam.esm.entity.Order;
 import com.epam.esm.specification.CriteriaSpecification;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,8 @@ public class AllUserOrdersSpecification implements CriteriaSpecification<Order> 
     public CriteriaQuery<Order> getCriteriaQuery(CriteriaBuilder builder) {
         CriteriaQuery<Order> criteria = builder.createQuery(Order.class);
         Root<Order> orderRoot = criteria.from(Order.class);
-        Predicate ordersByUserIdPredicate = builder.equal(orderRoot.get("user_id"), userId);
-        Predicate isNotDeletedPredicate = builder.isFalse(orderRoot.get("isDeleted"));
+        Predicate ordersByUserIdPredicate = builder.equal(orderRoot.get(Order.USER_ID_ATTRIBUTE), userId);
+        Predicate isNotDeletedPredicate = builder.isFalse(orderRoot.get(BaseEntity.IS_DELETED_ATTRIBUTE));
         criteria.select(orderRoot).distinct(true).where(ordersByUserIdPredicate,
                 isNotDeletedPredicate);
         return criteria;
