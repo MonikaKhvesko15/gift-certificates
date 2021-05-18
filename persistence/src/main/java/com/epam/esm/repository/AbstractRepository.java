@@ -79,15 +79,8 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
     @Override
     @Transactional(readOnly = true)
     public long countEntities(CriteriaSpecification<T> specification) {
-//        CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
-//        Predicate predicate = criteriaQuery.getGroupRestriction();
-//        CriteriaQuery<Long> criteriaQueryCount = builder.createQuery(Long.class);
-//        criteriaQueryCount.select(builder.count(entityRoot))/*.where(predicate)*/;
-//        return entityManager.createQuery(criteriaQueryCount).getSingleResult();
-
         CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
-        TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList().size();
+        return entityManager.createQuery(criteriaQuery).getResultStream().count();
     }
 
     @Override

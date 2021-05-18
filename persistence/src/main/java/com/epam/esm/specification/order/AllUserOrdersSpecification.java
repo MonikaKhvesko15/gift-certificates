@@ -12,12 +12,13 @@ import javax.persistence.criteria.Root;
 
 @RequiredArgsConstructor
 public class AllUserOrdersSpecification implements CriteriaSpecification<Order> {
+    private static final Class<Order> ORDER_CLASS = Order.class;
     private final Long userId;
 
     @Override
     public CriteriaQuery<Order> getCriteriaQuery(CriteriaBuilder builder) {
-        CriteriaQuery<Order> criteria = builder.createQuery(Order.class);
-        Root<Order> orderRoot = criteria.from(Order.class);
+        CriteriaQuery<Order> criteria = builder.createQuery(ORDER_CLASS);
+        Root<Order> orderRoot = criteria.from(ORDER_CLASS);
         Predicate ordersByUserIdPredicate = builder.equal(orderRoot.get(Order.USER_ID_ATTRIBUTE), userId);
         Predicate isNotDeletedPredicate = builder.isFalse(orderRoot.get(BaseEntity.IS_DELETED_ATTRIBUTE));
         criteria.select(orderRoot).distinct(true).where(ordersByUserIdPredicate,

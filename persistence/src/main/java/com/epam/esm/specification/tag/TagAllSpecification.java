@@ -8,10 +8,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 public class TagAllSpecification implements CriteriaSpecification<Tag> {
+
+    private static final Class<Tag> TAG_CLASS = Tag.class;
+
     @Override
     public CriteriaQuery<Tag> getCriteriaQuery(CriteriaBuilder builder) {
-        CriteriaQuery<Tag> criteria = builder.createQuery(Tag.class);
-        Root<Tag> tagRoot = criteria.from(Tag.class);
+        CriteriaQuery<Tag> criteria = builder.createQuery(TAG_CLASS);
+        Root<Tag> tagRoot = criteria.from(TAG_CLASS);
         criteria.select(tagRoot).distinct(true);
         return criteria;
     }

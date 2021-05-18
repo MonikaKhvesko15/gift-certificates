@@ -9,9 +9,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class TagDTOLinkBuilder implements LinkBuilder<TagDTO> {
+    private static final Class<TagController> tagControllerClass = TagController.class;
+
     @Override
     public void toModel(TagDTO tagDTO) {
-        tagDTO.add(linkTo(TagController.class).withRel("tags"));
-        tagDTO.add(linkTo(methodOn(TagController.class).findById(tagDTO.getId())).withSelfRel());
+        tagDTO.add(linkTo(tagControllerClass)
+                .withRel("tags"));
+        tagDTO.add(linkTo(methodOn(tagControllerClass)
+                .findById(tagDTO.getId()))
+                .withSelfRel());
+        tagDTO.add(linkTo(tagControllerClass)
+                .slash(tagDTO.getId())
+                .withRel("delete"));
     }
 }

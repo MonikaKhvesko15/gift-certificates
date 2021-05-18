@@ -68,12 +68,13 @@ public class OrderServiceImpl extends AbstractService<OrderDTO, Order> implement
 
     private PageDTO<OrderDTO> getOrderDTOPageDTO(PageRequestDTO pageRequestDTO, CriteriaSpecification<Order> specification) {
         List<Order> userOrderList = repository.getEntityListBySpecification(specification,
-                pageRequestDTO.getPage(), pageRequestDTO.getSize());
+                Integer.parseInt(pageRequestDTO.getPage().toString()),
+                Integer.parseInt(pageRequestDTO.getSize().toString()));
         List<OrderDTO> userOrderDTOList = converter.convertToListDTO(userOrderList);
         long totalElements = repository.countEntities(specification);
         return new PageDTO<>(
-                pageRequestDTO.getPage(),
-                pageRequestDTO.getSize(),
+                Integer.parseInt(pageRequestDTO.getPage().toString()),
+                Integer.parseInt(pageRequestDTO.getSize().toString()),
                 totalElements,
                 userOrderDTOList
         );

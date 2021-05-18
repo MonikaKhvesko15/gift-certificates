@@ -11,11 +11,12 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;
-import com.epam.esm.repository.TagRepository;
+import com.epam.esm.repository.TagRepositoryImpl;
 import com.epam.esm.service.AbstractService;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.certificate.CertificateByParamsSpecification;
+import com.epam.esm.validator.PageParamsValidator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -33,15 +34,9 @@ public class CertificateServiceImpl extends AbstractService<CertificateDTO, Cert
 
     public CertificateServiceImpl(DTOConverter<Certificate, CertificateDTO> converter,
                                   Repository<Certificate> repository,
-                                  TagRepository tagRepository) {
+                                  TagRepositoryImpl tagRepositoryImpl) {
         super(converter, repository);
-        this.tagRepository = tagRepository;
-    }
-
-    @Override
-    public void remove(Long id) {
-        Certificate certificate = converter.convertToEntity(getById(id));
-        repository.delete(certificate);
+        this.tagRepository = tagRepositoryImpl;
     }
 
     @Override
@@ -104,12 +99,13 @@ public class CertificateServiceImpl extends AbstractService<CertificateDTO, Cert
         CriteriaSpecification<Certificate> specification = new CertificateByParamsSpecification(queryDTO.getTags(),
                 queryDTO.getName(), queryDTO.getDescription(), queryDTO.getSortBy(), queryDTO.getOrder());
         List<Certificate> certificates = repository.getEntityListBySpecification(specification,
-                pageRequestDTO.getPage(), pageRequestDTO.getSize());
+                Integer.parseInt(pageRequestDTO.getPage().toString()),
+                Integer.parseInt(pageRequestDTO.getSize().toString()));
         List<CertificateDTO> certificateDTOList = converter.convertToListDTO(certificates);
         long totalElements = repository.countEntities(specification);
         return new PageDTO<>(
-                pageRequestDTO.getPage(),
-                pageRequestDTO.getSize(),
+                Integer.parseInt(pageRequestDTO.getPage().toString()),
+                Integer.parseInt(pageRequestDTO.getSize().toString()),
                 totalElements,
                 certificateDTOList);
     }

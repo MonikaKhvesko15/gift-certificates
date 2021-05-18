@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 
 @Repository
-public class UserRepository extends AbstractRepository<User>{
-    protected UserRepository(EntityManager entityManager) {
+public class UserRepositoryImpl extends AbstractRepository<User>{
+    protected UserRepositoryImpl(EntityManager entityManager) {
         super(entityManager, User.class);
     }
 }

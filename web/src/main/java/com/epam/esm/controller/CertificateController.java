@@ -7,7 +7,6 @@ import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.link.PageDTOLinkBuilder;
-import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;

@@ -10,8 +10,6 @@ public interface CertificateService {
 
     CertificateDTO create(CertificateDTO certificateDTO);
 
-    void remove(Long id);
-
     CertificateDTO update(Long id, CertificateDTO certificate);
 
     PageDTO<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, PageRequestDTO pageRequestDTO);

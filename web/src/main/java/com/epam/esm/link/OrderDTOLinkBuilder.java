@@ -11,6 +11,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 @RequiredArgsConstructor
 public class OrderDTOLinkBuilder implements LinkBuilder<OrderDTO> {
+    private static final Class<OrderController> orderControllerClass = OrderController.class;
     private final CertificateDTOLinkBuilder certificateDTOLinkBuilder;
 
     @Override
@@ -18,7 +19,16 @@ public class OrderDTOLinkBuilder implements LinkBuilder<OrderDTO> {
         if (orderDTO.getCertificates() != null) {
             orderDTO.getCertificates().forEach(certificateDTOLinkBuilder::toModel);
         }
-        orderDTO.add(linkTo(OrderController.class).withRel("orders"));
-        orderDTO.add(linkTo(methodOn(OrderController.class).findById(orderDTO.getId())).withSelfRel());
+        orderDTO.add(linkTo(orderControllerClass)
+                .withRel("orders"));
+        orderDTO.add(linkTo(methodOn(orderControllerClass)
+                .findById(orderDTO.getId()))
+                .withSelfRel());
+//        orderDTO.add(linkTo(methodOn(OrderController.class)
+//                .update(orderDTO, orderDTO.getId()))
+//                .withRel("update"));
+//        orderDTO.add(linkTo(orderControllerClass)
+//                .slash(orderDTO.getId())
+//                .withRel("delete"));
     }
 }

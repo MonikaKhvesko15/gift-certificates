@@ -10,10 +10,13 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 public class UserAllSpecification implements CriteriaSpecification<User> {
+
+    private static final Class<User> USER_CLASS = User.class;
+
     @Override
     public CriteriaQuery<User> getCriteriaQuery(CriteriaBuilder builder) {
-        CriteriaQuery<User> criteria = builder.createQuery(User.class);
-        Root<User> userRoot = criteria.from(User.class);
+        CriteriaQuery<User> criteria = builder.createQuery(USER_CLASS);
+        Root<User> userRoot = criteria.from(USER_CLASS);
         criteria.select(userRoot).distinct(true);
         Predicate isNotDeletedPredicate = builder.isFalse(userRoot.get(BaseEntity.IS_DELETED_ATTRIBUTE));
         criteria.where(isNotDeletedPredicate);

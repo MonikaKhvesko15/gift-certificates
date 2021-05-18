@@ -8,10 +8,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 public class OrderAllSpecification implements CriteriaSpecification<Order> {
+
+    private static final Class<Order> ORDER_CLASS = Order.class;
+
     @Override
     public CriteriaQuery<Order> getCriteriaQuery(CriteriaBuilder builder) {
-        CriteriaQuery<Order> criteria = builder.createQuery(Order.class);
-        Root<Order> orderRoot = criteria.from(Order.class);
+        CriteriaQuery<Order> criteria = builder.createQuery(ORDER_CLASS);
+        Root<Order> orderRoot = criteria.from(ORDER_CLASS);
         criteria.select(orderRoot).distinct(true);
         return criteria;
     }

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ContextConfiguration(classes = {TestConfig.class})
 @ActiveProfiles("dev")
 @Transactional
-class CertificateRepositoryTest {
+class CertificateRepositoryImplTest {
 
     private static final long TEST_CERTIFICATE_ID = 5L;
     public static final long EXISTING_CERTIFICATE_ID = 4L;
@@ -30,11 +30,11 @@ class CertificateRepositoryTest {
     private Certificate existingCertificate;
 
 
-    private final CertificateRepository certificateRepository;
+    private final CertificateRepositoryImpl certificateRepositoryImpl;
 
     @Autowired
-    public CertificateRepositoryTest(CertificateRepository certificateRepository) {
-        this.certificateRepository = certificateRepository;
+    public CertificateRepositoryImplTest(CertificateRepositoryImpl certificateRepositoryImpl) {
+        this.certificateRepositoryImpl = certificateRepositoryImpl;
     }
 
     @BeforeEach

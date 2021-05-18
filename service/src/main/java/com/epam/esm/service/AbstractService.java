@@ -19,5 +19,9 @@ public abstract class AbstractService<D extends EntityDTO, T extends BaseEntity>
         return converter.convertToDto(entity);
     }
 
-
+    @Override
+    public void remove(Long id) {
+        T entity = converter.convertToEntity(getById(id));
+        repository.delete(entity);
+    }
 }

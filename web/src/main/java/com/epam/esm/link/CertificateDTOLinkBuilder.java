@@ -11,6 +11,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 @RequiredArgsConstructor
 public class CertificateDTOLinkBuilder implements LinkBuilder<CertificateDTO> {
+    private static final Class<CertificateController> certificateControllerClass = CertificateController.class;
     private final TagDTOLinkBuilder tagDTOLinkBuilder;
 
     @Override
@@ -18,7 +19,16 @@ public class CertificateDTOLinkBuilder implements LinkBuilder<CertificateDTO> {
         if (certificateDTO.getTags() != null) {
             certificateDTO.getTags().forEach(tagDTOLinkBuilder::toModel);
         }
-        certificateDTO.add(linkTo(CertificateController.class).withRel("certificates"));
-        certificateDTO.add(linkTo(methodOn(CertificateController.class).findById(certificateDTO.getId())).withSelfRel());
+        certificateDTO.add(linkTo(certificateControllerClass)
+                .withRel("certificates"));
+        certificateDTO.add(linkTo(methodOn(certificateControllerClass)
+                .findById(certificateDTO.getId()))
+                .withSelfRel());
+        certificateDTO.add(linkTo(methodOn(certificateControllerClass)
+                .update(certificateDTO, certificateDTO.getId()))
+                .withRel("update"));
+        certificateDTO.add(linkTo(certificateControllerClass)
+                .slash(certificateDTO.getId())
+                .withRel("delete"));
     }
 }

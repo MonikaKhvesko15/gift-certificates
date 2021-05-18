@@ -35,12 +35,13 @@ public class UserServiceImpl extends AbstractService<UserDTO, User> implements U
     public PageDTO<UserDTO> findAll(PageRequestDTO pageRequestDTO) {
         CriteriaSpecification<User> specification = new UserAllSpecification();
         List<User> userList = repository.getEntityListBySpecification(specification,
-                pageRequestDTO.getPage(), pageRequestDTO.getSize());
+                Integer.parseInt(pageRequestDTO.getPage().toString()),
+                Integer.parseInt(pageRequestDTO.getSize().toString()));
         List<UserDTO> userDTOList = converter.convertToListDTO(userList);
         long totalElements = repository.countEntities(specification);
         return new PageDTO<>(
-                pageRequestDTO.getPage(),
-                pageRequestDTO.getSize(),
+                Integer.parseInt(pageRequestDTO.getPage().toString()),
+                Integer.parseInt(pageRequestDTO.getSize().toString()),
                 totalElements,
                 userDTOList
         );

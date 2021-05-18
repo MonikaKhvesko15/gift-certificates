@@ -24,6 +24,7 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
     private static final String ASC = "ASC";
     private static final String DESC = "DESC";
     private static final String DATE_ATTRIBUTE = "date";
+    private static final Class<Certificate> CERTIFICATE_CLASS = Certificate.class;
     private final List<String> tags;
     private final String name;
     private final String description;
@@ -32,8 +33,8 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
 
     @Override
     public CriteriaQuery<Certificate> getCriteriaQuery(CriteriaBuilder builder) {
-        CriteriaQuery<Certificate> criteria = builder.createQuery(Certificate.class);
-        Root<Certificate> certificateRoot = criteria.from(Certificate.class);
+        CriteriaQuery<Certificate> criteria = builder.createQuery(CERTIFICATE_CLASS);
+        Root<Certificate> certificateRoot = criteria.from(CERTIFICATE_CLASS);
         certificateRoot.fetch(Certificate.TAGS_ATTRIBUTE, JoinType.LEFT);
         criteria.select(certificateRoot).distinct(true);
 
@@ -75,8 +76,8 @@ public class CertificateByParamsSpecification implements CriteriaSpecification<C
     private Subquery<Certificate> getTagNameSubQuery(CriteriaBuilder builder,
                                                      CriteriaQuery<Certificate> criteria,
                                                      String tagName) {
-        Subquery<Certificate> subQuery = criteria.subquery(Certificate.class);
-        Root<Certificate> subQueryCertificateRoot = subQuery.from(Certificate.class);
+        Subquery<Certificate> subQuery = criteria.subquery(CERTIFICATE_CLASS);
+        Root<Certificate> subQueryCertificateRoot = subQuery.from(CERTIFICATE_CLASS);
         Join<Certificate, Tag> certificateTagJoin = subQueryCertificateRoot.join(Certificate.TAGS_ATTRIBUTE);
         Path<String> tagNamePath = certificateTagJoin.get(Tag.NAME_ATTRIBUTE);
         subQuery.select(subQueryCertificateRoot).distinct(true);
