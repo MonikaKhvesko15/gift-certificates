@@ -41,4 +41,12 @@ public class CertificateDTO extends EntityDTO{
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
     private Set<TagDTO> tags = new HashSet<>();
+
+    public CertificateDTO(String name, String description, double price, int duration) {
+        super();
+        this.name = name;
+        this.description = description;
+        this.price = BigDecimal.valueOf(price);
+        this.duration = duration;
+    }
 }

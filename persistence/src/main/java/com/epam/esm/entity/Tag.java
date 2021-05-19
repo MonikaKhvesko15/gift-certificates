@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.ParameterMode;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 
@@ -33,4 +32,7 @@ public class Tag extends BaseEntity {
         throw new UnsupportedOperationException();
     }
 
+    public Tag(String name) {
+        this.name = name;
+    }
 }

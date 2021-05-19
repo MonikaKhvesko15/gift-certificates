@@ -2,12 +2,12 @@ package com.epam.esm.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -44,4 +44,11 @@ public class Certificate extends BaseEntity {
     )
     private Set<Tag> tags;
 
+    public Certificate(String name, String description, double price, int duration) {
+        super();
+        this.name = name;
+        this.description = description;
+        this.price = BigDecimal.valueOf(price);
+        this.duration = duration;
+    }
 }

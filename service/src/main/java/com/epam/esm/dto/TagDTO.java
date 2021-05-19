@@ -17,4 +17,8 @@ public class TagDTO extends EntityDTO {
     @NotBlank
     @Size(max = 50)
     private String name;
+
+    public TagDTO(String name) {
+        this.name = name;
+    }
 }

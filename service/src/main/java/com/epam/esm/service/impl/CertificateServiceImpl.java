@@ -16,7 +16,6 @@ import com.epam.esm.service.AbstractService;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.certificate.CertificateByParamsSpecification;
-import com.epam.esm.validator.PageParamsValidator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
