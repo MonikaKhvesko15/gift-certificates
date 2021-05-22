@@ -1,5 +1,6 @@
 package com.epam.esm.specification.order;
 
+import com.epam.esm.entity.BaseEntity;
 import com.epam.esm.entity.Order;
 import com.epam.esm.specification.CriteriaSpecification;
 
@@ -15,7 +16,8 @@ public class OrderAllSpecification implements CriteriaSpecification<Order> {
     public CriteriaQuery<Order> getCriteriaQuery(CriteriaBuilder builder) {
         CriteriaQuery<Order> criteria = builder.createQuery(ORDER_CLASS);
         Root<Order> orderRoot = criteria.from(ORDER_CLASS);
-        criteria.select(orderRoot).distinct(true);
+        criteria.select(orderRoot).distinct(true)
+                .orderBy(builder.asc(orderRoot.get(BaseEntity.ID_ATTRIBUTE)));
         return criteria;
     }
 }

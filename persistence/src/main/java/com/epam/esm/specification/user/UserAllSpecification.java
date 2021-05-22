@@ -19,7 +19,8 @@ public class UserAllSpecification implements CriteriaSpecification<User> {
         Root<User> userRoot = criteria.from(USER_CLASS);
         criteria.select(userRoot).distinct(true);
         Predicate isNotDeletedPredicate = builder.isFalse(userRoot.get(BaseEntity.IS_DELETED_ATTRIBUTE));
-        criteria.where(isNotDeletedPredicate);
+        criteria.where(isNotDeletedPredicate)
+                .orderBy(builder.asc(userRoot.get(BaseEntity.ID_ATTRIBUTE)));
         return criteria;
     }
 }

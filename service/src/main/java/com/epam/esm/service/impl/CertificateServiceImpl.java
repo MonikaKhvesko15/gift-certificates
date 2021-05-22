@@ -16,6 +16,7 @@ import com.epam.esm.service.AbstractService;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.certificate.CertificateByParamsSpecification;
+import com.epam.esm.util.PageRequestDTOHandler;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -33,8 +34,9 @@ public class CertificateServiceImpl extends AbstractService<CertificateDTO, Cert
 
     public CertificateServiceImpl(DTOConverter<Certificate, CertificateDTO> converter,
                                   Repository<Certificate> repository,
+                                  PageRequestDTOHandler parser,
                                   TagRepositoryImpl tagRepositoryImpl) {
-        super(converter, repository);
+        super(converter, repository, parser);
         this.tagRepository = tagRepositoryImpl;
     }
 
@@ -45,18 +47,18 @@ public class CertificateServiceImpl extends AbstractService<CertificateDTO, Cert
             throw new EntityAlreadyExistsException(" (name = " + name + ")");
         }
         Certificate certificate = converter.convertToEntity(certificateDTO);
-        Set<Tag> tags = getFullTags(certificate);
-        if (tags != null) {
+        Set<Tag> tags = certificate.getTags();
+        if (CollectionUtils.isNotEmpty(tags)) {
             createNotExistingTag(tags);
+            certificate.setTags(getFullTags(certificate));
         }
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(LocalDateTime.now());
         return converter.convertToDto(repository.save(certificate));
     }
-
-    private Set<Tag> getFullTags(Certificate certificate) {
+        private Set<Tag> getFullTags(Certificate certificate) {
         return certificate.getTags().stream()
-                .map(tag -> tagRepository.getById(tag.getId())
+                .map(tag -> tagRepository.getByName(tag.getName())
                         .orElseThrow(() -> new EntityNotFoundException(" (tagId = " + tag.getId() + ")")))
                 .collect(Collectors.toSet());
     }
@@ -94,17 +96,19 @@ public class CertificateServiceImpl extends AbstractService<CertificateDTO, Cert
 
 
     @Override
-    public PageDTO<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, PageRequestDTO pageRequestDTO) {
+    public PageDTO<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO,
+                                                PageRequestDTO pageRequestDTO) {
+        PageRequestDTO pageParsed = pageHandler.checkPageRequest(pageRequestDTO);
         CriteriaSpecification<Certificate> specification = new CertificateByParamsSpecification(queryDTO.getTags(),
                 queryDTO.getName(), queryDTO.getDescription(), queryDTO.getSortBy(), queryDTO.getOrder());
         List<Certificate> certificates = repository.getEntityListBySpecification(specification,
-                Integer.parseInt(pageRequestDTO.getPage().toString()),
-                Integer.parseInt(pageRequestDTO.getSize().toString()));
+                Integer.parseInt(pageParsed.getPage().toString()),
+                Integer.parseInt(pageParsed.getSize().toString()));
         List<CertificateDTO> certificateDTOList = converter.convertToListDTO(certificates);
         long totalElements = repository.countEntities(specification);
         return new PageDTO<>(
-                Integer.parseInt(pageRequestDTO.getPage().toString()),
-                Integer.parseInt(pageRequestDTO.getSize().toString()),
+                Integer.parseInt(pageParsed.getPage().toString()),
+                Integer.parseInt(pageParsed.getSize().toString()),
                 totalElements,
                 certificateDTOList);
     }

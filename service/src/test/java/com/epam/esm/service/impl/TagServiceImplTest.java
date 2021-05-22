@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class TagServiceImplTest {
     @InjectMocks
     TagServiceImpl tagService;
-
     @Mock
     Repository<User> userRepository;
     @Mock
@@ -32,13 +31,14 @@ class TagServiceImplTest {
     @Mock
     TagDTOConverter converter;
 
-    Tag tagTest = new Tag("test");
+
+    Tag tagTestFirst = new Tag("test1");
     TagDTO tagDTOTest = new TagDTO("test");
 
     @Test
     void testGetByIdShouldReturnTagDTOWhenEntityExists() {
-        Mockito.when(tagRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(tagTest));
-        Mockito.when(converter.convertToDto(tagTest)).thenReturn(tagDTOTest);
+        Mockito.when(tagRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(tagTestFirst));
+        Mockito.when(converter.convertToDto(tagTestFirst)).thenReturn(tagDTOTest);
         TagDTO actual = tagService.getById(1L);
         assertEquals(tagDTOTest, actual);
     }
@@ -50,17 +50,16 @@ class TagServiceImplTest {
     }
 
     @Test
-    void testGetMostPopularTagShouldThrowExceptionWhenUserNotExists() {
-        Mockito.when(userRepository.getById(Mockito.anyLong())).thenReturn(Optional.empty());
+    void testGetMostPopularTagShouldThrowExceptionWhenUserIdNotExists() {
         assertThrows(EntityNotFoundException.class, () -> tagService.getMostPopularTag(1L));
     }
 
     @Test
     void testCreateShouldReturnCreatedTagWhenTagNameNotExists() {
         Mockito.when(tagRepository.getByName(Mockito.anyString())).thenReturn(Optional.empty());
-        Mockito.when(converter.convertToEntity(tagDTOTest)).thenReturn(tagTest);
-        Mockito.when(tagRepository.save(tagTest)).thenReturn(tagTest);
-        Mockito.when(converter.convertToDto(tagTest)).thenReturn(tagDTOTest);
+        Mockito.when(converter.convertToEntity(tagDTOTest)).thenReturn(tagTestFirst);
+        Mockito.when(tagRepository.save(tagTestFirst)).thenReturn(tagTestFirst);
+        Mockito.when(converter.convertToDto(tagTestFirst)).thenReturn(tagDTOTest);
 
         TagDTO actual = tagService.create(tagDTOTest);
 
@@ -69,7 +68,7 @@ class TagServiceImplTest {
 
     @Test
     void testCreateShouldThrowExceptionWhenTagNameExists() {
-        Mockito.when(tagRepository.getByName(Mockito.anyString())).thenReturn(Optional.of(tagTest));
+        Mockito.when(tagRepository.getByName(Mockito.anyString())).thenReturn(Optional.of(tagTestFirst));
         assertThrows(EntityAlreadyExistsException.class, () -> tagService.create(tagDTOTest));
     }
 }

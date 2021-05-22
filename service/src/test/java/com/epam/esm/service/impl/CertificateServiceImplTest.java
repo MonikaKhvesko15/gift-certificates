@@ -6,7 +6,6 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;
-import com.epam.esm.repository.TagRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,14 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CertificateServiceImplTest {
     @InjectMocks
     CertificateServiceImpl certificateService;
-
     @Mock
     Repository<Certificate> certificateRepository;
     @Mock
     CertificateDTOConverter converter;
 
-    Certificate certificateTestFirst = new Certificate("certificate1", "first", 50.5, 15);
-    CertificateDTO certificateDTOTest = new CertificateDTO("certificateDTO", "first", 12.3, 13);
+    Certificate certificateTestFirst = new Certificate("certificate", "first", 50.5, 15);
+    CertificateDTO certificateDTOTest = new CertificateDTO("certificate", "first", 12.3, 13);
 
 
     @Test
@@ -53,5 +51,4 @@ class CertificateServiceImplTest {
 
         assertThrows(EntityAlreadyExistsException.class, () -> certificateService.create(certificateDTOTest));
     }
-
 }

@@ -38,12 +38,12 @@ public class CertificateController {
     /**
      * Search for certificates by passed params.
      *
-     * @return the list of queried certificates or all certificates if no params passed
+     * @return the {@link PageDTO<CertificateDTO>} of queried certificates or all certificates if no params passed
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public PageDTO<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO,
-                                        @Valid PageRequestDTO pageRequestDTO) {
+                                        PageRequestDTO pageRequestDTO) {
         PageDTO<CertificateDTO> pageDTO = certificateService.findByParams(queryDTO, pageRequestDTO);
         if(CollectionUtils.isNotEmpty(pageDTO.getContent())) {
             pageDTO.getContent().forEach(certificateDTOLinkBuilder::toModel);
@@ -52,6 +52,13 @@ public class CertificateController {
         return pageDTO;
     }
 
+    /**
+     * Update certificate field.
+     *
+     * @param id             the id of certificate to update
+     * @param requestField the updated field of certificate
+     * @return the updated certificate {@link CertificateDTO}
+     */
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CertificateDTO updateSingleField(@PathVariable Long id,
@@ -92,7 +99,6 @@ public class CertificateController {
      * Delete certificate.
      *
      * @param id the id of certificate
-     * @return no content
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -107,7 +113,6 @@ public class CertificateController {
      * @param certificateDTO the updated fields of certificate
      * @return the updated certificate {@link CertificateDTO}
      */
-
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CertificateDTO update(@RequestBody @Valid CertificateDTO certificateDTO,

@@ -2,7 +2,6 @@ package com.epam.esm.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -46,9 +45,13 @@ public class Certificate extends BaseEntity {
 
     public Certificate(String name, String description, double price, int duration) {
         super();
-        this.name = name;
+        this.name= name;
         this.description = description;
         this.price = BigDecimal.valueOf(price);
-        this.duration = duration;
+        this.duration =duration;
+    }
+
+    public Certificate(){
+        super();
     }
 }

@@ -34,11 +34,11 @@ public class TagController {
     /**
      * Fids all tags.
      *
-     * @return the list of all tags
+     * @return {@link PageDTO<TagDTO>} the list of all tags
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public PageDTO<TagDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
+    public PageDTO<TagDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<TagDTO> pageDTO = tagService.findAll(pageRequestDTO);
         if(CollectionUtils.isNotEmpty(pageDTO.getContent())) {
             pageDTO.getContent().forEach(tagDTOLinkBuilder::toModel);
@@ -65,7 +65,6 @@ public class TagController {
      * Delete tag.
      *
      * @param id the id of tag to remove
-     * @return no content
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

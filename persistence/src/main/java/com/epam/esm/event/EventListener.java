@@ -1,7 +1,6 @@
 package com.epam.esm.event;
 
 import com.epam.esm.entity.BaseEntity;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;

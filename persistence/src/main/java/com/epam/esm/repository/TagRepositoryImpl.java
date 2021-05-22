@@ -29,10 +29,7 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
     public Optional<Tag> getByName(String name) {
         criteria.select(entityRoot)
                 .where(builder.equal(entityRoot.get(NAME_ATTRIBUTE), name));
-        return findOrEmpty(() ->
-                entityManager
-                        .createQuery(criteria)
-                        .getSingleResult());
+        return findOrEmpty(criteria);
     }
 
     @Override

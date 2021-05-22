@@ -5,12 +5,14 @@ import com.epam.esm.dto.EntityDTO;
 import com.epam.esm.entity.BaseEntity;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;
+import com.epam.esm.util.PageRequestDTOHandler;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public abstract class AbstractService<D extends EntityDTO, T extends BaseEntity> implements Service<D> {
     protected final DTOConverter<T, D> converter;
     protected final Repository<T> repository;
+    protected PageRequestDTOHandler pageHandler;
 
     @Override
     public D getById(Long id) {

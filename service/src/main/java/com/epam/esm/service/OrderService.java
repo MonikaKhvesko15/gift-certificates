@@ -11,5 +11,5 @@ public interface OrderService {
 
     PageDTO<OrderDTO> getAllUserOrders(Long userId, PageRequestDTO pageRequestDTO);
 
-    OrderDTO getUserOrder(Long userId, Long orderId, PageRequestDTO pageRequestDTO);
+    OrderDTO getUserOrder(Long userId, Long orderId);
 }

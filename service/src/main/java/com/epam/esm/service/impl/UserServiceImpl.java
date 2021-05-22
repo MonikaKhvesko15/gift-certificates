@@ -11,6 +11,7 @@ import com.epam.esm.service.AbstractService;
 import com.epam.esm.service.UserService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.user.UserAllSpecification;
+import com.epam.esm.util.PageRequestDTOHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +21,9 @@ public class UserServiceImpl extends AbstractService<UserDTO, User> implements U
 
 
     public UserServiceImpl(DTOConverter<User, UserDTO> converter,
-                           Repository<User> repository) {
-        super(converter, repository);
+                           Repository<User> repository,
+                           PageRequestDTOHandler parser) {
+        super(converter, repository, parser);
     }
 
     @Override
@@ -33,15 +35,16 @@ public class UserServiceImpl extends AbstractService<UserDTO, User> implements U
 
     @Override
     public PageDTO<UserDTO> findAll(PageRequestDTO pageRequestDTO) {
+        PageRequestDTO pageParsed = pageHandler.checkPageRequest(pageRequestDTO);
         CriteriaSpecification<User> specification = new UserAllSpecification();
         List<User> userList = repository.getEntityListBySpecification(specification,
-                Integer.parseInt(pageRequestDTO.getPage().toString()),
-                Integer.parseInt(pageRequestDTO.getSize().toString()));
+                Integer.parseInt(pageParsed.getPage().toString()),
+                Integer.parseInt(pageParsed.getSize().toString()));
         List<UserDTO> userDTOList = converter.convertToListDTO(userList);
         long totalElements = repository.countEntities(specification);
         return new PageDTO<>(
-                Integer.parseInt(pageRequestDTO.getPage().toString()),
-                Integer.parseInt(pageRequestDTO.getSize().toString()),
+                Integer.parseInt(pageParsed.getPage().toString()),
+                Integer.parseInt(pageParsed.getSize().toString()),
                 totalElements,
                 userDTOList
         );

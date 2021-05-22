@@ -5,11 +5,8 @@ plugins {
 dependencies {
     implementation project(':persistence')
 
-    //validator
     api 'javax.validation:validation-api:2.0.1.Final'
-    api 'org.hibernate:hibernate-validator:6.2.0.Final'
 
-    //model mapper
     implementation 'org.modelmapper:modelmapper:2.4.0'
 }
 

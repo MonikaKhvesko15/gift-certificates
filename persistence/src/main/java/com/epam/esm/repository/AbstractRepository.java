@@ -70,10 +70,7 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
     private Optional<T> findSingleEntity(Predicate predicate) {
         Predicate isNotDeletedPredicate = builder.isFalse(entityRoot.get(BaseEntity.IS_DELETED_ATTRIBUTE));
         criteria.select(entityRoot).where(isNotDeletedPredicate, predicate);
-        return findOrEmpty(() ->
-                entityManager
-                        .createQuery(criteria)
-                        .getSingleResult());
+        return findOrEmpty(criteria);
     }
 
     @Override
@@ -97,14 +94,14 @@ public abstract class AbstractRepository<T extends BaseEntity> implements Reposi
     @Override
     public Optional<T> getEntityBySpecification(CriteriaSpecification<T> specification) {
         CriteriaQuery<T> criteriaQuery = specification.getCriteriaQuery(builder);
-        return findOrEmpty(() ->
-                entityManager
-                        .createQuery(criteriaQuery)
-                        .getSingleResult());
+        return findOrEmpty(criteriaQuery);
     }
 
-    public static <T> Optional<T> findOrEmpty(final EntityRetriever<T> retriever) {
+    public Optional<T> findOrEmpty(CriteriaQuery<T> criteriaQuery) {
         try {
+            EntityRetriever<T> retriever = () -> entityManager
+                            .createQuery(criteriaQuery)
+                            .getSingleResult();
             return Optional.of(retriever.retrieve());
         } catch (NoResultException ex) {
             log.warn("No matches found matching search criteria");

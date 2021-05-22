@@ -9,7 +9,6 @@ import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.link.PageDTOLinkBuilder;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.UserService;
 import com.epam.esm.service.impl.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -22,8 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
+/**
+ * The controller to provide CR operations on {@link UserDTO}.
+ */
 @RestController
 @RequestMapping(value = "/v1/users")
 @AllArgsConstructor
@@ -37,6 +37,12 @@ public class UserController {
     private final PageDTOLinkBuilder<UserDTO> pageUserDTOLinkBuilder;
     private final PageDTOLinkBuilder<OrderDTO> pageOrderDTOLinkBuilder;
 
+    /**
+     * Find by id.
+     *
+     * @param id the id of user
+     * @return the {@link UserDTO} of queried user
+     */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserDTO findById(@PathVariable Long id) {
@@ -45,17 +51,29 @@ public class UserController {
         return userDTO;
     }
 
+    /**
+     * Find all.
+     *
+     * @return the {@link PageDTO<UserDTO>} of all users
+     */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public PageDTO<UserDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
+    public PageDTO<UserDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<UserDTO> pageDTO = userService.findAll(pageRequestDTO);
-        if(CollectionUtils.isNotEmpty(pageDTO.getContent())) {
+        if (CollectionUtils.isNotEmpty(pageDTO.getContent())) {
             pageDTO.getContent().forEach(userDTOLinkBuilder::toModel);
             pageUserDTOLinkBuilder.toModel(pageDTO);
         }
         return pageDTO;
     }
 
+    /**
+     * Create order.
+     *
+     * @param id       the id of user
+     * @param orderDTO the order of concrete user
+     * @return {@link OrderDTO} created order
+     */
     @PostMapping("/{id}/orders")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO createOrder(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
@@ -64,29 +82,47 @@ public class UserController {
         return createdOrder;
     }
 
+    /**
+     * Get all user orders.
+     *
+     * @param id the id of concrete user
+     * @return {@link PageDTO} all user orders
+     * */
     @GetMapping("/{id}/orders")
     @ResponseStatus(HttpStatus.OK)
     public PageDTO<OrderDTO> getAllUserOrders(@PathVariable Long id,
-                                              @Valid PageRequestDTO pageRequestDTO) {
+                                              PageRequestDTO pageRequestDTO) {
         PageDTO<OrderDTO> orderDTOPage = orderService.getAllUserOrders(id, pageRequestDTO);
         orderDTOPage.getContent().forEach(orderDTOLinkBuilder::toModel);
         pageOrderDTOLinkBuilder.toModel(orderDTOPage);
         return orderDTOPage;
     }
 
+    /**
+     * Get user order.
+     *
+     * @param id the id of concrete user
+     * @param orderId the id of concrete user order
+     * @return {@link OrderDTO} user order
+     */
     @GetMapping("/{id}/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public OrderDTO getUserOrder(@PathVariable Long id,
-                                 @PathVariable Long orderId,
-                                 @Valid PageRequestDTO pageRequestDTO) {
-        OrderDTO orderDTO = orderService.getUserOrder(id, orderId, pageRequestDTO);
+                                 @PathVariable Long orderId) {
+        OrderDTO orderDTO = orderService.getUserOrder(id, orderId);
         orderDTOLinkBuilder.toModel(orderDTO);
         return orderDTO;
     }
 
+    /**
+     * Get the most widely used tag of a user with the highest cost of all orders.
+     *
+     * @param id the id of user
+     * @return {@link TagDTO} most popular tag
+     */
     @GetMapping("/{id}/most-popular-tag")
     @ResponseStatus(HttpStatus.OK)
-    public TagDTO getMostPopularTag(@PathVariable Long id){
+    public TagDTO getMostPopularTag(@PathVariable Long id) {
         TagDTO tagDTO = tagService.getMostPopularTag(id);
         tagDTOLinkBuilder.toModel(tagDTO);
         return tagDTO;

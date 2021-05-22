@@ -1,7 +1,6 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.converter.DTOConverter;
-import com.epam.esm.converter.OrderDTOConverter;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
@@ -16,7 +15,7 @@ import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.order.AllUserOrdersSpecification;
 import com.epam.esm.specification.order.OrderAllSpecification;
 import com.epam.esm.specification.order.UserOrderSpecification;
-import lombok.RequiredArgsConstructor;
+import com.epam.esm.util.PageRequestDTOHandler;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -32,16 +31,18 @@ public class OrderServiceImpl extends AbstractService<OrderDTO, Order> implement
     public OrderServiceImpl(DTOConverter<Order, OrderDTO> converter,
                             Repository<Order> repository,
                             Repository<User> userRepository,
+                            PageRequestDTOHandler parser,
                             Repository<Certificate> certificateRepository) {
-        super(converter, repository);
+        super(converter, repository, parser);
         this.userRepository = userRepository;
         this.certificateRepository = certificateRepository;
     }
 
     @Override
     public PageDTO<OrderDTO> findAll(PageRequestDTO pageRequestDTO) {
+        PageRequestDTO pageParsed = pageHandler.checkPageRequest(pageRequestDTO);
         CriteriaSpecification<Order> specification = new OrderAllSpecification();
-        return getOrderDTOPageDTO(pageRequestDTO, specification);
+        return getOrderDTOPageDTO(pageParsed, specification);
     }
 
     @Override
@@ -61,29 +62,32 @@ public class OrderServiceImpl extends AbstractService<OrderDTO, Order> implement
 
     @Override
     public PageDTO<OrderDTO> getAllUserOrders(Long userId, PageRequestDTO pageRequestDTO) {
+        PageRequestDTO pageParsed = pageHandler.checkPageRequest(pageRequestDTO);
         User user = getUserIfExists(userId);
-        CriteriaSpecification<Order> specification = new AllUserOrdersSpecification(user.getId());
-        return getOrderDTOPageDTO(pageRequestDTO, specification);
+        CriteriaSpecification<Order> specification = new AllUserOrdersSpecification(user);
+        return getOrderDTOPageDTO(pageParsed, specification);
     }
 
-    private PageDTO<OrderDTO> getOrderDTOPageDTO(PageRequestDTO pageRequestDTO, CriteriaSpecification<Order> specification) {
+    private PageDTO<OrderDTO> getOrderDTOPageDTO(PageRequestDTO pageRequestDTO,
+                                                 CriteriaSpecification<Order> specification) {
+        PageRequestDTO pageParsed = pageHandler.checkPageRequest(pageRequestDTO);
         List<Order> userOrderList = repository.getEntityListBySpecification(specification,
-                Integer.parseInt(pageRequestDTO.getPage().toString()),
-                Integer.parseInt(pageRequestDTO.getSize().toString()));
+                Integer.parseInt(pageParsed.getPage().toString()),
+                Integer.parseInt(pageParsed.getSize().toString()));
         List<OrderDTO> userOrderDTOList = converter.convertToListDTO(userOrderList);
         long totalElements = repository.countEntities(specification);
         return new PageDTO<>(
-                Integer.parseInt(pageRequestDTO.getPage().toString()),
-                Integer.parseInt(pageRequestDTO.getSize().toString()),
+                Integer.parseInt(pageParsed.getPage().toString()),
+                Integer.parseInt(pageParsed.getSize().toString()),
                 totalElements,
                 userOrderDTOList
         );
     }
 
     @Override
-    public OrderDTO getUserOrder(Long userId, Long orderId, PageRequestDTO pageRequestDTO) {
+    public OrderDTO getUserOrder(Long userId, Long orderId) {
         User user = getUserIfExists(userId);
-        CriteriaSpecification<Order> specification = new UserOrderSpecification(user.getId(), orderId);
+        CriteriaSpecification<Order> specification = new UserOrderSpecification(user, orderId);
         Order order = repository.getEntityBySpecification(specification)
                 .orElseThrow(() -> new EntityNotFoundException(" (orderId = " + orderId + ")"));
         return converter.convertToDto(order);

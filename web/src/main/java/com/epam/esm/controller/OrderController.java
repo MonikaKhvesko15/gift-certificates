@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
+/**
+ * The controller to provide operations on {@link OrderDTO}.
+ */
 @RestController
 @RequestMapping(value = "/v1/orders")
 @AllArgsConstructor
@@ -25,6 +26,12 @@ public class OrderController {
     private final LinkBuilder<OrderDTO> orderDTOLinkBuilder;
     private final PageDTOLinkBuilder<OrderDTO> pageDTOLinkBuilder;
 
+    /**
+     * Find by id.
+     *
+     * @param id the id of order
+     * @return the {@link OrderDTO} of queried order
+     */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OrderDTO findById(@PathVariable Long id) {
@@ -33,9 +40,14 @@ public class OrderController {
         return orderDTO;
     }
 
+    /**
+     * Find all orders.
+     *
+     * @return the {@link PageDTO<OrderDTO>} of queried orders
+     */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public PageDTO<OrderDTO> findAll(@Valid PageRequestDTO pageRequestDTO) {
+    public PageDTO<OrderDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<OrderDTO> pageDTO = orderService.findAll(pageRequestDTO);
         if(CollectionUtils.isNotEmpty(pageDTO.getContent())){
             pageDTO.getContent().forEach(orderDTOLinkBuilder::toModel);

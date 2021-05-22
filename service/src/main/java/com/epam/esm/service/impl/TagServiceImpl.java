@@ -14,8 +14,8 @@ import com.epam.esm.service.AbstractService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.tag.TagAllSpecification;
+import com.epam.esm.util.PageRequestDTOHandler;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -25,8 +25,9 @@ public class TagServiceImpl extends AbstractService<TagDTO, Tag> implements TagS
 
     public TagServiceImpl(DTOConverter<Tag, TagDTO> converter,
                           TagRepository tagRepository,
+                          PageRequestDTOHandler parser,
                           Repository<User> userRepository) {
-        super(converter, tagRepository);
+        super(converter, tagRepository, parser);
         this.tagRepository = tagRepository;
         this.userRepository = userRepository;
     }
@@ -56,15 +57,16 @@ public class TagServiceImpl extends AbstractService<TagDTO, Tag> implements TagS
 
     @Override
     public PageDTO<TagDTO> findAll(PageRequestDTO pageRequestDTO) {
+        PageRequestDTO pageParsed = pageHandler.checkPageRequest(pageRequestDTO);
         CriteriaSpecification<Tag> specification = new TagAllSpecification();
         List<Tag> tagList = repository.getEntityListBySpecification(specification,
-                Integer.parseInt(pageRequestDTO.getPage().toString()),
-                Integer.parseInt(pageRequestDTO.getSize().toString()));
+                Integer.parseInt(pageParsed.getPage().toString()),
+                Integer.parseInt(pageParsed.getSize().toString()));
         List<TagDTO> tagDTOList = converter.convertToListDTO(tagList);
         long totalElements = repository.countEntities(specification);
         return new PageDTO<>(
-                Integer.parseInt(pageRequestDTO.getPage().toString()),
-                Integer.parseInt(pageRequestDTO.getSize().toString()),
+                Integer.parseInt(pageParsed.getPage().toString()),
+                Integer.parseInt(pageParsed.getSize().toString()),
                 totalElements,
                 tagDTOList
         );

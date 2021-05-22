@@ -3,7 +3,6 @@ package com.epam.esm.entity;
 import com.epam.esm.event.EventListener;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
