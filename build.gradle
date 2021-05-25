@@ -1,6 +1,20 @@
-subprojects {
-    apply plugin: 'java'
+buildscript {
+    ext {
+        springBootVersion = '2.4.5'
+    }
 
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+    }
+}
+
+subprojects {
+    apply plugin:  'java'
+    apply plugin:  'org.springframework.boot'
+    apply plugin:  'io.spring.dependency-management'
 
     compileJava {
         sourceCompatibility = '1.8'
@@ -11,28 +25,26 @@ subprojects {
         mavenCentral()
     }
 
-    ext {
-        springVersion = '5.3.5'
-    }
-
     dependencies {
         //spring
-        implementation "org.springframework:spring-core:$springVersion"
-        implementation "org.springframework:spring-beans:$springVersion"
-        implementation "org.springframework:spring-context:$springVersion"
-        implementation "org.springframework:spring-jdbc:$springVersion"
+        implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+        implementation "org.springframework.boot:spring-boot-starter-hateoas:$springBootVersion"
+        implementation "org.springframework.boot:spring-boot-starter-validation:$springBootVersion"
 
-        //test
-        testImplementation "org.springframework:spring-test:$springVersion"
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
-        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.9.0'
-        testImplementation 'org.mockito:mockito-core:2.1.0'
-        testImplementation 'org.glassfish:javax.servlet:3.1'
-        testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.0'
+        //lombok
+        compileOnly 'org.projectlombok:lombok:1.18.20'
+        annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+        // logger
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
+
+        testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
 
         //utils
         implementation 'org.apache.commons:commons-lang3:3.10'
+        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
+
     }
 
     test {

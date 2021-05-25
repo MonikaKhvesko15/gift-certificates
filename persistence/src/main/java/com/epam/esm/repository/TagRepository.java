@@ -2,8 +2,8 @@ package com.epam.esm.repository;
 
 import com.epam.esm.entity.Tag;
 
-import java.util.Set;
+import java.util.Optional;
 
-public interface TagRepository extends Repository<Tag> {
-    void createCertificateTags(Long certificateId, Set<Tag> tags);
+public interface TagRepository extends Repository<Tag>{
+    Optional<Tag> getMostPopularTag(Long userId);
 }

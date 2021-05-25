@@ -1,61 +1,42 @@
 package com.epam.esm.entity;
 
-import java.util.Objects;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureParameter;
+import javax.persistence.Table;
 
-public class Tag extends Entity {
+@Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NamedStoredProcedureQuery(
+        name = "getMostWidelyUsedTag",
+        procedureName = "fn_getMostWidelyUsedTag",
+        resultClasses = {Tag.class},
+        parameters = {
+                @StoredProcedureParameter(name = "var_user_id", mode = ParameterMode.IN, type = Long.class)
+        })
+@Table(name = "tags")
+public class Tag extends BaseEntity {
+    public static final String NAME_ATTRIBUTE = "name";
 
+    @Column(unique = true)
     private String name;
 
-    public enum Columns {
-        ID("id"),
-        NAME("name"),
-        TAG_ID("tag_id");
-
-        private String column;
-
-        Columns(String columnName) {
-            this.column = columnName;
-        }
-
-        public String getColumn() {
-            return column;
-        }
+    @Override
+    public void setDeleted(boolean flag) {
+        throw new UnsupportedOperationException();
     }
 
-    public Tag() {
-    }
-
-    public Tag(Long id, String name) {
-        super(id);
+    public Tag(String name) {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Tag tag = (Tag) o;
-        return Objects.equals(name, tag.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-
-    @Override
-    public String toString() {
-        return "Tag{" +
-                "name='" + name + '\'' +
-                '}';
+    public Tag(){
+        super();
     }
 }

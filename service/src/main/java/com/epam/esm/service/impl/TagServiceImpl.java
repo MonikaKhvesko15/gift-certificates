@@ -1,66 +1,84 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.converter.DTOConverter;
+import com.epam.esm.dto.PageDTO;
+import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.dto.TagDTO;
-import com.epam.esm.dto.converter.TagConverterDTO;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.DeleteEntityException;
+import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
+import com.epam.esm.repository.Repository;
 import com.epam.esm.repository.TagRepository;
+import com.epam.esm.service.AbstractService;
 import com.epam.esm.service.TagService;
-import com.epam.esm.specification.TagAllSpecification;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.epam.esm.specification.CriteriaSpecification;
+import com.epam.esm.specification.tag.TagAllSpecification;
+import com.epam.esm.util.PageRequestDTOHandler;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class TagServiceImpl implements TagService {
+public class TagServiceImpl extends AbstractService<TagDTO, Tag> implements TagService {
+    private final Repository<User> userRepository;
     private final TagRepository tagRepository;
-    private final TagConverterDTO converter;
 
-    @Autowired
-    public TagServiceImpl(TagRepository tagRepository, TagConverterDTO converter) {
+    public TagServiceImpl(DTOConverter<Tag, TagDTO> converter,
+                          TagRepository tagRepository,
+                          PageRequestDTOHandler parser,
+                          Repository<User> userRepository) {
+        super(converter, tagRepository, parser);
         this.tagRepository = tagRepository;
-        this.converter = converter;
+        this.userRepository = userRepository;
     }
+
 
     @Override
     public TagDTO getById(Long id) {
-        Tag tag = tagRepository.getById(id)
+        Tag tag = repository.getById(id)
                 .orElseThrow(() -> new EntityNotFoundException(" (id = " + id + ")"));
         return converter.convertToDto(tag);
     }
 
     @Override
-    public List<TagDTO> getAll() {
-        List<Tag> tags = tagRepository.query(new TagAllSpecification());
-        return tags.stream().map(converter::convertToDto).collect(Collectors.toList());
+    public void remove(Long id) {
+        Tag tag = converter.convertToEntity(getById(id));
+        repository.delete(tag);
     }
 
     @Override
-    public TagDTO create(TagDTO tagDto) {
-        String tagName = tagDto.getName();
-        if (tagRepository.getByName(tagName).isPresent()) {
-            throw new EntityAlreadyExistsException(" (name = " + tagName + ")");
-        }
-        Tag tag = converter.convertToEntity(tagDto);
-        tag = tagRepository.save(tag)
+    public TagDTO getMostPopularTag(Long userId) {
+        User user = userRepository.getById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(" (id = " + userId + ")"));
+        Tag tag = tagRepository.getMostPopularTag(user.getId())
                 .orElseThrow(EntityNotFoundException::new);
         return converter.convertToDto(tag);
     }
 
+    @Override
+    public PageDTO<TagDTO> findAll(PageRequestDTO pageRequestDTO) {
+        PageRequestDTO pageParsed = pageHandler.checkPageRequest(pageRequestDTO);
+        CriteriaSpecification<Tag> specification = new TagAllSpecification();
+        List<Tag> tagList = repository.getEntityListBySpecification(specification,
+                Integer.parseInt(pageParsed.getPage().toString()),
+                Integer.parseInt(pageParsed.getSize().toString()));
+        List<TagDTO> tagDTOList = converter.convertToListDTO(tagList);
+        long totalElements = repository.countEntities(specification);
+        return new PageDTO<>(
+                Integer.parseInt(pageParsed.getPage().toString()),
+                Integer.parseInt(pageParsed.getSize().toString()),
+                totalElements,
+                tagDTOList
+        );
+    }
 
     @Override
-    public boolean remove(Long id) {
-        if(!tagRepository.getById(id).isPresent()){
-            throw new EntityNotFoundException(" (id = " + id + ")");
+    public TagDTO create(TagDTO tagDTO) {
+        String tagName = tagDTO.getName();
+        if (repository.getByName(tagName).isPresent()) {
+            throw new EntityAlreadyExistsException(" (name = " + tagName + ")");
         }
-        boolean result = tagRepository.deleteById(id);
-        if (!result) {
-            throw new DeleteEntityException(" (id = " + id + ")");
-        }
-        return result;
+        Tag tag = converter.convertToEntity(tagDTO);
+        return converter.convertToDto(repository.save(tag));
     }
 }

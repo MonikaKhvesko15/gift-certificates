@@ -1,18 +1,18 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.CertificateDTO;
-import com.epam.esm.dto.query.CertificatePageQueryDTO;
-
-import java.util.List;
+import com.epam.esm.dto.CertificatePageQueryDTO;
+import com.epam.esm.dto.CertificateRequestFieldDTO;
+import com.epam.esm.dto.PageDTO;
+import com.epam.esm.dto.PageRequestDTO;
 
 public interface CertificateService {
-    CertificateDTO getById(Long id);
 
     CertificateDTO create(CertificateDTO certificateDTO);
 
-    boolean remove(Long id);
+    CertificateDTO update(Long id, CertificateDTO certificate);
 
-    CertificateDTO update(Long id, CertificateDTO certificateDTO);
+    PageDTO<CertificateDTO> findByParams(CertificatePageQueryDTO queryDTO, PageRequestDTO pageRequestDTO);
 
-    List<CertificateDTO> executeQuery(CertificatePageQueryDTO queryDTO);
+    CertificateDTO updateField(Long id, CertificateRequestFieldDTO field);
 }

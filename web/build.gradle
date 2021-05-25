@@ -1,12 +1,5 @@
-plugins {
-    id 'war'
-}
-
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
     implementation project(':service')
-
-    implementation "org.springframework:spring-web:$springVersion"
-    implementation "org.springframework:spring-webmvc:$springVersion"
-
-    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
 }

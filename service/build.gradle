@@ -5,13 +5,15 @@ plugins {
 dependencies {
     implementation project(':persistence')
 
-    api 'com.fasterxml.jackson.core:jackson-databind:2.12.2'
-    api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.1'
-
-    //validator
     api 'javax.validation:validation-api:2.0.1.Final'
-    api 'org.hibernate:hibernate-validator:6.2.0.Final'
 
-    //model mapper
     implementation 'org.modelmapper:modelmapper:2.4.0'
+}
+
+bootJar {
+    enabled = false
+}
+
+jar{
+    enabled = true
 }

@@ -1,19 +1,25 @@
 package com.epam.esm.repository;
 
-import com.epam.esm.entity.Entity;
-import com.epam.esm.specification.SqlSpecification;
+import com.epam.esm.entity.BaseEntity;
+import com.epam.esm.specification.CriteriaSpecification;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface Repository<T extends Entity> {
-    Optional<T> save(T t);
+public interface Repository<T extends BaseEntity> {
+    T save(T entity);
 
-    boolean deleteById(Long id);
+    T update(T entity);
 
-    List<T> query(SqlSpecification specification);
+    void delete(T entity);
 
     Optional<T> getById(Long id);
 
     Optional<T> getByName(String name);
+
+    long countEntities(CriteriaSpecification<T> specification);
+
+    List<T> getEntityListBySpecification(CriteriaSpecification<T> specification, int pageNumber, int pageSize);
+
+    Optional<T> getEntityBySpecification(CriteriaSpecification<T> specification);
 }
