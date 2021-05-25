@@ -3,8 +3,6 @@ package com.epam.esm.util;
 import com.epam.esm.dto.PageRequestDTO;
 import org.springframework.stereotype.Component;
 
-import java.util.regex.Pattern;
-
 @Component
 public class PageRequestDTOHandler {
     private static final String DIGITAL_REGEX = "[0-9]+";
@@ -18,7 +16,7 @@ public class PageRequestDTOHandler {
         Object sizeObj = pageRequest.getSize();
         Object pageObj = pageRequest.getPage();
 
-        if (isOnlyDigits(pageObj.toString()) ||
+        if (!isOnlyDigits(pageObj.toString()) ||
                 Integer.parseInt(pageObj.toString()) < MIN_PAGE_NUMBER) {
             pageObj = MIN_PAGE_NUMBER;
         }
@@ -27,7 +25,7 @@ public class PageRequestDTOHandler {
             pageObj = MAX_PAGE_NUMBER;
         }
 
-        if (isOnlyDigits(sizeObj.toString()) ||
+        if (!isOnlyDigits(sizeObj.toString()) ||
                 Integer.parseInt(sizeObj.toString()) < MIN_PAGE_SIZE) {
             sizeObj = MIN_PAGE_SIZE;
         }
@@ -39,6 +37,6 @@ public class PageRequestDTOHandler {
     }
 
     private boolean isOnlyDigits(String str) {
-        return !Pattern.compile(DIGITAL_REGEX).matcher(str).find();
+        return str.matches(DIGITAL_REGEX);
     }
 }

@@ -56,7 +56,28 @@ public class CertificateServiceImpl extends AbstractService<CertificateDTO, Cert
         certificate.setLastUpdateDate(LocalDateTime.now());
         return converter.convertToDto(repository.save(certificate));
     }
-        private Set<Tag> getFullTags(Certificate certificate) {
+
+    @Override
+    public CertificateDTO update(Long id, CertificateDTO certificateDTO) {
+        CertificateDTO formerCertificate = getById(id);
+        String newName = certificateDTO.getName();
+        if (repository.getByName(newName).isPresent()
+                && !newName.equals(formerCertificate.getName())) {
+            throw new EntityAlreadyExistsException(" (name = " + newName + ")");
+        }
+        Certificate certificate = converter.convertToEntity(certificateDTO);
+        Set<Tag> updatedTags = certificate.getTags();
+        if (CollectionUtils.isNotEmpty(updatedTags)) {
+            createNotExistingTag(updatedTags);
+            certificate.setTags(getFullTags(certificate));
+        }
+        certificate.setId(id);
+        certificate.setCreateDate(formerCertificate.getCreateDate());
+        certificate.setLastUpdateDate(LocalDateTime.now());
+        return converter.convertToDto(repository.update(certificate));
+    }
+
+    private Set<Tag> getFullTags(Certificate certificate) {
         return certificate.getTags().stream()
                 .map(tag -> tagRepository.getByName(tag.getName())
                         .orElseThrow(() -> new EntityNotFoundException(" (tagId = " + tag.getId() + ")")))
@@ -75,24 +96,7 @@ public class CertificateServiceImpl extends AbstractService<CertificateDTO, Cert
         }
     }
 
-    @Override
-    public CertificateDTO update(Long id, CertificateDTO certificateDTO) {
-        CertificateDTO formerCertificate = getById(id);
-        String newName = certificateDTO.getName();
-        if (repository.getByName(newName).isPresent()
-                && !newName.equals(formerCertificate.getName())) {
-            throw new EntityAlreadyExistsException(" (name = " + newName + ")");
-        }
-        Certificate certificate = converter.convertToEntity(certificateDTO);
-        Set<Tag> updatedTags = certificate.getTags();
-        if (updatedTags != null) {
-            createNotExistingTag(updatedTags);
-        }
-        certificate.setId(id);
-        certificate.setCreateDate(formerCertificate.getCreateDate());
-        certificate.setLastUpdateDate(LocalDateTime.now());
-        return converter.convertToDto(repository.update(certificate));
-    }
+
 
 
     @Override

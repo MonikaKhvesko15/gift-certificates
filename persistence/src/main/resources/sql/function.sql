@@ -29,7 +29,7 @@ $$
 language 'plpgsql';
 ------------------------------------------------------------------------
 --for test
-  select distinct
+  select
   tags.id,
   tags.name,
   sum(orders.total_price) OVER (partition by tags.id)
@@ -37,6 +37,6 @@ language 'plpgsql';
 				         LEFT JOIN gift_certificates_tags ON tags.id = gift_certificates_tags.tag_id
                          LEFT JOIN gift_certificates_orders ON gift_certificates_tags.gift_certificate_id = gift_certificates_orders.gift_certificate_id
                          LEFT JOIN orders ON orders.id = gift_certificates_orders.order_id
-						 where orders.user_id = 3
+						 where orders.user_id = 965
 						 order by sum desc
 						 FETCH FIRST ROW ONLY;
