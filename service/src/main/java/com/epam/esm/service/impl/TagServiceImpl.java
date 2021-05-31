@@ -17,6 +17,7 @@ import com.epam.esm.specification.tag.TagAllSpecification;
 import com.epam.esm.util.PageRequestDTOHandler;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TagServiceImpl extends AbstractService<TagDTO, Tag> implements TagService {
@@ -50,9 +51,12 @@ public class TagServiceImpl extends AbstractService<TagDTO, Tag> implements TagS
     public TagDTO getMostPopularTag(Long userId) {
         User user = userRepository.getById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(" (id = " + userId + ")"));
-        Tag tag = tagRepository.getMostPopularTag(user.getId())
-                .orElseThrow(EntityNotFoundException::new);
-        return converter.convertToDto(tag);
+        Optional<Tag> tag = tagRepository.getMostPopularTag(user.getId());
+        if(tag.isPresent()){
+            return converter.convertToDto(tag.get());
+        }else {
+            return TagDTO.empty;
+        }
     }
 
     @Override

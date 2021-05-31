@@ -1,13 +1,15 @@
 package com.epam.esm.dto;
 
 import com.epam.esm.entity.UserRole;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Set;
@@ -18,17 +20,22 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class UserDTO extends EntityDTO {
     @NotBlank
-    @Size(min = 5, max = 20)
-    private String username;
+    @Email
+    private String email;
+
     @NotBlank
     @Size(min = 10, max = 15)
+    @JsonProperty(access = Access.WRITE_ONLY)
     private String password;
+
+    @NotBlank
+    @Size(min = 2, max = 50)
+    private String firstName;
+
+    @NotBlank
+    @Size(min = 2, max = 50)
+    private String lastName;
     private UserRole role;
     @Valid
     private Set<OrderDTO> orders;
-
-    @JsonIgnore
-    public String getPassword() {
-        return password;
-    }
 }

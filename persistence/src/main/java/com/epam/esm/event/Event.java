@@ -22,7 +22,7 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "operation", nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
@@ -35,7 +35,7 @@ public class Event {
     private String contentName;
 
     @Column(name = "content_id", nullable = false)
-    private Long contentId;
+    private long contentId;
 
     public Event(OperationType operation, BaseEntity entity) {
         this.operation = operation;

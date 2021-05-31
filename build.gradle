@@ -30,6 +30,17 @@ subprojects {
         implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
         implementation "org.springframework.boot:spring-boot-starter-hateoas:$springBootVersion"
         implementation "org.springframework.boot:spring-boot-starter-validation:$springBootVersion"
+        implementation "org.springframework.boot:spring-boot-starter-security:$springBootVersion"
+
+        //jwt
+//        implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+//        runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.10.7'
+//        runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.10.5'
+
+
+        //core utilities
+        implementation group: 'com.google.guava', name: 'guava', version: '11.0.2'
+
 
         //lombok
         compileOnly 'org.projectlombok:lombok:1.18.20'

@@ -11,6 +11,7 @@ import com.epam.esm.service.impl.CertificateServiceImpl;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,7 +29,7 @@ import javax.validation.Valid;
  * The controller to provide CRUD operations on {@link CertificateDTO}.
  */
 @RestController
-@RequestMapping(value = "/v1/certificates")
+@RequestMapping(value = "/api/v1/certificates")
 @AllArgsConstructor
 public class CertificateController {
     private final CertificateServiceImpl certificateService;
@@ -42,6 +43,7 @@ public class CertificateController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('certificate:read')")
     public PageDTO<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO,
                                         PageRequestDTO pageRequestDTO) {
         PageDTO<CertificateDTO> pageDTO = certificateService.findByParams(queryDTO, pageRequestDTO);
@@ -61,6 +63,7 @@ public class CertificateController {
      */
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('certificate:modify')")
     public CertificateDTO updateSingleField(@PathVariable Long id,
                                             @RequestBody @Valid CertificateRequestFieldDTO requestField) {
         return certificateService.updateField(id, requestField);
@@ -74,6 +77,7 @@ public class CertificateController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('certificate:read')")
     public CertificateDTO findById(@PathVariable Long id) {
         CertificateDTO certificateDTO = certificateService.getById(id);
         certificateDTOLinkBuilder.toModel(certificateDTO);
@@ -88,6 +92,7 @@ public class CertificateController {
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('certificate:create')")
     public CertificateDTO create(@RequestBody @Valid CertificateDTO certificateDTO) {
         CertificateDTO createdCertificate = certificateService.create(certificateDTO);
         certificateDTOLinkBuilder.toModel(createdCertificate);
@@ -102,6 +107,7 @@ public class CertificateController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('certificate:delete')")
     public void delete(@PathVariable Long id) {
         certificateService.remove(id);
     }
@@ -115,6 +121,7 @@ public class CertificateController {
      */
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('certificate:modify')")
     public CertificateDTO update(@RequestBody @Valid CertificateDTO certificateDTO,
                                  @PathVariable Long id) {
         CertificateDTO updatedCertificate = certificateService.update(id, certificateDTO);
