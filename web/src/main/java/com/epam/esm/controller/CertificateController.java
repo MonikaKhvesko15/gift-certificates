@@ -43,7 +43,7 @@ public class CertificateController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('certificate:read')")
+    @PreAuthorize("isAnonymous() or hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     public PageDTO<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO,
                                         PageRequestDTO pageRequestDTO) {
         PageDTO<CertificateDTO> pageDTO = certificateService.findByParams(queryDTO, pageRequestDTO);
@@ -63,7 +63,7 @@ public class CertificateController {
      */
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('certificate:modify')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public CertificateDTO updateSingleField(@PathVariable Long id,
                                             @RequestBody @Valid CertificateRequestFieldDTO requestField) {
         return certificateService.updateField(id, requestField);
@@ -77,7 +77,7 @@ public class CertificateController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('certificate:read')")
+    @PreAuthorize("isAnonymous() or hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     public CertificateDTO findById(@PathVariable Long id) {
         CertificateDTO certificateDTO = certificateService.getById(id);
         certificateDTOLinkBuilder.toModel(certificateDTO);
@@ -92,7 +92,7 @@ public class CertificateController {
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('certificate:create')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public CertificateDTO create(@RequestBody @Valid CertificateDTO certificateDTO) {
         CertificateDTO createdCertificate = certificateService.create(certificateDTO);
         certificateDTOLinkBuilder.toModel(createdCertificate);
@@ -107,7 +107,7 @@ public class CertificateController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('certificate:delete')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(@PathVariable Long id) {
         certificateService.remove(id);
     }
@@ -121,7 +121,7 @@ public class CertificateController {
      */
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('certificate:modify')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public CertificateDTO update(@RequestBody @Valid CertificateDTO certificateDTO,
                                  @PathVariable Long id) {
         CertificateDTO updatedCertificate = certificateService.update(id, certificateDTO);

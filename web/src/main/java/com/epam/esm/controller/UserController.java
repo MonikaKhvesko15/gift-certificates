@@ -84,7 +84,7 @@ public class UserController {
      */
     @PostMapping("/{id}/orders")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('userOrder:create')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public OrderDTO createOrder(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
         OrderDTO createdOrder = orderService.create(id, orderDTO);
         orderDTOLinkBuilder.toModel(createdOrder);
@@ -99,7 +99,7 @@ public class UserController {
      * */
     @GetMapping("/{id}/orders")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('userOrder:read')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public PageDTO<OrderDTO> getAllUserOrders(@PathVariable Long id,
                                               PageRequestDTO pageRequestDTO) {
         PageDTO<OrderDTO> orderDTOPage = orderService.getAllUserOrders(id, pageRequestDTO);
@@ -117,7 +117,7 @@ public class UserController {
      */
     @GetMapping("/{id}/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('userOrder:read')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public OrderDTO getUserOrder(@PathVariable Long id,
                                  @PathVariable Long orderId) {
         OrderDTO orderDTO = orderService.getUserOrder(id, orderId);
@@ -132,7 +132,7 @@ public class UserController {
      * @return {@link TagDTO} most popular tag
      */
     @GetMapping("/{id}/most-popular-tag")
-    @PreAuthorize("hasAuthority('user:popularTag')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public TagDTO getMostPopularTag(@PathVariable Long id) {
         TagDTO tagDTO = tagService.getMostPopularTag(id);
         if(tagDTO!=null){
@@ -141,29 +141,22 @@ public class UserController {
         return tagDTO;
     }
 
-//    @PostMapping()
-//    @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('user:register')")
-//    public UserDTO registerNewUser(@RequestBody @Valid UserDTO userDTO) {
-//        UserDTO newUser = userService.register(userDTO);
-//        userDTOLinkBuilder.toModel(newUser);
-//        return newUser;
-//    }
     /**
-     * Delete certificate.
+     * Delete user.
      *
-     * @param id the id of certificate
+     * @param id the id of user
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('user:delete')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(@PathVariable Long id) {
         userService.remove(id);
     }
 
+
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('user:modify')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public UserDTO update(@RequestBody @Valid UserRequestFieldDTO userRequestFieldDTO,
                                  @PathVariable Long id) {
         UserDTO updatedUser = userService.update(id, userRequestFieldDTO);
