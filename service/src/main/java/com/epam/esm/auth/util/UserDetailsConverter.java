@@ -1,31 +1,20 @@
-package com.epam.esm.auth;
+package com.epam.esm.auth.util;
 
+import com.epam.esm.auth.ApplicationUser;
+import com.epam.esm.auth.ApplicationUserPermission;
+import com.epam.esm.auth.ApplicationUserRole;
 import com.epam.esm.entity.User;
 import com.epam.esm.entity.UserRole;
-import com.epam.esm.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import java.util.Optional;
+import org.springframework.stereotype.Component;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Service
-@AllArgsConstructor
-public class ApplicationUserService implements UserDetailsService {
-
-    private final UserRepository userRepository;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findByEmail(username);
-        User user = optionalUser.orElseThrow(
-                () -> new UsernameNotFoundException(String.format("Username %s not found", username))
-        );
+@Component
+public class UserDetailsConverter {
+    public ApplicationUser convertToUserDetails(User user){
         String email = user.getEmail();
         String password = user.getPassword();
         ApplicationUserRole role = convertUserRole(user.getRole());
@@ -51,10 +40,10 @@ public class ApplicationUserService implements UserDetailsService {
                 .stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.name()))
                 .collect(Collectors.toSet());
-        GrantedAuthority roleAuthority = new SimpleGrantedAuthority(role.name());
+
+        GrantedAuthority roleAuthority = new SimpleGrantedAuthority("ROLE_" +role.name());
         grantedAuthorities.add(roleAuthority);
+
         return grantedAuthorities;
     }
-
-
 }

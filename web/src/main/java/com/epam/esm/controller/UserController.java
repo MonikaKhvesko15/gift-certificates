@@ -51,7 +51,7 @@ public class UserController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('user:read')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public UserDTO findById(@PathVariable Long id) {
         UserDTO userDTO = userService.getById(id);
         userDTOLinkBuilder.toModel(userDTO);
@@ -65,7 +65,7 @@ public class UserController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('user:read')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public PageDTO<UserDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<UserDTO> pageDTO = userService.findAll(pageRequestDTO);
         if (CollectionUtils.isNotEmpty(pageDTO.getContent())) {
@@ -141,14 +141,14 @@ public class UserController {
         return tagDTO;
     }
 
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('user:register')")
-    public UserDTO registerNewUser(@RequestBody @Valid UserDTO userDTO) {
-        UserDTO newUser = userService.register(userDTO);
-        userDTOLinkBuilder.toModel(newUser);
-        return newUser;
-    }
+//    @PostMapping()
+//    @ResponseStatus(HttpStatus.CREATED)
+//    @PreAuthorize("hasAuthority('user:register')")
+//    public UserDTO registerNewUser(@RequestBody @Valid UserDTO userDTO) {
+//        UserDTO newUser = userService.register(userDTO);
+//        userDTOLinkBuilder.toModel(newUser);
+//        return newUser;
+//    }
     /**
      * Delete certificate.
      *

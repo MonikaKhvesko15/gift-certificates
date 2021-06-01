@@ -27,6 +27,7 @@ public class ControllerExceptionHandler {
     public static final String ENTITY_VALIDATOR_EXCEPTION = "entity_not_valid";
     public static final String FIELDS_NUMBER_VALIDATOR_EXCEPTION = "fields_number_not_valid";
     public static final String ACCESS_ERROR = "access_error";
+    public static final String USERNAME_NOT_FOUND_EXCEPTION = "username_not_found";
     public static final String INTERNAL_SERVER_ERROR = "server_error";
 
 

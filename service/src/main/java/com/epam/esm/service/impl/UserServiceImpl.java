@@ -16,6 +16,7 @@ import com.epam.esm.specification.CriteriaSpecification;
 import com.epam.esm.specification.user.UserAllSpecification;
 import com.epam.esm.util.PageRequestDTOHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,17 +24,17 @@ import java.util.List;
 @Service
 public class UserServiceImpl extends AbstractService<UserDTO, User> implements UserService {
     private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(DTOConverter<User, UserDTO> converter,
                            UserRepository repository,
                            PageRequestDTOHandler parser
-//                           ,
-//                           PasswordEncoder passwordEncoder
+                           ,
+                           PasswordEncoder passwordEncoder
     ) {
         super(converter, repository, parser);
         this.userRepository = repository;
-//        this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -66,12 +67,11 @@ public class UserServiceImpl extends AbstractService<UserDTO, User> implements U
         if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
             throw new EntityAlreadyExistsException(" (username = " + username + ") ");
         }
-        //todo:encode password
-//        String password = userDTO.getPassword();
+        String password = userDTO.getPassword();
         User user = converter.convertToEntity(userDTO);
         user.setIsBlocked(false);
         user.setRole(UserRole.USER);
-//        user.setPassword(passwordEncoder.encode(password));
+        user.setPassword(passwordEncoder.encode(password));
         return converter.convertToDto(userRepository.save(user));
     }
 
