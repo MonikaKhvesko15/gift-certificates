@@ -1,9 +1,9 @@
 package com.epam.esm.security.config;
 
 import com.epam.esm.auth.service.ApplicationUserService;
-import com.epam.esm.jwt.JwtConfig;
 import com.epam.esm.jwt.JwtTokenVerifier;
 import com.epam.esm.jwt.JwtUsernameAndPasswordAuthenticationFilter;
+import com.epam.esm.jwt.util.TokenInterpreter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.crypto.SecretKey;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -26,8 +24,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
     private final ApplicationUserService userService;
-    private final SecretKey secretKey;
-    private final JwtConfig jwtConfig;
+    private final TokenInterpreter tokenInterpreter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -35,16 +32,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
-                .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class);
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.POST, "/api/v1/authorization/signup").permitAll()
-//                .anyRequest()
-//                .authenticated();
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), tokenInterpreter))
+                .addFilterAfter(new JwtTokenVerifier(tokenInterpreter), JwtUsernameAndPasswordAuthenticationFilter.class);
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 

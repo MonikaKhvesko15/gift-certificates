@@ -1,10 +1,8 @@
 package com.epam.esm.auth.util;
 
 import com.epam.esm.auth.ApplicationUser;
-import com.epam.esm.auth.ApplicationUserRole;
 import com.epam.esm.entity.Role;
 import com.epam.esm.entity.User;
-import com.epam.esm.entity.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -33,8 +31,7 @@ public class UserDetailsConverter {
     private Set<GrantedAuthority> getGrantedAuthoritySetFromRoles(Set<Role> roles) {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         for (Role role : roles) {
-            ApplicationUserRole applicationUserRole = UserRole.ADMIN.equals(role.getName()) ? ApplicationUserRole.ADMIN : ApplicationUserRole.USER;
-            GrantedAuthority roleAuthority = new SimpleGrantedAuthority("ROLE_" +applicationUserRole.name());
+            GrantedAuthority roleAuthority = new SimpleGrantedAuthority("ROLE_" + role.getName());
             grantedAuthorities.add(roleAuthority);
         }
         return grantedAuthorities;
