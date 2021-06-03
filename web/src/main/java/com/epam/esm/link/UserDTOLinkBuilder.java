@@ -1,7 +1,7 @@
 package com.epam.esm.link;
 
 import com.epam.esm.controller.UserController;
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.dto.entityDTO.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

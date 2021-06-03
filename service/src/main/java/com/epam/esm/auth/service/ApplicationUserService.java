@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -23,7 +22,6 @@ public class ApplicationUserService implements UserDetailsService {
         Optional<User> optionalUser = userRepository.findByEmail(username);
         User user = optionalUser
                 .orElseThrow(() -> new UsernameNotFoundException(" (username = " + username + ")"));
-
         return converter.convertToUserDetails(user);
     }
 }

@@ -1,7 +1,7 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.converter.DTOConverter;
-import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.entityDTO.OrderDTO;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.entity.Certificate;

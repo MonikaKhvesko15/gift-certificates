@@ -1,6 +1,5 @@
 package com.epam.esm.jwt;
 
-import com.google.common.net.HttpHeaders;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +16,4 @@ public class JwtConfig {
     private String tokenPrefix;
     private Integer tokenExpirationAfterDays;
 
-    public String getAuthorizationHeader(){
-        return HttpHeaders.AUTHORIZATION;
-    }
 }

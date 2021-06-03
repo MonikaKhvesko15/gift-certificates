@@ -1,6 +1,5 @@
-package com.epam.esm.dto;
+package com.epam.esm.dto.entityDTO;
 
-import com.epam.esm.entity.UserRole;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import lombok.EqualsAndHashCode;
@@ -35,7 +34,9 @@ public class UserDTO extends EntityDTO {
     @NotBlank
     @Size(min = 2, max = 50)
     private String lastName;
-    private UserRole role;
+
+//    @JsonProperty(access = Access.WRITE_ONLY)
+    private Set<@Valid RoleDTO> roles;
     @Valid
     private Set<OrderDTO> orders;
 }

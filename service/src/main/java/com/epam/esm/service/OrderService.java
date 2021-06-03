@@ -1,6 +1,6 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.entityDTO.OrderDTO;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 

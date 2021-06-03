@@ -3,7 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.converter.DTOConverter;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
-import com.epam.esm.dto.TagDTO;
+import com.epam.esm.dto.entityDTO.TagDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityAlreadyExistsException;

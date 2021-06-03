@@ -4,11 +4,11 @@ import com.epam.esm.controller.CertificateController;
 import com.epam.esm.controller.OrderController;
 import com.epam.esm.controller.TagController;
 import com.epam.esm.controller.UserController;
-import com.epam.esm.dto.CertificateDTO;
-import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.entityDTO.CertificateDTO;
+import com.epam.esm.dto.entityDTO.OrderDTO;
 import com.epam.esm.dto.PageDTO;
-import com.epam.esm.dto.TagDTO;
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.dto.entityDTO.TagDTO;
+import com.epam.esm.dto.entityDTO.UserDTO;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;

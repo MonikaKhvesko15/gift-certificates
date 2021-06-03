@@ -1,6 +1,6 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.dto.entityDTO.UserDTO;
 import com.epam.esm.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,16 +26,4 @@ public class AuthenticationController {
     public UserDTO register(@RequestBody @Valid UserDTO userDTO) {
         return userService.register(userDTO);
     }
-
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationRequestDTO requestDTO) {
-//        return null;
-//    }
-
-//
-//    @PostMapping("/logout")
-//    public void logout(HttpServletRequest request, HttpServletResponse response) {
-//        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-//        securityContextLogoutHandler.logout(request, response, null);
-//    }
 }

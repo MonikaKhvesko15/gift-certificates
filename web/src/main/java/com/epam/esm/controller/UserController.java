@@ -1,10 +1,10 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.entityDTO.OrderDTO;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
-import com.epam.esm.dto.TagDTO;
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.dto.entityDTO.TagDTO;
+import com.epam.esm.dto.entityDTO.UserDTO;
 import com.epam.esm.dto.UserRequestFieldDTO;
 import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.link.PageDTOLinkBuilder;

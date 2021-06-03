@@ -1,8 +1,8 @@
 package com.epam.esm.converter;
 
-import com.epam.esm.dto.CertificateDTO;
-import com.epam.esm.dto.OrderDTO;
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.dto.entityDTO.CertificateDTO;
+import com.epam.esm.dto.entityDTO.OrderDTO;
+import com.epam.esm.dto.entityDTO.UserDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
@@ -22,6 +22,7 @@ public class OrderDTOConverter implements DTOConverter<Order, OrderDTO>{
     private final CertificateDTOConverter certificateDTOConverter;
     private final UserDTOConverter userDTOConverter;
 
+    @Override
     public Order convertToEntity(OrderDTO orderDTO) {
         List<Certificate> certificates = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(orderDTO.getCertificates())) {
@@ -39,6 +40,7 @@ public class OrderDTOConverter implements DTOConverter<Order, OrderDTO>{
         return order;
     }
 
+    @Override
     public OrderDTO convertToDto(Order order) {
         List<CertificateDTO> certificates = order.getCertificates().stream()
                 .map(certificateDTOConverter::convertToDto)
@@ -53,6 +55,7 @@ public class OrderDTOConverter implements DTOConverter<Order, OrderDTO>{
         return orderDTO;
     }
 
+    @Override
     public List<OrderDTO> convertToListDTO(List<Order> orders) {
         return orders.stream()
                 .map(this::convertToDto)

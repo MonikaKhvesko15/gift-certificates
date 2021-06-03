@@ -2,7 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
-import com.epam.esm.dto.TagDTO;
+import com.epam.esm.dto.entityDTO.TagDTO;
 import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.link.PageDTOLinkBuilder;
 import com.epam.esm.service.TagService;

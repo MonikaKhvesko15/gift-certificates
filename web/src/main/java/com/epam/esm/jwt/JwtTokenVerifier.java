@@ -1,6 +1,7 @@
 package com.epam.esm.jwt;
 
 import com.google.common.base.Strings;
+import com.google.common.net.HttpHeaders;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -33,13 +34,14 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String authorizationHeader = request.getHeader(jwtConfig.getAuthorizationHeader());
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith(jwtConfig.getTokenPrefix())) {
             filterChain.doFilter(request, response);
             return;
         }
         String token = authorizationHeader.replace(jwtConfig.getTokenPrefix(), "");
         try {
+            //////////////////////////////////////////////////////
             Jws<Claims> claimsJws = Jwts.parser()
                     .setSigningKey(secretKey)
                     .parseClaimsJws(token);
@@ -57,6 +59,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                     null,
                     simpleGrantedAuthorities
             );
+            /////////////////////////////////////////////////////////
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (JwtException e) {
