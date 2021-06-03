@@ -1,6 +1,6 @@
-package com.epam.esm.jwt;
+package com.epam.esm.security.jwt;
 
-import com.epam.esm.jwt.util.TokenInterpreter;
+import com.epam.esm.security.jwt.util.TokenInterpreter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.net.HttpHeaders;
 import lombok.AllArgsConstructor;

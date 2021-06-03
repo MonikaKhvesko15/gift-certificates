@@ -1,19 +1,19 @@
-package com.epam.esm.security.config;
+package com.epam.esm.security;
 
 import com.epam.esm.auth.service.ApplicationUserService;
-import com.epam.esm.jwt.JwtTokenVerifier;
-import com.epam.esm.jwt.JwtUsernameAndPasswordAuthenticationFilter;
-import com.epam.esm.jwt.util.TokenInterpreter;
+import com.epam.esm.security.jwt.JwtTokenVerifier;
+import com.epam.esm.security.jwt.JwtUsernameAndPasswordAuthenticationFilter;
+import com.epam.esm.security.jwt.util.TokenInterpreter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
@@ -22,9 +22,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final PasswordEncoder passwordEncoder;
     private final ApplicationUserService userService;
     private final TokenInterpreter tokenInterpreter;
+    private final UnauthorizedResponseAuthenticationEntryPoint unauthorizedResponseAuthenticationEntryPoint;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -33,19 +33,22 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), tokenInterpreter))
-                .addFilterAfter(new JwtTokenVerifier(tokenInterpreter), JwtUsernameAndPasswordAuthenticationFilter.class);
+                .addFilterAfter(new JwtTokenVerifier(tokenInterpreter), JwtUsernameAndPasswordAuthenticationFilter.class)
+                .authorizeRequests()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthorizedResponseAuthenticationEntryPoint);
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(daoAuthenticationProvider());
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(userService);
-        return provider;
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
     }
 }

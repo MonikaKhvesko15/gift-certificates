@@ -43,7 +43,6 @@ public class CertificateController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAnonymous() or hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     public PageDTO<CertificateDTO> find(@Valid CertificatePageQueryDTO queryDTO,
                                         PageRequestDTO pageRequestDTO) {
         PageDTO<CertificateDTO> pageDTO = certificateService.findByParams(queryDTO, pageRequestDTO);
@@ -77,7 +76,6 @@ public class CertificateController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAnonymous() or hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     public CertificateDTO findById(@PathVariable Long id) {
         CertificateDTO certificateDTO = certificateService.getById(id);
         certificateDTOLinkBuilder.toModel(certificateDTO);

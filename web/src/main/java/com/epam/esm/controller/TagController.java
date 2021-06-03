@@ -39,7 +39,7 @@ public class TagController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAnonymous() or hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     public PageDTO<TagDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<TagDTO> pageDTO = tagService.findAll(pageRequestDTO);
         if(CollectionUtils.isNotEmpty(pageDTO.getContent())) {

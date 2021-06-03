@@ -1,6 +1,6 @@
-package com.epam.esm.jwt;
+package com.epam.esm.security.jwt;
 
-import com.epam.esm.jwt.util.TokenInterpreter;
+import com.epam.esm.security.jwt.util.TokenInterpreter;
 import com.google.common.base.Strings;
 import com.google.common.net.HttpHeaders;
 import lombok.AllArgsConstructor;
@@ -29,10 +29,8 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
             return;
         }
         String token = authorizationHeader.replace(tokenInterpreter.getTokenPrefix(), "");
-        //
         Authentication authentication = tokenInterpreter.parseTokenToAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        //
         filterChain.doFilter(request, response);
     }
 }
