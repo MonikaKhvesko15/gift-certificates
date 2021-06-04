@@ -42,7 +42,9 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
-                                            Authentication authResult) {
-        response.addHeader(HttpHeaders.AUTHORIZATION, tokenInterpreter.createToken(authResult));
+                                            Authentication authResult) throws IOException {
+        String token = tokenInterpreter.createToken(authResult);
+        response.addHeader(HttpHeaders.AUTHORIZATION, token);
+        response.getWriter().println(token);
     }
 }
