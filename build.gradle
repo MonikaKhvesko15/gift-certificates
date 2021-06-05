@@ -38,7 +38,6 @@ subprojects {
         runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.10.7'
         runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.10.5'
 
-
         //core utilities
         implementation group: 'com.google.guava', name: 'guava', version: '11.0.2'
 

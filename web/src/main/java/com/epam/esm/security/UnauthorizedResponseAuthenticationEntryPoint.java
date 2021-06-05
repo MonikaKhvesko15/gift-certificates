@@ -15,6 +15,6 @@ public class UnauthorizedResponseAuthenticationEntryPoint implements Authenticat
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                "You need to provide the JWT Token to Access This resource");
+                authException.getLocalizedMessage());
     }
 }

@@ -34,10 +34,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), tokenInterpreter))
                 .addFilterAfter(new JwtTokenVerifier(tokenInterpreter), JwtUsernameAndPasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                .anyRequest()
-                .authenticated()
-                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(unauthorizedResponseAuthenticationEntryPoint);
     }

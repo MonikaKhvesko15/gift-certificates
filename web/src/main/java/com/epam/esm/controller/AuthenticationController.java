@@ -22,7 +22,7 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAnonymous() or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAnonymous() or hasRole('ADMIN')")
     public UserDTO register(@RequestBody @Valid UserDTO userDTO) {
         return userService.register(userDTO);
     }

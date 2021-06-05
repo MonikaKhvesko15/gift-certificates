@@ -39,7 +39,7 @@ public class TagController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public PageDTO<TagDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<TagDTO> pageDTO = tagService.findAll(pageRequestDTO);
         if(CollectionUtils.isNotEmpty(pageDTO.getContent())) {
@@ -57,7 +57,7 @@ public class TagController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAnonymous() or hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+    @PreAuthorize("isAnonymous() or hasAnyRole('ADMIN','USER')")
     public TagDTO findById(@PathVariable Long id) {
         TagDTO tagDTO = tagService.getById(id);
         tagDTOLinkBuilder.toModel(tagDTO);
@@ -71,7 +71,7 @@ public class TagController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable Long id) {
         tagService.remove(id);
     }
@@ -84,7 +84,7 @@ public class TagController {
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public TagDTO create(@RequestBody @Valid TagDTO tagDTO) {
         TagDTO createdTag = tagService.create(tagDTO);
         tagDTOLinkBuilder.toModel(createdTag);
