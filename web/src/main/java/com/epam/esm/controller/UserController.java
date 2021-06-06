@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 /**
@@ -51,7 +52,7 @@ public class UserController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') && @userSecurity.hasSameName(authentication, #id))")
+    @RolesAllowed({"admin","user"})
     public UserDTO findById(@PathVariable Long id) {
         UserDTO userDTO = userService.getById(id);
         userDTOLinkBuilder.toModel(userDTO);
@@ -65,7 +66,7 @@ public class UserController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
+    @RolesAllowed("admin")
     public PageDTO<UserDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<UserDTO> pageDTO = userService.findAll(pageRequestDTO);
         if (CollectionUtils.isNotEmpty(pageDTO.getContent())) {
@@ -84,7 +85,7 @@ public class UserController {
      */
     @PostMapping("/{id}/orders")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('USER') && @userSecurity.hasSameName(authentication, #id)")
+    @RolesAllowed({"user"})
     public OrderDTO createOrder(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
         OrderDTO createdOrder = orderService.create(id, orderDTO);
         orderDTOLinkBuilder.toModel(createdOrder);
@@ -99,7 +100,7 @@ public class UserController {
      * */
     @GetMapping("/{id}/orders")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') && @userSecurity.hasSameName(authentication, #id))")
+    @RolesAllowed({"admin","user"})
     public PageDTO<OrderDTO> getAllUserOrders(@PathVariable Long id,
                                               PageRequestDTO pageRequestDTO) {
         PageDTO<OrderDTO> orderDTOPage = orderService.getAllUserOrders(id, pageRequestDTO);
@@ -117,7 +118,7 @@ public class UserController {
      */
     @GetMapping("/{id}/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') && @userSecurity.hasSameName(authentication, #id))")
+    @RolesAllowed({"admin","user"})
     public OrderDTO getUserOrder(@PathVariable Long id,
                                  @PathVariable Long orderId) {
         OrderDTO orderDTO = orderService.getUserOrder(id, orderId);
@@ -132,7 +133,7 @@ public class UserController {
      * @return {@link TagDTO} most popular tag
      */
     @GetMapping("/{id}/most-popular-tag")
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') && @userSecurity.hasSameName(authentication, #id))")
+    @RolesAllowed({"admin","user"})
     public TagDTO getMostPopularTag(@PathVariable Long id) {
         TagDTO tagDTO = tagService.getMostPopularTag(id);
         if(tagDTO!=null){
@@ -148,7 +149,7 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN')")
+    @RolesAllowed("admin")
     public void delete(@PathVariable Long id) {
         userService.remove(id);
     }
@@ -156,7 +157,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') && @userSecurity.hasSameName(authentication, #id))")
+    @RolesAllowed({"admin","user"})
     public UserDTO update(@RequestBody @Valid UserRequestFieldDTO userRequestFieldDTO,
                                  @PathVariable Long id) {
         UserDTO updatedUser = userService.update(id, userRequestFieldDTO);

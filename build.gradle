@@ -1,6 +1,7 @@
 buildscript {
     ext {
         springBootVersion = '2.4.5'
+        keycloakVersion = '9.0.2'
     }
 
     repositories {
@@ -25,6 +26,12 @@ subprojects {
         mavenCentral()
     }
 
+    dependencyManagement {
+        imports {
+            mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
+        }
+    }
+
     dependencies {
 
         //spring
@@ -41,6 +48,8 @@ subprojects {
         //core utilities
         implementation group: 'com.google.guava', name: 'guava', version: '11.0.2'
 
+        //keycloak
+        implementation "org.keycloak:keycloak-spring-boot-starter:$keycloakVersion"
 
         //lombok
         compileOnly 'org.projectlombok:lombok:1.18.20'

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
+
 /**
  * The controller to provide operations on {@link OrderDTO}.
  */
@@ -35,7 +37,7 @@ public class OrderController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @RolesAllowed({"admin"})
     public OrderDTO findById(@PathVariable Long id) {
         OrderDTO orderDTO = orderService.getById(id);
         orderDTOLinkBuilder.toModel(orderDTO);
@@ -49,7 +51,7 @@ public class OrderController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @RolesAllowed({"admin"})
     public PageDTO<OrderDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<OrderDTO> pageDTO = orderService.findAll(pageRequestDTO);
         if(CollectionUtils.isNotEmpty(pageDTO.getContent())){
