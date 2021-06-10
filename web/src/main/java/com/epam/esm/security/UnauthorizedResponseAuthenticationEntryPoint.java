@@ -14,7 +14,9 @@ public class UnauthorizedResponseAuthenticationEntryPoint implements Authenticat
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
-        response.setHeader("WWW-Authenticate", "Basic realm=localhost, charset=UTF-8");
+        response.setHeader("WWW-Authenticate",
+                "Basic realm="+ request.getRequestURI() +
+                        ", charset="+ request.getCharacterEncoding());
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                 authException.getLocalizedMessage());
     }
