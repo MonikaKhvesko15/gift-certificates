@@ -12,8 +12,6 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = true)
 public class TagDTO extends EntityDTO {
 
-    public static final TagDTO empty = null;
-
     @NotBlank
     @Size(max = 50)
     private String name;

@@ -23,7 +23,7 @@ public class UserDTO extends EntityDTO {
     private String email;
 
     @NotBlank
-    @Size(min = 10, max = 15)
+    @Size(min = 5, max = 15)
     @JsonProperty(access = Access.WRITE_ONLY)
     private String password;
 

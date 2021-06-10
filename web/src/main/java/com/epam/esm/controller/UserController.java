@@ -1,11 +1,11 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.entityDTO.OrderDTO;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
+import com.epam.esm.dto.UserRequestFieldDTO;
+import com.epam.esm.dto.entityDTO.OrderDTO;
 import com.epam.esm.dto.entityDTO.TagDTO;
 import com.epam.esm.dto.entityDTO.UserDTO;
-import com.epam.esm.dto.UserRequestFieldDTO;
 import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.link.PageDTOLinkBuilder;
 import com.epam.esm.service.OrderService;
@@ -14,7 +14,6 @@ import com.epam.esm.service.impl.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;

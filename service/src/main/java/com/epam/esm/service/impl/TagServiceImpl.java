@@ -52,11 +52,7 @@ public class TagServiceImpl extends AbstractService<TagDTO, Tag> implements TagS
         User user = userRepository.getById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(" (id = " + userId + ")"));
         Optional<Tag> tag = tagRepository.getMostPopularTag(user.getId());
-        if(tag.isPresent()){
-            return converter.convertToDto(tag.get());
-        }else {
-            return TagDTO.empty;
-        }
+        return tag.map(converter::convertToDto).orElse(null);
     }
 
     @Override

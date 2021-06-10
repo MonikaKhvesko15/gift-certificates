@@ -1,6 +1,5 @@
 package com.epam.esm.auth.util;
 
-import com.epam.esm.auth.ApplicationUser;
 import com.epam.esm.entity.Role;
 import com.epam.esm.entity.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,19 +12,19 @@ import java.util.Set;
 @Component
 public class UserDetailsConverter {
 
-    public ApplicationUser convertToUserDetails(User user) {
+    public org.springframework.security.core.userdetails.User convertToUserDetails(User user) {
         String email = user.getEmail();
         String password = user.getPassword();
         boolean isBlocked = user.getIsBlocked();
         Set<GrantedAuthority> grantedAuthorities = getGrantedAuthoritySetFromRoles(user.getRoles());
-        return new ApplicationUser(
-                grantedAuthorities,
+        return new org.springframework.security.core.userdetails.User(
                 email,
                 password,
                 !isBlocked,
                 !isBlocked,
                 !isBlocked,
-                !isBlocked);
+                !isBlocked,
+                grantedAuthorities);
     }
 
     private Set<GrantedAuthority> getGrantedAuthoritySetFromRoles(Set<Role> roles) {

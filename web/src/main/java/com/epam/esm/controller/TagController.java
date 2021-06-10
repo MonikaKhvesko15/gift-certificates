@@ -9,7 +9,6 @@ import com.epam.esm.service.TagService;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

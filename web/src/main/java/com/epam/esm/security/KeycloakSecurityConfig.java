@@ -25,11 +25,11 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
-        http.authorizeRequests()
+        http
+                .csrf().disable()
+                .authorizeRequests()
                 .anyRequest()
                 .permitAll();
-        http.csrf().disable();
     }
 
     @Autowired
@@ -54,4 +54,5 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(12);
     }
+
 }
