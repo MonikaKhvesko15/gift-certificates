@@ -57,7 +57,7 @@ public class TagController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAnonymous() or hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public TagDTO findById(@PathVariable Long id) {
         TagDTO tagDTO = tagService.getById(id);
         tagDTOLinkBuilder.toModel(tagDTO);
