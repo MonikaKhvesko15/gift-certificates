@@ -24,25 +24,26 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class UserServiceImpl extends AbstractService<UserDTO, User> implements UserService {
     private final UserRepository userRepository;
     private final Repository<Role> roleRepository;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(DTOConverter<User, UserDTO> converter,
                            UserRepository repository,
                            RoleRepositoryImpl roleRepository,
                            PageRequestDTOHandler parser
-            ,
-                           PasswordEncoder passwordEncoder
+//            ,
+//                           PasswordEncoder passwordEncoder
     ) {
         super(converter, repository, parser);
         this.userRepository = repository;
         this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
+//        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -84,7 +85,7 @@ public class UserServiceImpl extends AbstractService<UserDTO, User> implements U
         user.setIsBlocked(false);
         user.setDeleted(false);
         user.setRoles(roles);
-        user.setPassword(passwordEncoder.encode(password));
+//        user.setPassword(passwordEncoder.encode(password));
         return converter.convertToDto(userRepository.save(user));
     }
 
@@ -103,5 +104,15 @@ public class UserServiceImpl extends AbstractService<UserDTO, User> implements U
         }
         return converter.convertToDto(userRepository.update(user));
 
+    }
+
+    @Override
+    public UserDTO findByEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        UserDTO userDTO = null;
+        if(userOptional.isPresent()){
+            userDTO = converter.convertToDto(userOptional.get());
+        }
+        return userDTO;
     }
 }

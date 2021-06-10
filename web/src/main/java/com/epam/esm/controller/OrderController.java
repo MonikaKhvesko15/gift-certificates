@@ -36,7 +36,7 @@ public class OrderController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @RolesAllowed({"admin"})
+    @RolesAllowed({"ADMIN"})
     public OrderDTO findById(@PathVariable Long id) {
         OrderDTO orderDTO = orderService.getById(id);
         orderDTOLinkBuilder.toModel(orderDTO);
@@ -50,7 +50,7 @@ public class OrderController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @RolesAllowed({"admin"})
+    @RolesAllowed({"ADMIN"})
     public PageDTO<OrderDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<OrderDTO> pageDTO = orderService.findAll(pageRequestDTO);
         if(CollectionUtils.isNotEmpty(pageDTO.getContent())){

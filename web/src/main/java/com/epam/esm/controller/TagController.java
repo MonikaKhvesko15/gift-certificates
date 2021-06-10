@@ -39,7 +39,7 @@ public class TagController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @RolesAllowed({"admin","user"})
+    @RolesAllowed({"ADMIN","USER"})
     public PageDTO<TagDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<TagDTO> pageDTO = tagService.findAll(pageRequestDTO);
         if(CollectionUtils.isNotEmpty(pageDTO.getContent())) {
@@ -57,7 +57,7 @@ public class TagController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @RolesAllowed({"admin","user"})
+    @RolesAllowed({"ADMIN","USER"})
     public TagDTO findById(@PathVariable Long id) {
         TagDTO tagDTO = tagService.getById(id);
         tagDTOLinkBuilder.toModel(tagDTO);
@@ -71,7 +71,7 @@ public class TagController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RolesAllowed("admin")
+    @RolesAllowed("ADMIN")
     public void delete(@PathVariable Long id) {
         tagService.remove(id);
     }
@@ -84,7 +84,7 @@ public class TagController {
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    @RolesAllowed("admin")
+    @RolesAllowed("ADMIN")
     public TagDTO create(@RequestBody @Valid TagDTO tagDTO) {
         TagDTO createdTag = tagService.create(tagDTO);
         tagDTOLinkBuilder.toModel(createdTag);

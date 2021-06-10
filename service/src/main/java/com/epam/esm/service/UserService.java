@@ -11,4 +11,6 @@ public interface UserService {
     UserDTO register(UserDTO userDTO);
 
     UserDTO update(Long id, UserRequestFieldDTO userRequestFieldDTO);
+
+    UserDTO findByEmail(String email);
 }
