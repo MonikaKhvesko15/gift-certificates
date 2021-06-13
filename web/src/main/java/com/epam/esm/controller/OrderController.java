@@ -35,7 +35,7 @@ public class OrderController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public OrderDTO findById(@PathVariable Long id) {
         OrderDTO orderDTO = orderService.getById(id);
         orderDTOLinkBuilder.toModel(orderDTO);
@@ -49,7 +49,7 @@ public class OrderController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public PageDTO<OrderDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<OrderDTO> pageDTO = orderService.findAll(pageRequestDTO);
         if(CollectionUtils.isNotEmpty(pageDTO.getContent())){
