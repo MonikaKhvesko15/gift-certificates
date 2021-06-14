@@ -38,29 +38,39 @@ public class CustomAuthenticationProvider extends KeycloakAuthenticationProvider
         KeycloakSecurityContext securityContext = account.getKeycloakSecurityContext();
         AccessToken accessToken = securityContext.getToken();
 
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        Set<String> roles = account.getRoles();
-        for (String role : roles) {
-            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_" + role.toUpperCase());
-            grantedAuthorities.add(grantedAuthority);
-        }
-
         String email = accessToken.getEmail();
         UserDTO userDTO = userService.findByEmail(email);
         if (userDTO == null) {
-            UserDTO newUserDTO = new UserDTO();
-            newUserDTO.setEmail(email);
-            newUserDTO.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
-            newUserDTO.setFirstName(accessToken.getGivenName());
-            newUserDTO.setLastName(accessToken.getFamilyName());
+            UserDTO newUserDTO = createUserDTO(accessToken);
             userService.register(newUserDTO);
         }
 
         Principal principal = new KeycloakPrincipal<>(email, account.getKeycloakSecurityContext());
         RefreshableKeycloakSecurityContext refreshableKeycloakSecurityContext = (RefreshableKeycloakSecurityContext) account.getKeycloakSecurityContext();
         KeycloakAccount keycloakAccount = new SimpleKeycloakAccount(principal,
-                roles, refreshableKeycloakSecurityContext);
+                account.getRoles(), refreshableKeycloakSecurityContext);
+
+        List<GrantedAuthority> grantedAuthorities = getAuthoritiesFromAccount(account);
 
         return new UsernamePasswordAuthenticationToken(keycloakAccount, token.isInteractive(), grantedAuthorities);
+    }
+
+    private List<GrantedAuthority> getAuthoritiesFromAccount(OidcKeycloakAccount account) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        Set<String> roles = account.getRoles();
+        for (String role : roles) {
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_" + role.toUpperCase());
+            grantedAuthorities.add(grantedAuthority);
+        }
+        return grantedAuthorities;
+    }
+
+    private UserDTO createUserDTO(AccessToken accessToken) {
+        UserDTO newUserDTO = new UserDTO();
+        newUserDTO.setEmail(accessToken.getEmail());
+        newUserDTO.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+        newUserDTO.setFirstName(accessToken.getGivenName());
+        newUserDTO.setLastName(accessToken.getFamilyName());
+        return newUserDTO;
     }
 }
