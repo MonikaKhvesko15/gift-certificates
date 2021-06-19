@@ -1,7 +1,7 @@
 package com.epam.esm.converter;
 
-import com.epam.esm.dto.CertificateDTO;
-import com.epam.esm.dto.TagDTO;
+import com.epam.esm.dto.entityDTO.CertificateDTO;
+import com.epam.esm.dto.entityDTO.TagDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +19,7 @@ public class CertificateDTOConverter implements DTOConverter<Certificate, Certif
     private final ModelMapper modelMapper;
     private final TagDTOConverter tagConverter;
 
+    @Override
     public Certificate convertToEntity(CertificateDTO certificateDto) {
         Set<Tag> tags = new HashSet<>();
         if (CollectionUtils.isNotEmpty(certificateDto.getTags())) {
@@ -31,6 +32,7 @@ public class CertificateDTOConverter implements DTOConverter<Certificate, Certif
         return certificate;
     }
 
+    @Override
     public CertificateDTO convertToDto(Certificate certificate) {
         Set<TagDTO> tags = certificate.getTags().stream()
                 .map(tagConverter::convertToDto)
@@ -40,6 +42,7 @@ public class CertificateDTOConverter implements DTOConverter<Certificate, Certif
         return certificateDTO;
     }
 
+    @Override
     public List<CertificateDTO> convertToListDTO(List<Certificate> certificates) {
         return certificates.stream()
                 .map(this::convertToDto)

@@ -1,4 +1,4 @@
-package com.epam.esm.dto;
+package com.epam.esm.dto.entityDTO;
 
 import com.epam.esm.entity.OrderStatus;
 import lombok.EqualsAndHashCode;

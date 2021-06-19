@@ -1,7 +1,7 @@
 package com.epam.esm.link;
 
 import com.epam.esm.controller.OrderController;
-import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.entityDTO.OrderDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

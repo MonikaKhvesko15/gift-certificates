@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.converter.DTOConverter;
-import com.epam.esm.dto.EntityDTO;
+import com.epam.esm.dto.entityDTO.EntityDTO;
 import com.epam.esm.entity.BaseEntity;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;

@@ -1,7 +1,7 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.converter.CertificateDTOConverter;
-import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.dto.entityDTO.CertificateDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotFoundException;

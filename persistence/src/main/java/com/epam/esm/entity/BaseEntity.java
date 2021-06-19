@@ -19,7 +19,7 @@ public abstract class BaseEntity implements Serializable {
     public static final String ID_ATTRIBUTE = "id";
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     public abstract void setDeleted(boolean flag);
 }

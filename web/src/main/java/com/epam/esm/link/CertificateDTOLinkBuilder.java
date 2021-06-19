@@ -1,7 +1,7 @@
 package com.epam.esm.link;
 
 import  com.epam.esm.controller.CertificateController;
-import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.dto.entityDTO.CertificateDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,11 +1,12 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.converter.DTOConverter;
-import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.entityDTO.OrderDTO;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Order;
+import com.epam.esm.entity.OrderStatus;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.Repository;
@@ -55,6 +56,7 @@ public class OrderServiceImpl extends AbstractService<OrderDTO, Order> implement
         order.setCreateDate(LocalDateTime.now());
         BigDecimal totalPrice = countTotalPrice(order);
         order.setTotalPrice(totalPrice);
+        order.setStatus(OrderStatus.PENDING);
         return converter.convertToDto(
                 repository.save(order)
         );

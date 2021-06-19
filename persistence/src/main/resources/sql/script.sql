@@ -32,19 +32,13 @@ CREATE TABLE gift_certificates_tags
 
 DROP TABLE IF EXISTS orders CASCADE;
 
-CREATE TYPE order_status AS ENUM (
-    'PENDING',
-    'APPROVED',
-    'REJECTED'
-)
-
 CREATE TABLE orders
 (
     id                  bigserial      NOT NULL PRIMARY KEY,
     total_price         double precision NOT NULL,
     create_date         timestamptz           NOT NULL,
     is_deleted          boolean DEFAULT false,
-    status              order_status DEFAULT 'PENDING',
+    status              VARCHAR (50) DEFAULT 'PENDING',
     user_id              BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE
 );
 
@@ -57,23 +51,40 @@ CREATE TABLE gift_certificates_orders
     PRIMARY KEY (gift_certificate_id, order_id)
 );
 
-drop type user_role ;
-
-CREATE TYPE user_role AS ENUM (
-    'USER',
-    'ADMIN'
-)
 
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users
 (
     id               bigserial      NOT NULL PRIMARY KEY,
-    username         VARCHAR(20)  NOT NULL,
-    password         VARCHAR(255) NOT NULL,
+    email            VARCHAR(50)  NOT NULL,
+    password         VARCHAR(60) NOT NULL,
+    first_name       VARCHAR (50) NOT NULL ,
+    last_name        VARCHAR (50) NOT NULL,
     is_deleted       boolean DEFAULT false,
-    role             user_role DEFAULT 'USER'
+    is_blocked       boolean DEFAULT false
 );
+
+DROP TABLE IF EXISTS roles;
+
+CREATE TABLE roles(
+                      id               bigserial      NOT NULL PRIMARY KEY,
+                      name             VARCHAR(50)  NOT NULL
+);
+
+insert into roles(name) values('USER');
+insert into roles(name) values('ADMIN');
+
+
+DROP TABLE IF EXISTS users_roles;
+
+CREATE TABLE users_roles
+(
+    user_id              BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE ,
+    role_id              BIGINT NOT NULL REFERENCES roles (id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, role_id)
+);
+
 
 DROP TABLE IF EXISTS events;
 

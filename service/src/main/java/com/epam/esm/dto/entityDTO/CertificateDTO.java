@@ -1,4 +1,4 @@
-package com.epam.esm.dto;
+package com.epam.esm.dto.entityDTO;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,7 +18,7 @@ import java.util.Set;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class CertificateDTO extends EntityDTO{
+public class CertificateDTO extends EntityDTO {
 
     @NotBlank
     @Size(max = 150)

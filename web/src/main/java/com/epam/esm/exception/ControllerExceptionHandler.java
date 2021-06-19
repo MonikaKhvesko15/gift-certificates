@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,12 +20,14 @@ import java.util.Objects;
 @ControllerAdvice
 @ResponseBody
 public class ControllerExceptionHandler {
-    private static final String DELIMITER = " ";
+
     private final MessageSource messageSource;
-    public static final String ENTITY_ALREADY_EXISTS = "entity_already_exists";
-    public static final String ENTITY_NOT_FOUND = "entity_not_found";
-    public static final String ENTITY_VALIDATOR_EXCEPTION = "entity_not_valid";
-    public static final String FIELDS_NUMBER_VALIDATOR_EXCEPTION = "fields_number_not_valid";
+    private static final String DELIMITER = " ";
+    public static final String ENTITY_ALREADY_EXISTS_MESSAGE = "entity_already_exists";
+    public static final String ENTITY_NOT_FOUND_MESSAGE = "entity_not_found";
+    public static final String ENTITY_VALIDATION_MESSAGE = "entity_not_valid";
+    public static final String FIELDS_NUMBER_VALIDATION_MESSAGE = "fields_number_not_valid";
+    public static final String ACCESS_DENIED_MESSAGE = "access_denied";
     public static final String INTERNAL_SERVER_ERROR = "server_error";
 
 
@@ -36,7 +39,7 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionResponse entityNotFoundHandler(EntityNotFoundException e, WebRequest request) {
         Locale locale = getLocale(request);
-        String message = buildMessage(ENTITY_NOT_FOUND, locale) + e.getMessage();
+        String message = buildMessage(ENTITY_NOT_FOUND_MESSAGE, locale) + e.getMessage();
         return new ExceptionResponse(HttpStatus.NOT_FOUND.value(), Collections.singletonList(message));
     }
 
@@ -44,7 +47,7 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse entityExistsHandler(EntityAlreadyExistsException e, WebRequest request) {
         Locale locale = getLocale(request);
-        String message = buildMessage(ENTITY_ALREADY_EXISTS, locale) + e.getMessage();
+        String message = buildMessage(ENTITY_ALREADY_EXISTS_MESSAGE, locale) + e.getMessage();
         return new ExceptionResponse(HttpStatus.CONFLICT.value(), Collections.singletonList(message));
     }
 
@@ -55,6 +58,14 @@ public class ControllerExceptionHandler {
         BindingResult bindingResult = e.getBindingResult();
         String message = buildValidatorExceptionMessage(bindingResult, locale);
         return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), Collections.singletonList(message));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public final ExceptionResponse handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        Locale locale = getLocale(request);
+        String message = buildMessage(ACCESS_DENIED_MESSAGE, locale);
+        return new ExceptionResponse(HttpStatus.FORBIDDEN.value(), Collections.singletonList(message));
     }
 
     @ExceptionHandler(RuntimeException.class)
@@ -77,12 +88,12 @@ public class ControllerExceptionHandler {
     private String buildValidatorExceptionMessage(BindingResult bindingResult, Locale locale) {
         String resultMessage;
         if (bindingResult.getFieldError() != null) {
-            resultMessage = buildMessage(ENTITY_VALIDATOR_EXCEPTION, locale) +
+            resultMessage = buildMessage(ENTITY_VALIDATION_MESSAGE, locale) +
                     Objects.requireNonNull(bindingResult.getFieldError()).getField()+
                     DELIMITER +
                     buildMessage(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), locale);
         } else {
-            resultMessage = buildMessage(FIELDS_NUMBER_VALIDATOR_EXCEPTION, locale);
+            resultMessage = buildMessage(FIELDS_NUMBER_VALIDATION_MESSAGE, locale);
         }
         return resultMessage;
     }

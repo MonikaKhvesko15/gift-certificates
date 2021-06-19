@@ -3,7 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.converter.DTOConverter;
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
-import com.epam.esm.dto.TagDTO;
+import com.epam.esm.dto.entityDTO.TagDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityAlreadyExistsException;
@@ -17,6 +17,7 @@ import com.epam.esm.specification.tag.TagAllSpecification;
 import com.epam.esm.util.PageRequestDTOHandler;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TagServiceImpl extends AbstractService<TagDTO, Tag> implements TagService {
@@ -50,9 +51,8 @@ public class TagServiceImpl extends AbstractService<TagDTO, Tag> implements TagS
     public TagDTO getMostPopularTag(Long userId) {
         User user = userRepository.getById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(" (id = " + userId + ")"));
-        Tag tag = tagRepository.getMostPopularTag(user.getId())
-                .orElseThrow(EntityNotFoundException::new);
-        return converter.convertToDto(tag);
+        Optional<Tag> tag = tagRepository.getMostPopularTag(user.getId());
+        return tag.map(converter::convertToDto).orElse(null);
     }
 
     @Override

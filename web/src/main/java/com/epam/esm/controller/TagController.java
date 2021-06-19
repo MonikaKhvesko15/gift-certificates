@@ -2,13 +2,14 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.PageDTO;
 import com.epam.esm.dto.PageRequestDTO;
-import com.epam.esm.dto.TagDTO;
+import com.epam.esm.dto.entityDTO.TagDTO;
 import com.epam.esm.link.LinkBuilder;
 import com.epam.esm.link.PageDTOLinkBuilder;
 import com.epam.esm.service.TagService;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +25,7 @@ import javax.validation.Valid;
  * The controller to provide CRD operations on {@link TagDTO}.
  */
 @RestController
-@RequestMapping(value = "/v1/tags")
+@RequestMapping(value = "/api/v1/tags")
 @AllArgsConstructor
 public class TagController {
     private final TagService tagService;
@@ -38,6 +39,7 @@ public class TagController {
      */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public PageDTO<TagDTO> findAll(PageRequestDTO pageRequestDTO) {
         PageDTO<TagDTO> pageDTO = tagService.findAll(pageRequestDTO);
         if(CollectionUtils.isNotEmpty(pageDTO.getContent())) {
@@ -55,6 +57,7 @@ public class TagController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public TagDTO findById(@PathVariable Long id) {
         TagDTO tagDTO = tagService.getById(id);
         tagDTOLinkBuilder.toModel(tagDTO);
@@ -68,6 +71,7 @@ public class TagController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable Long id) {
         tagService.remove(id);
     }
@@ -80,6 +84,7 @@ public class TagController {
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public TagDTO create(@RequestBody @Valid TagDTO tagDTO) {
         TagDTO createdTag = tagService.create(tagDTO);
         tagDTOLinkBuilder.toModel(createdTag);
